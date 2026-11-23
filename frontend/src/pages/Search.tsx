@@ -280,6 +280,10 @@ export const SearchPage: React.FC<SearchPageProps> = ({ searchInputRef, initialM
           <input
             ref={effectiveInputRef}
             type="text"
+            id="mainSearchInput"
+            name="searchQuery"
+            autoComplete="off"
+            spellCheck={false}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}

@@ -256,6 +256,9 @@ export const AdminPage: React.FC = () => {
           <div className="flex-1 min-w-[240px]">
             <input
               type="password"
+              id="adminApiKey"
+              name="adminApiKey"
+              autoComplete="current-password"
               value={adminKeyInput}
               onChange={(e) => setAdminKeyInput(e.target.value)}
               placeholder="Enter ADMIN_API_KEY token..."

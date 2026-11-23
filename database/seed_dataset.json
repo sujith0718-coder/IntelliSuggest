@@ -1,0 +1,5248 @@
+{
+  "keywords": [
+    {
+      "keyword": "python",
+      "frequency": 480
+    },
+    {
+      "keyword": "javascript",
+      "frequency": 450
+    },
+    {
+      "keyword": "java",
+      "frequency": 430
+    },
+    {
+      "keyword": "c",
+      "frequency": 410
+    },
+    {
+      "keyword": "c plus plus",
+      "frequency": 390
+    },
+    {
+      "keyword": "react",
+      "frequency": 380
+    },
+    {
+      "keyword": "typescript",
+      "frequency": 360
+    },
+    {
+      "keyword": "data structures",
+      "frequency": 350
+    },
+    {
+      "keyword": "algorithms",
+      "frequency": 340
+    },
+    {
+      "keyword": "binary search",
+      "frequency": 320
+    },
+    {
+      "keyword": "dynamic programming",
+      "frequency": 310
+    },
+    {
+      "keyword": "sql",
+      "frequency": 300
+    },
+    {
+      "keyword": "git",
+      "frequency": 295
+    },
+    {
+      "keyword": "html",
+      "frequency": 290
+    },
+    {
+      "keyword": "css",
+      "frequency": 280
+    },
+    {
+      "keyword": "node js",
+      "frequency": 275
+    },
+    {
+      "keyword": "docker",
+      "frequency": 270
+    },
+    {
+      "keyword": "hash table",
+      "frequency": 265
+    },
+    {
+      "keyword": "trie",
+      "frequency": 260
+    },
+    {
+      "keyword": "min heap",
+      "frequency": 250
+    },
+    {
+      "keyword": "dijkstra algorithm",
+      "frequency": 245
+    },
+    {
+      "keyword": "operating systems",
+      "frequency": 240
+    },
+    {
+      "keyword": "computer networks",
+      "frequency": 235
+    },
+    {
+      "keyword": "database",
+      "frequency": 230
+    },
+    {
+      "keyword": "machine learning",
+      "frequency": 225
+    },
+    {
+      "keyword": "linux",
+      "frequency": 220
+    },
+    {
+      "keyword": "rest api",
+      "frequency": 215
+    },
+    {
+      "keyword": "tcp",
+      "frequency": 210
+    },
+    {
+      "keyword": "http",
+      "frequency": 205
+    },
+    {
+      "keyword": "https",
+      "frequency": 200
+    },
+    {
+      "keyword": "linked list",
+      "frequency": 195
+    },
+    {
+      "keyword": "stack",
+      "frequency": 190
+    },
+    {
+      "keyword": "queue",
+      "frequency": 185
+    },
+    {
+      "keyword": "binary tree",
+      "frequency": 180
+    },
+    {
+      "keyword": "graph",
+      "frequency": 175
+    },
+    {
+      "keyword": "depth first search",
+      "frequency": 170
+    },
+    {
+      "keyword": "breadth first search",
+      "frequency": 165
+    },
+    {
+      "keyword": "merge sort",
+      "frequency": 160
+    },
+    {
+      "keyword": "quick sort",
+      "frequency": 155
+    },
+    {
+      "keyword": "acid properties",
+      "frequency": 150
+    },
+    {
+      "keyword": "virtual memory",
+      "frequency": 145
+    },
+    {
+      "keyword": "multithreading",
+      "frequency": 140
+    },
+    {
+      "keyword": "jwt",
+      "frequency": 135
+    },
+    {
+      "keyword": "graphql",
+      "frequency": 130
+    },
+    {
+      "keyword": "kubernetes",
+      "frequency": 125
+    },
+    {
+      "keyword": "deep learning",
+      "frequency": 120
+    },
+    {
+      "keyword": "transformers",
+      "frequency": 115
+    },
+    {
+      "keyword": "vector search",
+      "frequency": 110
+    },
+    {
+      "keyword": "system design",
+      "frequency": 108
+    },
+    {
+      "keyword": "design patterns",
+      "frequency": 105
+    },
+    {
+      "keyword": "cloud computing",
+      "frequency": 102
+    },
+    {
+      "keyword": "microservices",
+      "frequency": 100
+    },
+    {
+      "keyword": "go",
+      "frequency": 98
+    },
+    {
+      "keyword": "rust",
+      "frequency": 95
+    },
+    {
+      "keyword": "kotlin",
+      "frequency": 92
+    },
+    {
+      "keyword": "swift",
+      "frequency": 88
+    },
+    {
+      "keyword": "php",
+      "frequency": 85
+    },
+    {
+      "keyword": "ruby",
+      "frequency": 82
+    },
+    {
+      "keyword": "c sharp",
+      "frequency": 80
+    },
+    {
+      "keyword": "scala",
+      "frequency": 78
+    },
+    {
+      "keyword": "r",
+      "frequency": 75
+    },
+    {
+      "keyword": "shell scripting",
+      "frequency": 72
+    },
+    {
+      "keyword": "assembly",
+      "frequency": 70
+    },
+    {
+      "keyword": "doubly linked list",
+      "frequency": 95
+    },
+    {
+      "keyword": "circular queue",
+      "frequency": 90
+    },
+    {
+      "keyword": "deque",
+      "frequency": 88
+    },
+    {
+      "keyword": "hash map",
+      "frequency": 94
+    },
+    {
+      "keyword": "hash set",
+      "frequency": 86
+    },
+    {
+      "keyword": "binary search tree",
+      "frequency": 96
+    },
+    {
+      "keyword": "avl tree",
+      "frequency": 92
+    },
+    {
+      "keyword": "red black tree",
+      "frequency": 90
+    },
+    {
+      "keyword": "b tree",
+      "frequency": 88
+    },
+    {
+      "keyword": "b plus tree",
+      "frequency": 85
+    },
+    {
+      "keyword": "max heap",
+      "frequency": 84
+    },
+    {
+      "keyword": "priority queue",
+      "frequency": 92
+    },
+    {
+      "keyword": "disjoint set union",
+      "frequency": 86
+    },
+    {
+      "keyword": "segment tree",
+      "frequency": 82
+    },
+    {
+      "keyword": "fenwick tree",
+      "frequency": 80
+    },
+    {
+      "keyword": "trie node",
+      "frequency": 78
+    },
+    {
+      "keyword": "radix tree",
+      "frequency": 75
+    },
+    {
+      "keyword": "suffix tree",
+      "frequency": 72
+    },
+    {
+      "keyword": "directed acyclic graph",
+      "frequency": 85
+    },
+    {
+      "keyword": "adjacency list",
+      "frequency": 82
+    },
+    {
+      "keyword": "linear search",
+      "frequency": 90
+    },
+    {
+      "keyword": "heap sort",
+      "frequency": 88
+    },
+    {
+      "keyword": "bubble sort",
+      "frequency": 85
+    },
+    {
+      "keyword": "insertion sort",
+      "frequency": 82
+    },
+    {
+      "keyword": "selection sort",
+      "frequency": 80
+    },
+    {
+      "keyword": "counting sort",
+      "frequency": 78
+    },
+    {
+      "keyword": "radix sort",
+      "frequency": 75
+    },
+    {
+      "keyword": "bellman ford",
+      "frequency": 84
+    },
+    {
+      "keyword": "floyd warshall",
+      "frequency": 82
+    },
+    {
+      "keyword": "prim algorithm",
+      "frequency": 80
+    },
+    {
+      "keyword": "kruskal algorithm",
+      "frequency": 82
+    },
+    {
+      "keyword": "topological sort",
+      "frequency": 85
+    },
+    {
+      "keyword": "kmp algorithm",
+      "frequency": 80
+    },
+    {
+      "keyword": "rabin karp",
+      "frequency": 76
+    },
+    {
+      "keyword": "sliding window",
+      "frequency": 92
+    },
+    {
+      "keyword": "two pointers",
+      "frequency": 94
+    },
+    {
+      "keyword": "greedy algorithm",
+      "frequency": 90
+    },
+    {
+      "keyword": "backtracking",
+      "frequency": 88
+    },
+    {
+      "keyword": "matrix multiplication",
+      "frequency": 75
+    },
+    {
+      "keyword": "kadane algorithm",
+      "frequency": 84
+    },
+    {
+      "keyword": "longest common subsequence",
+      "frequency": 86
+    },
+    {
+      "keyword": "longest increasing subsequence",
+      "frequency": 84
+    },
+    {
+      "keyword": "knapsack problem",
+      "frequency": 88
+    },
+    {
+      "keyword": "process scheduling",
+      "frequency": 90
+    },
+    {
+      "keyword": "deadlock",
+      "frequency": 92
+    },
+    {
+      "keyword": "semaphore",
+      "frequency": 88
+    },
+    {
+      "keyword": "mutex",
+      "frequency": 90
+    },
+    {
+      "keyword": "paging",
+      "frequency": 86
+    },
+    {
+      "keyword": "segmentation",
+      "frequency": 82
+    },
+    {
+      "keyword": "page fault",
+      "frequency": 84
+    },
+    {
+      "keyword": "cache locality",
+      "frequency": 80
+    },
+    {
+      "keyword": "udp",
+      "frequency": 88
+    },
+    {
+      "keyword": "dns",
+      "frequency": 90
+    },
+    {
+      "keyword": "ip address",
+      "frequency": 86
+    },
+    {
+      "keyword": "subnetting",
+      "frequency": 78
+    },
+    {
+      "keyword": "socket programming",
+      "frequency": 80
+    },
+    {
+      "keyword": "database normalization",
+      "frequency": 88
+    },
+    {
+      "keyword": "first normal form",
+      "frequency": 80
+    },
+    {
+      "keyword": "second normal form",
+      "frequency": 78
+    },
+    {
+      "keyword": "third normal form",
+      "frequency": 82
+    },
+    {
+      "keyword": "bcnf",
+      "frequency": 76
+    },
+    {
+      "keyword": "b tree index",
+      "frequency": 84
+    },
+    {
+      "keyword": "query optimization",
+      "frequency": 86
+    },
+    {
+      "keyword": "transaction isolation",
+      "frequency": 82
+    },
+    {
+      "keyword": "write ahead logging",
+      "frequency": 80
+    },
+    {
+      "keyword": "angular",
+      "frequency": 85
+    },
+    {
+      "keyword": "vue",
+      "frequency": 86
+    },
+    {
+      "keyword": "svelte",
+      "frequency": 80
+    },
+    {
+      "keyword": "next js",
+      "frequency": 90
+    },
+    {
+      "keyword": "express js",
+      "frequency": 92
+    },
+    {
+      "keyword": "fastify",
+      "frequency": 75
+    },
+    {
+      "keyword": "spring boot",
+      "frequency": 88
+    },
+    {
+      "keyword": "django",
+      "frequency": 86
+    },
+    {
+      "keyword": "flask",
+      "frequency": 84
+    },
+    {
+      "keyword": "fastapi",
+      "frequency": 88
+    },
+    {
+      "keyword": "cors",
+      "frequency": 92
+    },
+    {
+      "keyword": "cookies",
+      "frequency": 88
+    },
+    {
+      "keyword": "session management",
+      "frequency": 85
+    },
+    {
+      "keyword": "oauth",
+      "frequency": 90
+    },
+    {
+      "keyword": "websockets",
+      "frequency": 88
+    },
+    {
+      "keyword": "content security policy",
+      "frequency": 78
+    },
+    {
+      "keyword": "server side rendering",
+      "frequency": 84
+    },
+    {
+      "keyword": "static site generation",
+      "frequency": 82
+    },
+    {
+      "keyword": "neural network",
+      "frequency": 92
+    },
+    {
+      "keyword": "convolutional neural network",
+      "frequency": 90
+    },
+    {
+      "keyword": "recurrent neural network",
+      "frequency": 86
+    },
+    {
+      "keyword": "lstm",
+      "frequency": 82
+    },
+    {
+      "keyword": "natural language processing",
+      "frequency": 88
+    },
+    {
+      "keyword": "computer vision",
+      "frequency": 86
+    },
+    {
+      "keyword": "retrieval augmented generation",
+      "frequency": 95
+    },
+    {
+      "keyword": "embeddings",
+      "frequency": 92
+    },
+    {
+      "keyword": "large language models",
+      "frequency": 96
+    },
+    {
+      "keyword": "supervised learning",
+      "frequency": 88
+    },
+    {
+      "keyword": "unsupervised learning",
+      "frequency": 84
+    },
+    {
+      "keyword": "reinforcement learning",
+      "frequency": 86
+    },
+    {
+      "keyword": "linear regression",
+      "frequency": 88
+    },
+    {
+      "keyword": "logistic regression",
+      "frequency": 86
+    },
+    {
+      "keyword": "decision tree",
+      "frequency": 85
+    },
+    {
+      "keyword": "random forest",
+      "frequency": 88
+    },
+    {
+      "keyword": "gradient boosting",
+      "frequency": 86
+    },
+    {
+      "keyword": "support vector machine",
+      "frequency": 84
+    },
+    {
+      "keyword": "k means clustering",
+      "frequency": 82
+    },
+    {
+      "keyword": "principal component analysis",
+      "frequency": 80
+    },
+    {
+      "keyword": "github",
+      "frequency": 95
+    },
+    {
+      "keyword": "ci cd",
+      "frequency": 90
+    },
+    {
+      "keyword": "unit testing",
+      "frequency": 88
+    },
+    {
+      "keyword": "integration testing",
+      "frequency": 85
+    },
+    {
+      "keyword": "test driven development",
+      "frequency": 82
+    },
+    {
+      "keyword": "singleton pattern",
+      "frequency": 84
+    },
+    {
+      "keyword": "factory pattern",
+      "frequency": 82
+    },
+    {
+      "keyword": "observer pattern",
+      "frequency": 84
+    },
+    {
+      "keyword": "strategy pattern",
+      "frequency": 80
+    },
+    {
+      "keyword": "decorator pattern",
+      "frequency": 78
+    },
+    {
+      "keyword": "dependency injection",
+      "frequency": 86
+    },
+    {
+      "keyword": "solid principles",
+      "frequency": 90
+    },
+    {
+      "keyword": "clean architecture",
+      "frequency": 84
+    },
+    {
+      "keyword": "monolith",
+      "frequency": 78
+    },
+    {
+      "keyword": "event driven architecture",
+      "frequency": 82
+    },
+    {
+      "keyword": "api gateway",
+      "frequency": 86
+    },
+    {
+      "keyword": "circuit breaker",
+      "frequency": 80
+    },
+    {
+      "keyword": "linear algebra",
+      "frequency": 82
+    },
+    {
+      "keyword": "matrix",
+      "frequency": 80
+    },
+    {
+      "keyword": "eigenvalues",
+      "frequency": 78
+    },
+    {
+      "keyword": "eigenvectors",
+      "frequency": 78
+    },
+    {
+      "keyword": "probability",
+      "frequency": 84
+    },
+    {
+      "keyword": "statistics",
+      "frequency": 86
+    },
+    {
+      "keyword": "bayes theorem",
+      "frequency": 80
+    },
+    {
+      "keyword": "graph theory",
+      "frequency": 84
+    },
+    {
+      "keyword": "discrete mathematics",
+      "frequency": 82
+    },
+    {
+      "keyword": "boolean algebra",
+      "frequency": 80
+    },
+    {
+      "keyword": "big o notation",
+      "frequency": 95
+    },
+    {
+      "keyword": "time complexity",
+      "frequency": 94
+    },
+    {
+      "keyword": "space complexity",
+      "frequency": 90
+    },
+    {
+      "keyword": "aws",
+      "frequency": 92
+    },
+    {
+      "keyword": "azure",
+      "frequency": 88
+    },
+    {
+      "keyword": "google cloud",
+      "frequency": 86
+    },
+    {
+      "keyword": "vercel",
+      "frequency": 84
+    },
+    {
+      "keyword": "render",
+      "frequency": 82
+    },
+    {
+      "keyword": "serverless",
+      "frequency": 85
+    },
+    {
+      "keyword": "lambda functions",
+      "frequency": 82
+    },
+    {
+      "keyword": "load balancer",
+      "frequency": 86
+    },
+    {
+      "keyword": "reverse proxy",
+      "frequency": 84
+    },
+    {
+      "keyword": "nginx",
+      "frequency": 88
+    },
+    {
+      "keyword": "containers",
+      "frequency": 90
+    },
+    {
+      "keyword": "prometheus",
+      "frequency": 80
+    },
+    {
+      "keyword": "grafana",
+      "frequency": 82
+    },
+    {
+      "keyword": "julia",
+      "frequency": 25
+    },
+    {
+      "keyword": "dart",
+      "frequency": 28
+    },
+    {
+      "keyword": "elixir",
+      "frequency": 24
+    },
+    {
+      "keyword": "clojure",
+      "frequency": 20
+    },
+    {
+      "keyword": "perl",
+      "frequency": 18
+    },
+    {
+      "keyword": "lua",
+      "frequency": 22
+    },
+    {
+      "keyword": "haskell",
+      "frequency": 26
+    },
+    {
+      "keyword": "erlang",
+      "frequency": 19
+    },
+    {
+      "keyword": "fortran",
+      "frequency": 15
+    },
+    {
+      "keyword": "cobol",
+      "frequency": 14
+    },
+    {
+      "keyword": "pascal",
+      "frequency": 12
+    },
+    {
+      "keyword": "zig",
+      "frequency": 27
+    },
+    {
+      "keyword": "nim",
+      "frequency": 18
+    },
+    {
+      "keyword": "f sharp",
+      "frequency": 16
+    },
+    {
+      "keyword": "ocaml",
+      "frequency": 17
+    },
+    {
+      "keyword": "scheme",
+      "frequency": 14
+    },
+    {
+      "keyword": "racket",
+      "frequency": 13
+    },
+    {
+      "keyword": "prolog",
+      "frequency": 16
+    },
+    {
+      "keyword": "solidity",
+      "frequency": 26
+    },
+    {
+      "keyword": "verilog",
+      "frequency": 15
+    },
+    {
+      "keyword": "vhdl",
+      "frequency": 14
+    },
+    {
+      "keyword": "matlab",
+      "frequency": 24
+    },
+    {
+      "keyword": "bash",
+      "frequency": 28
+    },
+    {
+      "keyword": "powershell",
+      "frequency": 25
+    },
+    {
+      "keyword": "groovy",
+      "frequency": 15
+    },
+    {
+      "keyword": "crystal",
+      "frequency": 12
+    },
+    {
+      "keyword": "d language",
+      "frequency": 10
+    },
+    {
+      "keyword": "ada",
+      "frequency": 12
+    },
+    {
+      "keyword": "awk",
+      "frequency": 18
+    },
+    {
+      "keyword": "sed",
+      "frequency": 16
+    },
+    {
+      "keyword": "monotonic stack",
+      "frequency": 28
+    },
+    {
+      "keyword": "monotonic queue",
+      "frequency": 26
+    },
+    {
+      "keyword": "circular linked list",
+      "frequency": 25
+    },
+    {
+      "keyword": "skip list",
+      "frequency": 22
+    },
+    {
+      "keyword": "splay tree",
+      "frequency": 20
+    },
+    {
+      "keyword": "treap",
+      "frequency": 22
+    },
+    {
+      "keyword": "k d tree",
+      "frequency": 24
+    },
+    {
+      "keyword": "quad tree",
+      "frequency": 22
+    },
+    {
+      "keyword": "octree",
+      "frequency": 20
+    },
+    {
+      "keyword": "r tree",
+      "frequency": 18
+    },
+    {
+      "keyword": "suffix array",
+      "frequency": 25
+    },
+    {
+      "keyword": "suffix automaton",
+      "frequency": 18
+    },
+    {
+      "keyword": "aho corasick trie",
+      "frequency": 24
+    },
+    {
+      "keyword": "binomial heap",
+      "frequency": 18
+    },
+    {
+      "keyword": "fibonacci heap",
+      "frequency": 20
+    },
+    {
+      "keyword": "pairing heap",
+      "frequency": 14
+    },
+    {
+      "keyword": "leftist heap",
+      "frequency": 12
+    },
+    {
+      "keyword": "skew heap",
+      "frequency": 10
+    },
+    {
+      "keyword": "d ary heap",
+      "frequency": 15
+    },
+    {
+      "keyword": "bloom filter",
+      "frequency": 28
+    },
+    {
+      "keyword": "cuckoo filter",
+      "frequency": 18
+    },
+    {
+      "keyword": "count min sketch",
+      "frequency": 22
+    },
+    {
+      "keyword": "hyperloglog",
+      "frequency": 24
+    },
+    {
+      "keyword": "rope data structure",
+      "frequency": 16
+    },
+    {
+      "keyword": "gap buffer",
+      "frequency": 14
+    },
+    {
+      "keyword": "tombstone hash table",
+      "frequency": 15
+    },
+    {
+      "keyword": "robin hood hashing",
+      "frequency": 22
+    },
+    {
+      "keyword": "cuckoo hashing",
+      "frequency": 20
+    },
+    {
+      "keyword": "hopscotch hashing",
+      "frequency": 16
+    },
+    {
+      "keyword": "linear probing",
+      "frequency": 25
+    },
+    {
+      "keyword": "quadratic probing",
+      "frequency": 22
+    },
+    {
+      "keyword": "double hashing",
+      "frequency": 24
+    },
+    {
+      "keyword": "separate chaining linked list",
+      "frequency": 26
+    },
+    {
+      "keyword": "b star tree",
+      "frequency": 16
+    },
+    {
+      "keyword": "van emde boas tree",
+      "frequency": 18
+    },
+    {
+      "keyword": "cartesian tree",
+      "frequency": 16
+    },
+    {
+      "keyword": "link cut tree",
+      "frequency": 14
+    },
+    {
+      "keyword": "heavy light decomposition",
+      "frequency": 20
+    },
+    {
+      "keyword": "wavelet tree",
+      "frequency": 15
+    },
+    {
+      "keyword": "sparse table",
+      "frequency": 26
+    },
+    {
+      "keyword": "disjoint set with path compression",
+      "frequency": 28
+    },
+    {
+      "keyword": "union by rank",
+      "frequency": 26
+    },
+    {
+      "keyword": "union by size",
+      "frequency": 24
+    },
+    {
+      "keyword": "persistent segment tree",
+      "frequency": 22
+    },
+    {
+      "keyword": "implicit treap",
+      "frequency": 18
+    },
+    {
+      "keyword": "trie compaction",
+      "frequency": 16
+    },
+    {
+      "keyword": "patricia trie",
+      "frequency": 20
+    },
+    {
+      "keyword": "burst trie",
+      "frequency": 14
+    },
+    {
+      "keyword": "ternary search tree",
+      "frequency": 22
+    },
+    {
+      "keyword": "compressed trie",
+      "frequency": 24
+    },
+    {
+      "keyword": "exponential search",
+      "frequency": 22
+    },
+    {
+      "keyword": "ternary search",
+      "frequency": 24
+    },
+    {
+      "keyword": "interpolation search",
+      "frequency": 20
+    },
+    {
+      "keyword": "fibonacci search",
+      "frequency": 16
+    },
+    {
+      "keyword": "quickselect",
+      "frequency": 28
+    },
+    {
+      "keyword": "intro sort",
+      "frequency": 18
+    },
+    {
+      "keyword": "tim sort",
+      "frequency": 26
+    },
+    {
+      "keyword": "bucket sort",
+      "frequency": 25
+    },
+    {
+      "keyword": "pigeonhole sort",
+      "frequency": 15
+    },
+    {
+      "keyword": "shell sort",
+      "frequency": 22
+    },
+    {
+      "keyword": "comb sort",
+      "frequency": 14
+    },
+    {
+      "keyword": "cocktail shaker sort",
+      "frequency": 16
+    },
+    {
+      "keyword": "gnome sort",
+      "frequency": 12
+    },
+    {
+      "keyword": "bitonic sort",
+      "frequency": 15
+    },
+    {
+      "keyword": "bogosort",
+      "frequency": 18
+    },
+    {
+      "keyword": "johnson algorithm",
+      "frequency": 20
+    },
+    {
+      "keyword": "a star algorithm",
+      "frequency": 28
+    },
+    {
+      "keyword": "ida star algorithm",
+      "frequency": 18
+    },
+    {
+      "keyword": "bidirectional bfs",
+      "frequency": 24
+    },
+    {
+      "keyword": "kahn topological sort",
+      "frequency": 26
+    },
+    {
+      "keyword": "tarjan strongly connected components",
+      "frequency": 24
+    },
+    {
+      "keyword": "kosaraju algorithm",
+      "frequency": 22
+    },
+    {
+      "keyword": "edmonds karp algorithm",
+      "frequency": 22
+    },
+    {
+      "keyword": "dinic algorithm",
+      "frequency": 20
+    },
+    {
+      "keyword": "push relabel algorithm",
+      "frequency": 18
+    },
+    {
+      "keyword": "ford fulkerson",
+      "frequency": 24
+    },
+    {
+      "keyword": "hungarian algorithm",
+      "frequency": 20
+    },
+    {
+      "keyword": "hopcroft karp algorithm",
+      "frequency": 18
+    },
+    {
+      "keyword": "fleury algorithm",
+      "frequency": 14
+    },
+    {
+      "keyword": "hierholzer algorithm",
+      "frequency": 16
+    },
+    {
+      "keyword": "karger min cut",
+      "frequency": 18
+    },
+    {
+      "keyword": "boruvka algorithm",
+      "frequency": 16
+    },
+    {
+      "keyword": "dial algorithm",
+      "frequency": 14
+    },
+    {
+      "keyword": "z algorithm",
+      "frequency": 22
+    },
+    {
+      "keyword": "manacher algorithm",
+      "frequency": 24
+    },
+    {
+      "keyword": "boyer moore string search",
+      "frequency": 26
+    },
+    {
+      "keyword": "horspool algorithm",
+      "frequency": 16
+    },
+    {
+      "keyword": "bitap algorithm",
+      "frequency": 14
+    },
+    {
+      "keyword": "ukkonen algorithm",
+      "frequency": 18
+    },
+    {
+      "keyword": "fractional knapsack",
+      "frequency": 25
+    },
+    {
+      "keyword": "matrix chain multiplication dp",
+      "frequency": 26
+    },
+    {
+      "keyword": "coin change problem",
+      "frequency": 28
+    },
+    {
+      "keyword": "rod cutting problem",
+      "frequency": 24
+    },
+    {
+      "keyword": "subset sum problem",
+      "frequency": 26
+    },
+    {
+      "keyword": "partition equal subset sum",
+      "frequency": 22
+    },
+    {
+      "keyword": "edit distance algorithm",
+      "frequency": 28
+    },
+    {
+      "keyword": "levenshtein distance",
+      "frequency": 26
+    },
+    {
+      "keyword": "longest palindromic substring",
+      "frequency": 28
+    },
+    {
+      "keyword": "wildcard matching dp",
+      "frequency": 22
+    },
+    {
+      "keyword": "regular expression matching dp",
+      "frequency": 24
+    },
+    {
+      "keyword": "word break problem",
+      "frequency": 25
+    },
+    {
+      "keyword": "floyd cycle detection",
+      "frequency": 28
+    },
+    {
+      "keyword": "tortoise and hare algorithm",
+      "frequency": 26
+    },
+    {
+      "keyword": "brent cycle algorithm",
+      "frequency": 16
+    },
+    {
+      "keyword": "dutch national flag algorithm",
+      "frequency": 25
+    },
+    {
+      "keyword": "mo algorithm",
+      "frequency": 20
+    },
+    {
+      "keyword": "square root decomposition",
+      "frequency": 22
+    },
+    {
+      "keyword": "convex hull graham scan",
+      "frequency": 24
+    },
+    {
+      "keyword": "jarvis march gift wrapping",
+      "frequency": 18
+    },
+    {
+      "keyword": "quickhull",
+      "frequency": 16
+    },
+    {
+      "keyword": "chan algorithm",
+      "frequency": 14
+    },
+    {
+      "keyword": "closest pair of points",
+      "frequency": 22
+    },
+    {
+      "keyword": "line sweep algorithm",
+      "frequency": 24
+    },
+    {
+      "keyword": "simpson rule",
+      "frequency": 15
+    },
+    {
+      "keyword": "newton raphson method",
+      "frequency": 22
+    },
+    {
+      "keyword": "monte carlo method",
+      "frequency": 26
+    },
+    {
+      "keyword": "las vegas algorithm",
+      "frequency": 16
+    },
+    {
+      "keyword": "reservoir sampling",
+      "frequency": 24
+    },
+    {
+      "keyword": "fisher yates shuffle",
+      "frequency": 26
+    },
+    {
+      "keyword": "context switch",
+      "frequency": 25
+    },
+    {
+      "keyword": "inter process communication",
+      "frequency": 26
+    },
+    {
+      "keyword": "shared memory ipc",
+      "frequency": 24
+    },
+    {
+      "keyword": "message queue ipc",
+      "frequency": 22
+    },
+    {
+      "keyword": "pipe ipc",
+      "frequency": 22
+    },
+    {
+      "keyword": "named pipe fifo",
+      "frequency": 18
+    },
+    {
+      "keyword": "unix domain socket",
+      "frequency": 20
+    },
+    {
+      "keyword": "signal handling",
+      "frequency": 22
+    },
+    {
+      "keyword": "fork exec",
+      "frequency": 26
+    },
+    {
+      "keyword": "zombie process",
+      "frequency": 25
+    },
+    {
+      "keyword": "orphan process",
+      "frequency": 22
+    },
+    {
+      "keyword": "daemon process",
+      "frequency": 20
+    },
+    {
+      "keyword": "race condition",
+      "frequency": 28
+    },
+    {
+      "keyword": "critical section",
+      "frequency": 26
+    },
+    {
+      "keyword": "peterson algorithm",
+      "frequency": 20
+    },
+    {
+      "keyword": "test and set lock",
+      "frequency": 18
+    },
+    {
+      "keyword": "compare and swap",
+      "frequency": 24
+    },
+    {
+      "keyword": "spinlock",
+      "frequency": 22
+    },
+    {
+      "keyword": "read write lock",
+      "frequency": 25
+    },
+    {
+      "keyword": "condition variable",
+      "frequency": 26
+    },
+    {
+      "keyword": "barrier synchronization",
+      "frequency": 18
+    },
+    {
+      "keyword": "futex",
+      "frequency": 16
+    },
+    {
+      "keyword": "banker algorithm",
+      "frequency": 22
+    },
+    {
+      "keyword": "resource allocation graph",
+      "frequency": 20
+    },
+    {
+      "keyword": "deadlock prevention",
+      "frequency": 24
+    },
+    {
+      "keyword": "deadlock avoidance",
+      "frequency": 22
+    },
+    {
+      "keyword": "deadlock detection",
+      "frequency": 20
+    },
+    {
+      "keyword": "round robin scheduling",
+      "frequency": 28
+    },
+    {
+      "keyword": "shortest job first",
+      "frequency": 25
+    },
+    {
+      "keyword": "shortest remaining time first",
+      "frequency": 22
+    },
+    {
+      "keyword": "multilevel queue scheduling",
+      "frequency": 20
+    },
+    {
+      "keyword": "multilevel feedback queue",
+      "frequency": 24
+    },
+    {
+      "keyword": "completely fair scheduler",
+      "frequency": 22
+    },
+    {
+      "keyword": "real time scheduling",
+      "frequency": 18
+    },
+    {
+      "keyword": "priority inversion",
+      "frequency": 22
+    },
+    {
+      "keyword": "priority inheritance",
+      "frequency": 20
+    },
+    {
+      "keyword": "thrashing",
+      "frequency": 24
+    },
+    {
+      "keyword": "working set model",
+      "frequency": 18
+    },
+    {
+      "keyword": "translation lookaside buffer",
+      "frequency": 26
+    },
+    {
+      "keyword": "inverted page table",
+      "frequency": 18
+    },
+    {
+      "keyword": "demand paging",
+      "frequency": 24
+    },
+    {
+      "keyword": "page replacement algorithm",
+      "frequency": 26
+    },
+    {
+      "keyword": "least recently used replacement",
+      "frequency": 28
+    },
+    {
+      "keyword": "first in first out replacement",
+      "frequency": 22
+    },
+    {
+      "keyword": "optimal page replacement",
+      "frequency": 20
+    },
+    {
+      "keyword": "clock page replacement",
+      "frequency": 22
+    },
+    {
+      "keyword": "dirty bit",
+      "frequency": 18
+    },
+    {
+      "keyword": "memory mapped file",
+      "frequency": 22
+    },
+    {
+      "keyword": "direct memory access",
+      "frequency": 24
+    },
+    {
+      "keyword": "interrupt request",
+      "frequency": 22
+    },
+    {
+      "keyword": "interrupt service routine",
+      "frequency": 20
+    },
+    {
+      "keyword": "trap instruction",
+      "frequency": 18
+    },
+    {
+      "keyword": "system call interface",
+      "frequency": 25
+    },
+    {
+      "keyword": "kernel mode",
+      "frequency": 26
+    },
+    {
+      "keyword": "user mode",
+      "frequency": 26
+    },
+    {
+      "keyword": "monolithic kernel",
+      "frequency": 22
+    },
+    {
+      "keyword": "microkernel",
+      "frequency": 20
+    },
+    {
+      "keyword": "device driver",
+      "frequency": 24
+    },
+    {
+      "keyword": "file descriptor",
+      "frequency": 26
+    },
+    {
+      "keyword": "inode",
+      "frequency": 25
+    },
+    {
+      "keyword": "vfs virtual file system",
+      "frequency": 20
+    },
+    {
+      "keyword": "ext4 file system",
+      "frequency": 20
+    },
+    {
+      "keyword": "ntfs file system",
+      "frequency": 18
+    },
+    {
+      "keyword": "btrfs",
+      "frequency": 16
+    },
+    {
+      "keyword": "zfs",
+      "frequency": 18
+    },
+    {
+      "keyword": "raid levels",
+      "frequency": 24
+    },
+    {
+      "keyword": "journaling file system",
+      "frequency": 22
+    },
+    {
+      "keyword": "swap space",
+      "frequency": 22
+    },
+    {
+      "keyword": "posix threads",
+      "frequency": 25
+    },
+    {
+      "keyword": "thread pool",
+      "frequency": 28
+    },
+    {
+      "keyword": "goroutines",
+      "frequency": 26
+    },
+    {
+      "keyword": "coroutines",
+      "frequency": 24
+    },
+    {
+      "keyword": "fiber",
+      "frequency": 16
+    },
+    {
+      "keyword": "green threads",
+      "frequency": 18
+    },
+    {
+      "keyword": "osi model",
+      "frequency": 28
+    },
+    {
+      "keyword": "tcp ip stack",
+      "frequency": 26
+    },
+    {
+      "keyword": "tcp handshake",
+      "frequency": 28
+    },
+    {
+      "keyword": "tcp four way close",
+      "frequency": 24
+    },
+    {
+      "keyword": "tcp flow control",
+      "frequency": 26
+    },
+    {
+      "keyword": "tcp sliding window",
+      "frequency": 26
+    },
+    {
+      "keyword": "tcp congestion control",
+      "frequency": 26
+    },
+    {
+      "keyword": "tcp slow start",
+      "frequency": 22
+    },
+    {
+      "keyword": "tcp fast retransmit",
+      "frequency": 20
+    },
+    {
+      "keyword": "tcp keepalive",
+      "frequency": 18
+    },
+    {
+      "keyword": "udp datagram",
+      "frequency": 22
+    },
+    {
+      "keyword": "user datagram protocol",
+      "frequency": 20
+    },
+    {
+      "keyword": "icmp protocol",
+      "frequency": 24
+    },
+    {
+      "keyword": "ping utility",
+      "frequency": 22
+    },
+    {
+      "keyword": "traceroute",
+      "frequency": 22
+    },
+    {
+      "keyword": "arp protocol",
+      "frequency": 24
+    },
+    {
+      "keyword": "rarp protocol",
+      "frequency": 14
+    },
+    {
+      "keyword": "dhcp protocol",
+      "frequency": 24
+    },
+    {
+      "keyword": "dhcp discover offer request ack",
+      "frequency": 20
+    },
+    {
+      "keyword": "nat network address translation",
+      "frequency": 24
+    },
+    {
+      "keyword": "port forwarding",
+      "frequency": 22
+    },
+    {
+      "keyword": "ipv4 packet header",
+      "frequency": 20
+    },
+    {
+      "keyword": "ipv6 addressing",
+      "frequency": 22
+    },
+    {
+      "keyword": "cidr notation",
+      "frequency": 24
+    },
+    {
+      "keyword": "subnet mask",
+      "frequency": 25
+    },
+    {
+      "keyword": "routing table",
+      "frequency": 22
+    },
+    {
+      "keyword": "bgp border gateway protocol",
+      "frequency": 20
+    },
+    {
+      "keyword": "ospf protocol",
+      "frequency": 18
+    },
+    {
+      "keyword": "rip routing protocol",
+      "frequency": 14
+    },
+    {
+      "keyword": "autonomous system",
+      "frequency": 16
+    },
+    {
+      "keyword": "domain name system",
+      "frequency": 26
+    },
+    {
+      "keyword": "dns record a",
+      "frequency": 22
+    },
+    {
+      "keyword": "dns record cname",
+      "frequency": 22
+    },
+    {
+      "keyword": "dns record mx",
+      "frequency": 20
+    },
+    {
+      "keyword": "dns record txt",
+      "frequency": 18
+    },
+    {
+      "keyword": "dns propagation",
+      "frequency": 20
+    },
+    {
+      "keyword": "tls handshake",
+      "frequency": 26
+    },
+    {
+      "keyword": "ssl certificate",
+      "frequency": 24
+    },
+    {
+      "keyword": "certificate authority",
+      "frequency": 22
+    },
+    {
+      "keyword": "public key infrastructure",
+      "frequency": 22
+    },
+    {
+      "keyword": "asymmetric encryption",
+      "frequency": 26
+    },
+    {
+      "keyword": "symmetric encryption",
+      "frequency": 25
+    },
+    {
+      "keyword": "diffie hellman key exchange",
+      "frequency": 24
+    },
+    {
+      "keyword": "rsa algorithm",
+      "frequency": 26
+    },
+    {
+      "keyword": "elliptic curve cryptography",
+      "frequency": 24
+    },
+    {
+      "keyword": "aes advanced encryption standard",
+      "frequency": 26
+    },
+    {
+      "keyword": "sha 256 hash",
+      "frequency": 26
+    },
+    {
+      "keyword": "hmac authentication",
+      "frequency": 24
+    },
+    {
+      "keyword": "http request methods",
+      "frequency": 26
+    },
+    {
+      "keyword": "http status codes",
+      "frequency": 28
+    },
+    {
+      "keyword": "http headers",
+      "frequency": 24
+    },
+    {
+      "keyword": "http persistent connection",
+      "frequency": 20
+    },
+    {
+      "keyword": "http pipelining",
+      "frequency": 16
+    },
+    {
+      "keyword": "http 2 multiplexing",
+      "frequency": 24
+    },
+    {
+      "keyword": "http 3 quic protocol",
+      "frequency": 22
+    },
+    {
+      "keyword": "grpc protocol",
+      "frequency": 26
+    },
+    {
+      "keyword": "protocol buffers",
+      "frequency": 25
+    },
+    {
+      "keyword": "webrtc",
+      "frequency": 24
+    },
+    {
+      "keyword": "server sent events",
+      "frequency": 24
+    },
+    {
+      "keyword": "long polling",
+      "frequency": 20
+    },
+    {
+      "keyword": "relational database",
+      "frequency": 28
+    },
+    {
+      "keyword": "non relational database",
+      "frequency": 26
+    },
+    {
+      "keyword": "nosql",
+      "frequency": 28
+    },
+    {
+      "keyword": "key value store",
+      "frequency": 26
+    },
+    {
+      "keyword": "document database",
+      "frequency": 24
+    },
+    {
+      "keyword": "columnar database",
+      "frequency": 22
+    },
+    {
+      "keyword": "graph database",
+      "frequency": 22
+    },
+    {
+      "keyword": "time series database",
+      "frequency": 20
+    },
+    {
+      "keyword": "in memory database",
+      "frequency": 25
+    },
+    {
+      "keyword": "redis",
+      "frequency": 28
+    },
+    {
+      "keyword": "memcached",
+      "frequency": 22
+    },
+    {
+      "keyword": "mongodb",
+      "frequency": 28
+    },
+    {
+      "keyword": "postgresql",
+      "frequency": 28
+    },
+    {
+      "keyword": "mysql",
+      "frequency": 28
+    },
+    {
+      "keyword": "sqlite",
+      "frequency": 28
+    },
+    {
+      "keyword": "cassandra",
+      "frequency": 22
+    },
+    {
+      "keyword": "dynamodb",
+      "frequency": 24
+    },
+    {
+      "keyword": "neo4j",
+      "frequency": 20
+    },
+    {
+      "keyword": "database transaction",
+      "frequency": 26
+    },
+    {
+      "keyword": "atomicity",
+      "frequency": 25
+    },
+    {
+      "keyword": "consistency",
+      "frequency": 25
+    },
+    {
+      "keyword": "isolation levels",
+      "frequency": 26
+    },
+    {
+      "keyword": "read uncommitted",
+      "frequency": 20
+    },
+    {
+      "keyword": "read committed",
+      "frequency": 24
+    },
+    {
+      "keyword": "repeatable read",
+      "frequency": 22
+    },
+    {
+      "keyword": "serializable",
+      "frequency": 24
+    },
+    {
+      "keyword": "durability",
+      "frequency": 25
+    },
+    {
+      "keyword": "dirty read",
+      "frequency": 22
+    },
+    {
+      "keyword": "non repeatable read",
+      "frequency": 20
+    },
+    {
+      "keyword": "phantom read",
+      "frequency": 22
+    },
+    {
+      "keyword": "two phase locking",
+      "frequency": 24
+    },
+    {
+      "keyword": "strict two phase locking",
+      "frequency": 20
+    },
+    {
+      "keyword": "multiversion concurrency control",
+      "frequency": 24
+    },
+    {
+      "keyword": "optimistic concurrency control",
+      "frequency": 22
+    },
+    {
+      "keyword": "pessimistic locking",
+      "frequency": 24
+    },
+    {
+      "keyword": "deadlock in databases",
+      "frequency": 22
+    },
+    {
+      "keyword": "database index",
+      "frequency": 28
+    },
+    {
+      "keyword": "clustered index",
+      "frequency": 26
+    },
+    {
+      "keyword": "non clustered index",
+      "frequency": 25
+    },
+    {
+      "keyword": "composite index",
+      "frequency": 22
+    },
+    {
+      "keyword": "unique index",
+      "frequency": 24
+    },
+    {
+      "keyword": "bitmap index",
+      "frequency": 18
+    },
+    {
+      "keyword": "inverted index db",
+      "frequency": 26
+    },
+    {
+      "keyword": "b tree depth",
+      "frequency": 20
+    },
+    {
+      "keyword": "query execution plan",
+      "frequency": 26
+    },
+    {
+      "keyword": "cost based optimizer",
+      "frequency": 22
+    },
+    {
+      "keyword": "index seek",
+      "frequency": 24
+    },
+    {
+      "keyword": "index scan",
+      "frequency": 22
+    },
+    {
+      "keyword": "full table scan",
+      "frequency": 24
+    },
+    {
+      "keyword": "hash join",
+      "frequency": 25
+    },
+    {
+      "keyword": "nested loop join",
+      "frequency": 22
+    },
+    {
+      "keyword": "merge join",
+      "frequency": 24
+    },
+    {
+      "keyword": "database partitioning",
+      "frequency": 24
+    },
+    {
+      "keyword": "horizontal partitioning sharding",
+      "frequency": 26
+    },
+    {
+      "keyword": "vertical partitioning",
+      "frequency": 22
+    },
+    {
+      "keyword": "database replication",
+      "frequency": 26
+    },
+    {
+      "keyword": "master slave replication",
+      "frequency": 22
+    },
+    {
+      "keyword": "multi master replication",
+      "frequency": 20
+    },
+    {
+      "keyword": "read replica",
+      "frequency": 25
+    },
+    {
+      "keyword": "write replica",
+      "frequency": 20
+    },
+    {
+      "keyword": "cap theorem",
+      "frequency": 28
+    },
+    {
+      "keyword": "pacelc theorem",
+      "frequency": 18
+    },
+    {
+      "keyword": "eventual consistency",
+      "frequency": 25
+    },
+    {
+      "keyword": "strong consistency",
+      "frequency": 24
+    },
+    {
+      "keyword": "distributed transactions",
+      "frequency": 22
+    },
+    {
+      "keyword": "two phase commit protocol",
+      "frequency": 24
+    },
+    {
+      "keyword": "saga pattern",
+      "frequency": 22
+    },
+    {
+      "keyword": "dom document object model",
+      "frequency": 28
+    },
+    {
+      "keyword": "virtual dom",
+      "frequency": 28
+    },
+    {
+      "keyword": "shadow dom",
+      "frequency": 22
+    },
+    {
+      "keyword": "css box model",
+      "frequency": 26
+    },
+    {
+      "keyword": "css flexbox layout",
+      "frequency": 28
+    },
+    {
+      "keyword": "css grid layout",
+      "frequency": 28
+    },
+    {
+      "keyword": "css media queries",
+      "frequency": 26
+    },
+    {
+      "keyword": "css preprocessor sass",
+      "frequency": 22
+    },
+    {
+      "keyword": "tailwind css",
+      "frequency": 28
+    },
+    {
+      "keyword": "bootstrap framework",
+      "frequency": 24
+    },
+    {
+      "keyword": "webpack bundler",
+      "frequency": 22
+    },
+    {
+      "keyword": "vite build tool",
+      "frequency": 28
+    },
+    {
+      "keyword": "rollup bundler",
+      "frequency": 18
+    },
+    {
+      "keyword": "esbuild",
+      "frequency": 22
+    },
+    {
+      "keyword": "babel transpiler",
+      "frequency": 22
+    },
+    {
+      "keyword": "react hooks",
+      "frequency": 28
+    },
+    {
+      "keyword": "use state hook",
+      "frequency": 26
+    },
+    {
+      "keyword": "use effect hook",
+      "frequency": 26
+    },
+    {
+      "keyword": "use memo hook",
+      "frequency": 24
+    },
+    {
+      "keyword": "use callback hook",
+      "frequency": 24
+    },
+    {
+      "keyword": "use ref hook",
+      "frequency": 24
+    },
+    {
+      "keyword": "use context hook",
+      "frequency": 24
+    },
+    {
+      "keyword": "react redux",
+      "frequency": 26
+    },
+    {
+      "keyword": "zustand state management",
+      "frequency": 24
+    },
+    {
+      "keyword": "tanstack query",
+      "frequency": 25
+    },
+    {
+      "keyword": "react router",
+      "frequency": 26
+    },
+    {
+      "keyword": "vue composition api",
+      "frequency": 20
+    },
+    {
+      "keyword": "vuex state management",
+      "frequency": 18
+    },
+    {
+      "keyword": "pinia vue",
+      "frequency": 20
+    },
+    {
+      "keyword": "rxjs",
+      "frequency": 20
+    },
+    {
+      "keyword": "cross origin resource sharing",
+      "frequency": 26
+    },
+    {
+      "keyword": "preflight request options",
+      "frequency": 24
+    },
+    {
+      "keyword": "cross site scripting prevention",
+      "frequency": 26
+    },
+    {
+      "keyword": "cross site request forgery token",
+      "frequency": 26
+    },
+    {
+      "keyword": "sql injection prevention",
+      "frequency": 28
+    },
+    {
+      "keyword": "parameterized query",
+      "frequency": 26
+    },
+    {
+      "keyword": "prepared statement",
+      "frequency": 28
+    },
+    {
+      "keyword": "input sanitization",
+      "frequency": 26
+    },
+    {
+      "keyword": "json web token structure",
+      "frequency": 26
+    },
+    {
+      "keyword": "jwt signature",
+      "frequency": 24
+    },
+    {
+      "keyword": "refresh token rotation",
+      "frequency": 24
+    },
+    {
+      "keyword": "session cookie http only",
+      "frequency": 25
+    },
+    {
+      "keyword": "same site cookie attribute",
+      "frequency": 24
+    },
+    {
+      "keyword": "secure cookie flag",
+      "frequency": 22
+    },
+    {
+      "keyword": "web storage api",
+      "frequency": 22
+    },
+    {
+      "keyword": "local storage",
+      "frequency": 26
+    },
+    {
+      "keyword": "session storage",
+      "frequency": 24
+    },
+    {
+      "keyword": "progressive web app",
+      "frequency": 22
+    },
+    {
+      "keyword": "service worker caching",
+      "frequency": 24
+    },
+    {
+      "keyword": "feature engineering",
+      "frequency": 26
+    },
+    {
+      "keyword": "data preprocessing",
+      "frequency": 25
+    },
+    {
+      "keyword": "one hot encoding",
+      "frequency": 24
+    },
+    {
+      "keyword": "standardization scaling",
+      "frequency": 22
+    },
+    {
+      "keyword": "min max normalization",
+      "frequency": 22
+    },
+    {
+      "keyword": "bias variance tradeoff",
+      "frequency": 28
+    },
+    {
+      "keyword": "overfitting prevention",
+      "frequency": 28
+    },
+    {
+      "keyword": "underfitting",
+      "frequency": 22
+    },
+    {
+      "keyword": "regularization l1 lasso",
+      "frequency": 24
+    },
+    {
+      "keyword": "regularization l2 ridge",
+      "frequency": 24
+    },
+    {
+      "keyword": "elastic net regularization",
+      "frequency": 18
+    },
+    {
+      "keyword": "cross validation k fold",
+      "frequency": 26
+    },
+    {
+      "keyword": "stratified k fold",
+      "frequency": 20
+    },
+    {
+      "keyword": "hyperparameter tuning",
+      "frequency": 25
+    },
+    {
+      "keyword": "grid search cv",
+      "frequency": 22
+    },
+    {
+      "keyword": "random search cv",
+      "frequency": 20
+    },
+    {
+      "keyword": "bayesian optimization",
+      "frequency": 22
+    },
+    {
+      "keyword": "confusion matrix",
+      "frequency": 26
+    },
+    {
+      "keyword": "precision metric",
+      "frequency": 26
+    },
+    {
+      "keyword": "recall metric",
+      "frequency": 26
+    },
+    {
+      "keyword": "f1 score metric",
+      "frequency": 26
+    },
+    {
+      "keyword": "roc auc curve",
+      "frequency": 25
+    },
+    {
+      "keyword": "mean squared error",
+      "frequency": 24
+    },
+    {
+      "keyword": "root mean squared error",
+      "frequency": 24
+    },
+    {
+      "keyword": "mean absolute error",
+      "frequency": 22
+    },
+    {
+      "keyword": "gradient descent",
+      "frequency": 28
+    },
+    {
+      "keyword": "stochastic gradient descent",
+      "frequency": 26
+    },
+    {
+      "keyword": "mini batch gradient descent",
+      "frequency": 22
+    },
+    {
+      "keyword": "adam optimizer",
+      "frequency": 26
+    },
+    {
+      "keyword": "rmsprop optimizer",
+      "frequency": 20
+    },
+    {
+      "keyword": "learning rate decay",
+      "frequency": 22
+    },
+    {
+      "keyword": "activation function relu",
+      "frequency": 26
+    },
+    {
+      "keyword": "activation function sigmoid",
+      "frequency": 24
+    },
+    {
+      "keyword": "activation function tanh",
+      "frequency": 22
+    },
+    {
+      "keyword": "activation function softmax",
+      "frequency": 26
+    },
+    {
+      "keyword": "vanishing gradient problem",
+      "frequency": 24
+    },
+    {
+      "keyword": "exploding gradient problem",
+      "frequency": 20
+    },
+    {
+      "keyword": "batch normalization",
+      "frequency": 24
+    },
+    {
+      "keyword": "layer normalization",
+      "frequency": 22
+    },
+    {
+      "keyword": "dropout layer",
+      "frequency": 25
+    },
+    {
+      "keyword": "pooling layer max pooling",
+      "frequency": 24
+    },
+    {
+      "keyword": "stride and padding cnn",
+      "frequency": 22
+    },
+    {
+      "keyword": "residual connection resnet",
+      "frequency": 24
+    },
+    {
+      "keyword": "dense layer fully connected",
+      "frequency": 22
+    },
+    {
+      "keyword": "autoencoder",
+      "frequency": 22
+    },
+    {
+      "keyword": "variational autoencoder",
+      "frequency": 20
+    },
+    {
+      "keyword": "generative adversarial network",
+      "frequency": 24
+    },
+    {
+      "keyword": "self attention mechanism",
+      "frequency": 28
+    },
+    {
+      "keyword": "multi head attention",
+      "frequency": 26
+    },
+    {
+      "keyword": "positional encoding transformer",
+      "frequency": 24
+    },
+    {
+      "keyword": "encoder decoder architecture",
+      "frequency": 26
+    },
+    {
+      "keyword": "bert model",
+      "frequency": 26
+    },
+    {
+      "keyword": "gpt architecture",
+      "frequency": 28
+    },
+    {
+      "keyword": "masked language modeling",
+      "frequency": 22
+    },
+    {
+      "keyword": "causal language modeling",
+      "frequency": 22
+    },
+    {
+      "keyword": "fine tuning llm",
+      "frequency": 26
+    },
+    {
+      "keyword": "lora low rank adaptation",
+      "frequency": 24
+    },
+    {
+      "keyword": "qlora quantization",
+      "frequency": 22
+    },
+    {
+      "keyword": "reinforcement learning human feedback",
+      "frequency": 24
+    },
+    {
+      "keyword": "prompt engineering",
+      "frequency": 28
+    },
+    {
+      "keyword": "in context learning",
+      "frequency": 22
+    },
+    {
+      "keyword": "few shot learning",
+      "frequency": 22
+    },
+    {
+      "keyword": "zero shot learning",
+      "frequency": 22
+    },
+    {
+      "keyword": "chain of thought reasoning",
+      "frequency": 24
+    },
+    {
+      "keyword": "retrieval augmented generation pipeline",
+      "frequency": 26
+    },
+    {
+      "keyword": "dense vector retrieval",
+      "frequency": 24
+    },
+    {
+      "keyword": "approximate nearest neighbor",
+      "frequency": 24
+    },
+    {
+      "keyword": "hnsw hierarchical navigable small world",
+      "frequency": 22
+    },
+    {
+      "keyword": "faiss vector index",
+      "frequency": 24
+    },
+    {
+      "keyword": "chroma db",
+      "frequency": 22
+    },
+    {
+      "keyword": "pinecone vector db",
+      "frequency": 22
+    },
+    {
+      "keyword": "qdrant vector db",
+      "frequency": 20
+    },
+    {
+      "keyword": "weaviate vector db",
+      "frequency": 20
+    },
+    {
+      "keyword": "milvus vector db",
+      "frequency": 18
+    },
+    {
+      "keyword": "cosine distance",
+      "frequency": 24
+    },
+    {
+      "keyword": "dot product similarity",
+      "frequency": 22
+    },
+    {
+      "keyword": "euclidean distance metric",
+      "frequency": 22
+    },
+    {
+      "keyword": "manhattan distance l1",
+      "frequency": 20
+    },
+    {
+      "keyword": "tf idf term frequency inverse document frequency",
+      "frequency": 26
+    },
+    {
+      "keyword": "bm25 ranking function",
+      "frequency": 24
+    },
+    {
+      "keyword": "tokenization bpe byte pair encoding",
+      "frequency": 24
+    },
+    {
+      "keyword": "word embeddings word2vec",
+      "frequency": 24
+    },
+    {
+      "keyword": "fasttext embeddings",
+      "frequency": 20
+    },
+    {
+      "keyword": "sentence transformers",
+      "frequency": 24
+    },
+    {
+      "keyword": "git commit",
+      "frequency": 28
+    },
+    {
+      "keyword": "git branch",
+      "frequency": 28
+    },
+    {
+      "keyword": "git merge",
+      "frequency": 28
+    },
+    {
+      "keyword": "git rebase",
+      "frequency": 26
+    },
+    {
+      "keyword": "git cherry pick",
+      "frequency": 24
+    },
+    {
+      "keyword": "git stash",
+      "frequency": 25
+    },
+    {
+      "keyword": "git bisect",
+      "frequency": 22
+    },
+    {
+      "keyword": "git hook",
+      "frequency": 22
+    },
+    {
+      "keyword": "pull request workflow",
+      "frequency": 26
+    },
+    {
+      "keyword": "code review best practices",
+      "frequency": 25
+    },
+    {
+      "keyword": "mocking in unit tests",
+      "frequency": 24
+    },
+    {
+      "keyword": "stubbing in testing",
+      "frequency": 22
+    },
+    {
+      "keyword": "assertion library",
+      "frequency": 22
+    },
+    {
+      "keyword": "test coverage analysis",
+      "frequency": 24
+    },
+    {
+      "keyword": "mutation testing",
+      "frequency": 16
+    },
+    {
+      "keyword": "fuzz testing",
+      "frequency": 20
+    },
+    {
+      "keyword": "load testing jmeter",
+      "frequency": 22
+    },
+    {
+      "keyword": "stress testing",
+      "frequency": 22
+    },
+    {
+      "keyword": "smoke testing",
+      "frequency": 20
+    },
+    {
+      "keyword": "regression testing",
+      "frequency": 24
+    },
+    {
+      "keyword": "end to end testing cypress",
+      "frequency": 22
+    },
+    {
+      "keyword": "playwright testing",
+      "frequency": 24
+    },
+    {
+      "keyword": "single responsibility principle",
+      "frequency": 26
+    },
+    {
+      "keyword": "open closed principle",
+      "frequency": 25
+    },
+    {
+      "keyword": "liskov substitution principle",
+      "frequency": 24
+    },
+    {
+      "keyword": "interface segregation principle",
+      "frequency": 24
+    },
+    {
+      "keyword": "dependency inversion principle",
+      "frequency": 25
+    },
+    {
+      "keyword": "composition over inheritance",
+      "frequency": 26
+    },
+    {
+      "keyword": "factory method pattern",
+      "frequency": 24
+    },
+    {
+      "keyword": "abstract factory pattern",
+      "frequency": 22
+    },
+    {
+      "keyword": "builder pattern",
+      "frequency": 26
+    },
+    {
+      "keyword": "prototype pattern",
+      "frequency": 20
+    },
+    {
+      "keyword": "adapter pattern",
+      "frequency": 24
+    },
+    {
+      "keyword": "bridge pattern",
+      "frequency": 18
+    },
+    {
+      "keyword": "composite pattern",
+      "frequency": 20
+    },
+    {
+      "keyword": "facade pattern",
+      "frequency": 24
+    },
+    {
+      "keyword": "flyweight pattern",
+      "frequency": 20
+    },
+    {
+      "keyword": "proxy pattern",
+      "frequency": 24
+    },
+    {
+      "keyword": "chain of responsibility",
+      "frequency": 20
+    },
+    {
+      "keyword": "command pattern",
+      "frequency": 22
+    },
+    {
+      "keyword": "iterator pattern",
+      "frequency": 22
+    },
+    {
+      "keyword": "mediator pattern",
+      "frequency": 18
+    },
+    {
+      "keyword": "memento pattern",
+      "frequency": 18
+    },
+    {
+      "keyword": "state pattern",
+      "frequency": 22
+    },
+    {
+      "keyword": "template method pattern",
+      "frequency": 22
+    },
+    {
+      "keyword": "visitor pattern",
+      "frequency": 20
+    },
+    {
+      "keyword": "mvc model view controller",
+      "frequency": 26
+    },
+    {
+      "keyword": "mvvm model view viewmodel",
+      "frequency": 22
+    },
+    {
+      "keyword": "hexagonal architecture ports and adapters",
+      "frequency": 22
+    },
+    {
+      "keyword": "onion architecture",
+      "frequency": 20
+    },
+    {
+      "keyword": "cqrs command query responsibility segregation",
+      "frequency": 24
+    },
+    {
+      "keyword": "event sourcing",
+      "frequency": 22
+    },
+    {
+      "keyword": "domain driven design aggregates",
+      "frequency": 22
+    },
+    {
+      "keyword": "bounded context ddd",
+      "frequency": 20
+    },
+    {
+      "keyword": "ubiquitous language",
+      "frequency": 18
+    },
+    {
+      "keyword": "circuit breaker pattern resilience4j",
+      "frequency": 22
+    },
+    {
+      "keyword": "bulkhead pattern",
+      "frequency": 18
+    },
+    {
+      "keyword": "retry with exponential backoff",
+      "frequency": 26
+    },
+    {
+      "keyword": "rate limiting token bucket",
+      "frequency": 24
+    },
+    {
+      "keyword": "rate limiting leaky bucket",
+      "frequency": 22
+    },
+    {
+      "keyword": "sidecar pattern kubernetes",
+      "frequency": 24
+    },
+    {
+      "keyword": "ambassador pattern",
+      "frequency": 16
+    },
+    {
+      "keyword": "strangler fig pattern",
+      "frequency": 20
+    },
+    {
+      "keyword": "asymptotic analysis",
+      "frequency": 26
+    },
+    {
+      "keyword": "omega notation lower bound",
+      "frequency": 22
+    },
+    {
+      "keyword": "theta notation tight bound",
+      "frequency": 24
+    },
+    {
+      "keyword": "little o notation",
+      "frequency": 18
+    },
+    {
+      "keyword": "recurrence relations",
+      "frequency": 24
+    },
+    {
+      "keyword": "master theorem",
+      "frequency": 26
+    },
+    {
+      "keyword": "akra bazzi method",
+      "frequency": 16
+    },
+    {
+      "keyword": "p vs np problem",
+      "frequency": 26
+    },
+    {
+      "keyword": "np completeness proof",
+      "frequency": 22
+    },
+    {
+      "keyword": "cook levin theorem",
+      "frequency": 18
+    },
+    {
+      "keyword": "turing reduction",
+      "frequency": 18
+    },
+    {
+      "keyword": "karp reduction",
+      "frequency": 18
+    },
+    {
+      "keyword": "deterministic finite automaton",
+      "frequency": 24
+    },
+    {
+      "keyword": "nondeterministic finite automaton",
+      "frequency": 22
+    },
+    {
+      "keyword": "regular grammar",
+      "frequency": 20
+    },
+    {
+      "keyword": "pumping lemma for regular languages",
+      "frequency": 22
+    },
+    {
+      "keyword": "context free grammar ch",
+      "frequency": 20
+    },
+    {
+      "keyword": "pushdown automaton",
+      "frequency": 22
+    },
+    {
+      "keyword": "pumping lemma for context free languages",
+      "frequency": 18
+    },
+    {
+      "keyword": "chomsky hierarchy",
+      "frequency": 20
+    },
+    {
+      "keyword": "turing machine halting problem",
+      "frequency": 24
+    },
+    {
+      "keyword": "undecidability proof",
+      "frequency": 20
+    },
+    {
+      "keyword": "rice theorem",
+      "frequency": 16
+    },
+    {
+      "keyword": "post correspondence problem",
+      "frequency": 14
+    },
+    {
+      "keyword": "dot product vectors",
+      "frequency": 24
+    },
+    {
+      "keyword": "cross product vectors",
+      "frequency": 22
+    },
+    {
+      "keyword": "matrix rank",
+      "frequency": 22
+    },
+    {
+      "keyword": "matrix determinant",
+      "frequency": 24
+    },
+    {
+      "keyword": "matrix inverse",
+      "frequency": 24
+    },
+    {
+      "keyword": "orthogonal matrix",
+      "frequency": 20
+    },
+    {
+      "keyword": "gram schmidt process",
+      "frequency": 18
+    },
+    {
+      "keyword": "lu decomposition",
+      "frequency": 20
+    },
+    {
+      "keyword": "qr decomposition",
+      "frequency": 20
+    },
+    {
+      "keyword": "cholesky decomposition",
+      "frequency": 18
+    },
+    {
+      "keyword": "singular value decomposition svd",
+      "frequency": 24
+    },
+    {
+      "keyword": "gaussian elimination",
+      "frequency": 22
+    },
+    {
+      "keyword": "vector space basis",
+      "frequency": 22
+    },
+    {
+      "keyword": "null space kernel",
+      "frequency": 20
+    },
+    {
+      "keyword": "discrete random variable",
+      "frequency": 22
+    },
+    {
+      "keyword": "continuous random variable",
+      "frequency": 20
+    },
+    {
+      "keyword": "probability density function",
+      "frequency": 22
+    },
+    {
+      "keyword": "cumulative distribution function",
+      "frequency": 22
+    },
+    {
+      "keyword": "expected value mean",
+      "frequency": 24
+    },
+    {
+      "keyword": "variance and standard deviation",
+      "frequency": 26
+    },
+    {
+      "keyword": "covariance and correlation",
+      "frequency": 24
+    },
+    {
+      "keyword": "bernoulli distribution",
+      "frequency": 20
+    },
+    {
+      "keyword": "binomial distribution",
+      "frequency": 22
+    },
+    {
+      "keyword": "poisson distribution",
+      "frequency": 22
+    },
+    {
+      "keyword": "geometric distribution",
+      "frequency": 18
+    },
+    {
+      "keyword": "normal gaussian distribution",
+      "frequency": 26
+    },
+    {
+      "keyword": "uniform distribution",
+      "frequency": 22
+    },
+    {
+      "keyword": "exponential distribution",
+      "frequency": 20
+    },
+    {
+      "keyword": "central limit theorem",
+      "frequency": 24
+    },
+    {
+      "keyword": "law of large numbers",
+      "frequency": 22
+    },
+    {
+      "keyword": "markov inequality",
+      "frequency": 18
+    },
+    {
+      "keyword": "chebyshev inequality",
+      "frequency": 18
+    },
+    {
+      "keyword": "chernoff bound",
+      "frequency": 16
+    },
+    {
+      "keyword": "maximum likelihood estimation",
+      "frequency": 24
+    },
+    {
+      "keyword": "hypothesis testing p value",
+      "frequency": 24
+    },
+    {
+      "keyword": "chi square test",
+      "frequency": 20
+    },
+    {
+      "keyword": "student t test",
+      "frequency": 22
+    },
+    {
+      "keyword": "euler path and circuit",
+      "frequency": 22
+    },
+    {
+      "keyword": "hamiltonian path problem",
+      "frequency": 22
+    },
+    {
+      "keyword": "graph planar testing",
+      "frequency": 18
+    },
+    {
+      "keyword": "kuratowski theorem",
+      "frequency": 16
+    },
+    {
+      "keyword": "graph coloring chromatic number",
+      "frequency": 22
+    },
+    {
+      "keyword": "four color theorem",
+      "frequency": 20
+    },
+    {
+      "keyword": "bipartite graph matching",
+      "frequency": 24
+    },
+    {
+      "keyword": "hall marriage theorem",
+      "frequency": 18
+    },
+    {
+      "keyword": "pigeonhole principle",
+      "frequency": 24
+    },
+    {
+      "keyword": "inclusion exclusion principle",
+      "frequency": 22
+    },
+    {
+      "keyword": "permutations and combinations",
+      "frequency": 24
+    },
+    {
+      "keyword": "generating functions",
+      "frequency": 18
+    },
+    {
+      "keyword": "catalan numbers",
+      "frequency": 22
+    },
+    {
+      "keyword": "fibonacci numbers",
+      "frequency": 26
+    },
+    {
+      "keyword": "modular arithmetic",
+      "frequency": 26
+    },
+    {
+      "keyword": "fermat little theorem",
+      "frequency": 24
+    },
+    {
+      "keyword": "euler totient function",
+      "frequency": 22
+    },
+    {
+      "keyword": "extended euclidean algorithm",
+      "frequency": 24
+    },
+    {
+      "keyword": "chinese remainder theorem",
+      "frequency": 22
+    },
+    {
+      "keyword": "rsa key generation",
+      "frequency": 24
+    },
+    {
+      "keyword": "primality test miller rabin",
+      "frequency": 22
+    },
+    {
+      "keyword": "sieve of eratosthenes",
+      "frequency": 26
+    },
+    {
+      "keyword": "dockerfile instructions",
+      "frequency": 26
+    },
+    {
+      "keyword": "docker image layer caching",
+      "frequency": 24
+    },
+    {
+      "keyword": "docker compose multi container",
+      "frequency": 26
+    },
+    {
+      "keyword": "docker volume persistence",
+      "frequency": 24
+    },
+    {
+      "keyword": "docker network bridge",
+      "frequency": 22
+    },
+    {
+      "keyword": "docker multi stage build",
+      "frequency": 26
+    },
+    {
+      "keyword": "kubernetes pod lifecycle",
+      "frequency": 26
+    },
+    {
+      "keyword": "kubernetes deployment replica set",
+      "frequency": 26
+    },
+    {
+      "keyword": "kubernetes service cluster ip",
+      "frequency": 24
+    },
+    {
+      "keyword": "kubernetes node port service",
+      "frequency": 22
+    },
+    {
+      "keyword": "kubernetes load balancer service",
+      "frequency": 24
+    },
+    {
+      "keyword": "kubernetes ingress controller",
+      "frequency": 25
+    },
+    {
+      "keyword": "kubernetes configmap secret",
+      "frequency": 24
+    },
+    {
+      "keyword": "kubernetes persistent volume claim",
+      "frequency": 24
+    },
+    {
+      "keyword": "kubernetes namespace isolation",
+      "frequency": 22
+    },
+    {
+      "keyword": "kubernetes horizontal pod autoscaler",
+      "frequency": 24
+    },
+    {
+      "keyword": "kubernetes daemonset",
+      "frequency": 20
+    },
+    {
+      "keyword": "kubernetes statefulset",
+      "frequency": 22
+    },
+    {
+      "keyword": "kubernetes custom resource definition",
+      "frequency": 20
+    },
+    {
+      "keyword": "helm chart packaging",
+      "frequency": 24
+    },
+    {
+      "keyword": "terraform state locking",
+      "frequency": 24
+    },
+    {
+      "keyword": "terraform provider module",
+      "frequency": 22
+    },
+    {
+      "keyword": "infrastructure as code declarative",
+      "frequency": 24
+    },
+    {
+      "keyword": "ansible automation playbook",
+      "frequency": 22
+    },
+    {
+      "keyword": "github actions workflow yaml",
+      "frequency": 26
+    },
+    {
+      "keyword": "gitlab ci pipeline runner",
+      "frequency": 24
+    },
+    {
+      "keyword": "jenkins pipeline groovy",
+      "frequency": 22
+    },
+    {
+      "keyword": "sonarqube code quality",
+      "frequency": 20
+    },
+    {
+      "keyword": "snyk vulnerability scanner",
+      "frequency": 20
+    },
+    {
+      "keyword": "trivy container scanner",
+      "frequency": 20
+    },
+    {
+      "keyword": "amazon s3 bucket storage",
+      "frequency": 26
+    },
+    {
+      "keyword": "amazon ec2 virtual machine",
+      "frequency": 26
+    },
+    {
+      "keyword": "aws lambda serverless trigger",
+      "frequency": 26
+    },
+    {
+      "keyword": "amazon dynamodb nosql table",
+      "frequency": 24
+    },
+    {
+      "keyword": "amazon rds managed database",
+      "frequency": 25
+    },
+    {
+      "keyword": "amazon cloudfront cdn",
+      "frequency": 24
+    },
+    {
+      "keyword": "aws iam roles and policies",
+      "frequency": 26
+    },
+    {
+      "keyword": "amazon sqs message queue",
+      "frequency": 24
+    },
+    {
+      "keyword": "amazon sns pub sub",
+      "frequency": 22
+    },
+    {
+      "keyword": "aws cloudwatch logging metrics",
+      "frequency": 24
+    },
+    {
+      "keyword": "google cloud storage bucket",
+      "frequency": 24
+    },
+    {
+      "keyword": "google compute engine vm",
+      "frequency": 22
+    },
+    {
+      "keyword": "google cloud run serverless",
+      "frequency": 26
+    },
+    {
+      "keyword": "google kubernetes engine gke",
+      "frequency": 24
+    },
+    {
+      "keyword": "google bigquery data warehouse",
+      "frequency": 25
+    },
+    {
+      "keyword": "azure blob storage container",
+      "frequency": 22
+    },
+    {
+      "keyword": "azure app service deployment",
+      "frequency": 22
+    },
+    {
+      "keyword": "azure functions serverless",
+      "frequency": 22
+    },
+    {
+      "keyword": "nginx reverse proxy configuration",
+      "frequency": 26
+    },
+    {
+      "keyword": "nginx load balancing upstream",
+      "frequency": 24
+    },
+    {
+      "keyword": "haproxy high availability",
+      "frequency": 22
+    },
+    {
+      "keyword": "envoy proxy service mesh",
+      "frequency": 22
+    },
+    {
+      "keyword": "istio service mesh control plane",
+      "frequency": 22
+    },
+    {
+      "keyword": "consul service discovery",
+      "frequency": 20
+    },
+    {
+      "keyword": "opentelemetry distributed tracing",
+      "frequency": 24
+    },
+    {
+      "keyword": "jaeger tracing backend",
+      "frequency": 20
+    },
+    {
+      "keyword": "prometheus pull metrics scraping",
+      "frequency": 24
+    },
+    {
+      "keyword": "grafana dashboard visualization",
+      "frequency": 26
+    },
+    {
+      "keyword": "elk stack elasticsearch logstash kibana",
+      "frequency": 24
+    },
+    {
+      "keyword": "loki log aggregation",
+      "frequency": 22
+    },
+    {
+      "keyword": "fluentd log collector",
+      "frequency": 20
+    },
+    {
+      "keyword": "datadog cloud monitoring",
+      "frequency": 22
+    },
+    {
+      "keyword": "pagerduty incident response",
+      "frequency": 20
+    },
+    {
+      "keyword": "chaos engineering gremlin",
+      "frequency": 18
+    },
+    {
+      "keyword": "algorithm analysis",
+      "frequency": 8
+    },
+    {
+      "keyword": "algorithm benchmark",
+      "frequency": 18
+    },
+    {
+      "keyword": "algorithm complexity",
+      "frequency": 5
+    },
+    {
+      "keyword": "algorithm correctness",
+      "frequency": 15
+    },
+    {
+      "keyword": "algorithm decomposition",
+      "frequency": 9
+    },
+    {
+      "keyword": "algorithm design",
+      "frequency": 9
+    },
+    {
+      "keyword": "algorithm efficiency",
+      "frequency": 17
+    },
+    {
+      "keyword": "algorithm heuristics",
+      "frequency": 20
+    },
+    {
+      "keyword": "algorithm implementation",
+      "frequency": 5
+    },
+    {
+      "keyword": "algorithm invariance",
+      "frequency": 3
+    },
+    {
+      "keyword": "algorithm optimization",
+      "frequency": 20
+    },
+    {
+      "keyword": "algorithm pruning",
+      "frequency": 11
+    },
+    {
+      "keyword": "algorithm recursion",
+      "frequency": 5
+    },
+    {
+      "keyword": "algorithm reduction",
+      "frequency": 8
+    },
+    {
+      "keyword": "algorithm scaling",
+      "frequency": 20
+    },
+    {
+      "keyword": "algorithm simulation",
+      "frequency": 21
+    },
+    {
+      "keyword": "algorithm termination",
+      "frequency": 8
+    },
+    {
+      "keyword": "algorithm transformation",
+      "frequency": 9
+    },
+    {
+      "keyword": "algorithm verification",
+      "frequency": 21
+    },
+    {
+      "keyword": "algorithm workflow",
+      "frequency": 19
+    },
+    {
+      "keyword": "compiler abstract syntax tree",
+      "frequency": 7
+    },
+    {
+      "keyword": "compiler code generation",
+      "frequency": 21
+    },
+    {
+      "keyword": "compiler code optimization",
+      "frequency": 15
+    },
+    {
+      "keyword": "compiler constant folding",
+      "frequency": 11
+    },
+    {
+      "keyword": "compiler dead code elimination",
+      "frequency": 3
+    },
+    {
+      "keyword": "compiler intermediate representation",
+      "frequency": 2
+    },
+    {
+      "keyword": "compiler lexical analysis",
+      "frequency": 20
+    },
+    {
+      "keyword": "compiler llvm backend",
+      "frequency": 18
+    },
+    {
+      "keyword": "compiler loop unrolling",
+      "frequency": 12
+    },
+    {
+      "keyword": "compiler parser combinator",
+      "frequency": 13
+    },
+    {
+      "keyword": "compiler register allocation",
+      "frequency": 7
+    },
+    {
+      "keyword": "compiler semantic analysis",
+      "frequency": 19
+    },
+    {
+      "keyword": "compiler static single assignment",
+      "frequency": 2
+    },
+    {
+      "keyword": "compiler symbol table",
+      "frequency": 13
+    },
+    {
+      "keyword": "compiler syntax tree",
+      "frequency": 9
+    },
+    {
+      "keyword": "cryptography block cipher",
+      "frequency": 24
+    },
+    {
+      "keyword": "cryptography stream cipher",
+      "frequency": 11
+    },
+    {
+      "keyword": "cryptography digital signature",
+      "frequency": 19
+    },
+    {
+      "keyword": "cryptography elliptic curve",
+      "frequency": 24
+    },
+    {
+      "keyword": "cryptography hash function",
+      "frequency": 20
+    },
+    {
+      "keyword": "cryptography keyed hmac",
+      "frequency": 2
+    },
+    {
+      "keyword": "cryptography nonce initialization",
+      "frequency": 6
+    },
+    {
+      "keyword": "cryptography padding oracle",
+      "frequency": 13
+    },
+    {
+      "keyword": "cryptography public key",
+      "frequency": 11
+    },
+    {
+      "keyword": "cryptography private key",
+      "frequency": 21
+    },
+    {
+      "keyword": "cryptography rainbow table",
+      "frequency": 15
+    },
+    {
+      "keyword": "cryptography salt hash",
+      "frequency": 13
+    },
+    {
+      "keyword": "cryptography symmetric key",
+      "frequency": 21
+    },
+    {
+      "keyword": "cryptography zero knowledge",
+      "frequency": 8
+    },
+    {
+      "keyword": "cryptography rsa encryption",
+      "frequency": 11
+    },
+    {
+      "keyword": "cryptography aes encryption",
+      "frequency": 14
+    },
+    {
+      "keyword": "cryptography sha hashing",
+      "frequency": 19
+    },
+    {
+      "keyword": "cryptography tls protocol",
+      "frequency": 6
+    },
+    {
+      "keyword": "concurrency atomic operation",
+      "frequency": 7
+    },
+    {
+      "keyword": "concurrency bounded buffer",
+      "frequency": 19
+    },
+    {
+      "keyword": "concurrency cas instruction",
+      "frequency": 6
+    },
+    {
+      "keyword": "concurrency deadlock detection",
+      "frequency": 7
+    },
+    {
+      "keyword": "concurrency double checked locking",
+      "frequency": 15
+    },
+    {
+      "keyword": "concurrency event loop",
+      "frequency": 3
+    },
+    {
+      "keyword": "concurrency future promise",
+      "frequency": 11
+    },
+    {
+      "keyword": "concurrency lock free queue",
+      "frequency": 21
+    },
+    {
+      "keyword": "concurrency livelock",
+      "frequency": 21
+    },
+    {
+      "keyword": "concurrency memory barrier",
+      "frequency": 20
+    },
+    {
+      "keyword": "concurrency mutex lock",
+      "frequency": 18
+    },
+    {
+      "keyword": "concurrency non blocking io",
+      "frequency": 10
+    },
+    {
+      "keyword": "concurrency producer consumer",
+      "frequency": 4
+    },
+    {
+      "keyword": "concurrency readers writers",
+      "frequency": 16
+    },
+    {
+      "keyword": "concurrency semaphore counter",
+      "frequency": 10
+    },
+    {
+      "keyword": "concurrency spinlock busy",
+      "frequency": 8
+    },
+    {
+      "keyword": "concurrency thread synchronization",
+      "frequency": 5
+    },
+    {
+      "keyword": "distributed byzantine fault",
+      "frequency": 5
+    },
+    {
+      "keyword": "distributed chandy lamport",
+      "frequency": 24
+    },
+    {
+      "keyword": "distributed consensus protocol",
+      "frequency": 9
+    },
+    {
+      "keyword": "distributed gossip protocol",
+      "frequency": 14
+    },
+    {
+      "keyword": "distributed heartbeat monitor",
+      "frequency": 8
+    },
+    {
+      "keyword": "distributed lamport timestamp",
+      "frequency": 11
+    },
+    {
+      "keyword": "distributed leader election",
+      "frequency": 23
+    },
+    {
+      "keyword": "distributed paxos algorithm",
+      "frequency": 3
+    },
+    {
+      "keyword": "distributed raft consensus",
+      "frequency": 22
+    },
+    {
+      "keyword": "distributed quorum read",
+      "frequency": 4
+    },
+    {
+      "keyword": "distributed sharding key",
+      "frequency": 14
+    },
+    {
+      "keyword": "distributed split brain",
+      "frequency": 10
+    },
+    {
+      "keyword": "distributed vector clock",
+      "frequency": 20
+    },
+    {
+      "keyword": "distributed virtual node",
+      "frequency": 23
+    },
+    {
+      "keyword": "networking bandwidth delay",
+      "frequency": 17
+    },
+    {
+      "keyword": "networking checksum error",
+      "frequency": 13
+    },
+    {
+      "keyword": "networking congestion avoidance",
+      "frequency": 12
+    },
+    {
+      "keyword": "networking datagram socket",
+      "frequency": 3
+    },
+    {
+      "keyword": "networking epoll mechanism",
+      "frequency": 6
+    },
+    {
+      "keyword": "networking flow control window",
+      "frequency": 14
+    },
+    {
+      "keyword": "networking frame forwarding",
+      "frequency": 19
+    },
+    {
+      "keyword": "networking jitter buffer",
+      "frequency": 24
+    },
+    {
+      "keyword": "networking keep alive packet",
+      "frequency": 9
+    },
+    {
+      "keyword": "networking latency roundtrip",
+      "frequency": 12
+    },
+    {
+      "keyword": "networking maximum transmission unit",
+      "frequency": 2
+    },
+    {
+      "keyword": "networking packet filtering",
+      "frequency": 11
+    },
+    {
+      "keyword": "networking port scanner",
+      "frequency": 9
+    },
+    {
+      "keyword": "networking routing table prefix",
+      "frequency": 22
+    },
+    {
+      "keyword": "networking segment reassembly",
+      "frequency": 11
+    },
+    {
+      "keyword": "database acid compliance",
+      "frequency": 2
+    },
+    {
+      "keyword": "database b tree fanout",
+      "frequency": 14
+    },
+    {
+      "keyword": "database bloom filter index",
+      "frequency": 6
+    },
+    {
+      "keyword": "database catalog metadata",
+      "frequency": 18
+    },
+    {
+      "keyword": "database check constraint",
+      "frequency": 21
+    },
+    {
+      "keyword": "database cursor iteration",
+      "frequency": 24
+    },
+    {
+      "keyword": "database deadlock victim",
+      "frequency": 20
+    },
+    {
+      "keyword": "database foreign key cascade",
+      "frequency": 5
+    },
+    {
+      "keyword": "database index cardinality",
+      "frequency": 17
+    },
+    {
+      "keyword": "database join selectivity",
+      "frequency": 13
+    },
+    {
+      "keyword": "database lock escalation",
+      "frequency": 9
+    },
+    {
+      "keyword": "database materialized view",
+      "frequency": 3
+    },
+    {
+      "keyword": "database query plan hash",
+      "frequency": 15
+    },
+    {
+      "keyword": "database savepoint rollback",
+      "frequency": 16
+    },
+    {
+      "keyword": "database serializable snapshot",
+      "frequency": 17
+    },
+    {
+      "keyword": "testing acceptance test",
+      "frequency": 17
+    },
+    {
+      "keyword": "testing benchmark harness",
+      "frequency": 11
+    },
+    {
+      "keyword": "testing boundary value test",
+      "frequency": 5
+    },
+    {
+      "keyword": "testing code coverage metric",
+      "frequency": 15
+    },
+    {
+      "keyword": "testing equivalence partitioning",
+      "frequency": 23
+    },
+    {
+      "keyword": "testing flaky test runner",
+      "frequency": 23
+    },
+    {
+      "keyword": "testing fuzz test input",
+      "frequency": 12
+    },
+    {
+      "keyword": "testing integration test bed",
+      "frequency": 4
+    },
+    {
+      "keyword": "testing load test duration",
+      "frequency": 16
+    },
+    {
+      "keyword": "testing mock object proxy",
+      "frequency": 12
+    },
+    {
+      "keyword": "testing property based test",
+      "frequency": 6
+    },
+    {
+      "keyword": "testing regression test suite",
+      "frequency": 23
+    },
+    {
+      "keyword": "testing smoke test pass",
+      "frequency": 7
+    },
+    {
+      "keyword": "testing unit test assertion",
+      "frequency": 15
+    },
+    {
+      "keyword": "security buffer overflow",
+      "frequency": 20
+    },
+    {
+      "keyword": "security command injection",
+      "frequency": 14
+    },
+    {
+      "keyword": "security cross site request",
+      "frequency": 24
+    },
+    {
+      "keyword": "security directory traversal",
+      "frequency": 11
+    },
+    {
+      "keyword": "security denial of service",
+      "frequency": 23
+    },
+    {
+      "keyword": "security elevation of privilege",
+      "frequency": 15
+    },
+    {
+      "keyword": "security format string bug",
+      "frequency": 6
+    },
+    {
+      "keyword": "security input validation sanitization",
+      "frequency": 24
+    },
+    {
+      "keyword": "security man in the middle",
+      "frequency": 12
+    },
+    {
+      "keyword": "security privilege separation",
+      "frequency": 13
+    },
+    {
+      "keyword": "security replay attack protection",
+      "frequency": 21
+    },
+    {
+      "keyword": "security sql injection sanitize",
+      "frequency": 10
+    },
+    {
+      "keyword": "security timing side channel",
+      "frequency": 15
+    },
+    {
+      "keyword": "security zero day exploit",
+      "frequency": 20
+    },
+    {
+      "keyword": "mac address",
+      "frequency": 110
+    },
+    {
+      "keyword": "macos",
+      "frequency": 70
+    },
+    {
+      "keyword": "machine code",
+      "frequency": 45
+    },
+    {
+      "keyword": "macro processor",
+      "frequency": 30
+    }
+  ],
+  "concepts": [
+    {
+      "concept_name": "Memoization",
+      "description": "A technique that stores previously computed results to avoid repeated calculations and optimize recursion in dynamic programming.",
+      "keywords": "caching, dynamic programming, stored results, lookup table, cache"
+    },
+    {
+      "concept_name": "Dijkstra Algorithm",
+      "description": "Algorithm that finds the shortest path between nodes in a weighted graph with non-negative edge weights using a priority queue.",
+      "keywords": "shortest path, graph search, priority queue, single source shortest path"
+    },
+    {
+      "concept_name": "HDMI Adapter",
+      "description": "Device or cable used to connect a laptop or computer to a projector, monitor or external display.",
+      "keywords": "usb-c to hdmi converter, display adapter, projector connector, displayport to hdmi"
+    },
+    {
+      "concept_name": "Laptop Cooling Pad",
+      "description": "External accessory used to cool a laptop and prevent thermal throttling or overheating with fans.",
+      "keywords": "cooling stand, laptop cooler, fan pad, thermal mat"
+    },
+    {
+      "concept_name": "Binary Search",
+      "description": "Search algorithm that finds the position of a target value within a sorted array by repeatedly dividing the search range in half.",
+      "keywords": "divide and conquer, logarithmic search, sorted array lookup, half interval search"
+    },
+    {
+      "concept_name": "LRU Cache",
+      "description": "A caching data structure that evicts the least recently used elements first when capacity limit is reached using doubly linked list and hashmap.",
+      "keywords": "least recently used, cache eviction policy, doubly linked list hashmap, memory buffer"
+    },
+    {
+      "concept_name": "Depth First Search",
+      "description": "Graph traversal algorithm that explores as deep as possible along each branch before backtracking using a stack or recursion.",
+      "keywords": "dfs, tree traversal, stack based search, recursion traversal, back tracking"
+    },
+    {
+      "concept_name": "Breadth First Search",
+      "description": "Graph traversal algorithm that explores all neighbor nodes at the present depth before moving to the next level using a queue.",
+      "keywords": "bfs, level order traversal, queue search, unweighted shortest path, layer traversal"
+    },
+    {
+      "concept_name": "Hash Table",
+      "description": "Data structure that implements an associative array abstract data type mapping keys to values using a hash function and collision resolution.",
+      "keywords": "key-value lookup, fast key lookup, associative array, hash-based search, key-value storage, hash map, dictionary"
+    },
+    {
+      "concept_name": "Min Heap",
+      "description": "A complete binary tree data structure where the parent node is always less than or equal to its children, used for priority queues and top-k ranking.",
+      "keywords": "priority queue, binary heap, top-k ranking, heap sort, minimum element"
+    },
+    {
+      "concept_name": "Stack",
+      "description": "A linear data structure following Last In First Out (LIFO) where insertions and deletions happen exclusively at the top.",
+      "keywords": "last in first out, LIFO, push and pop, stack data structure, call stack, undo buffer, function stack frame"
+    },
+    {
+      "concept_name": "Queue",
+      "description": "A linear data structure following First In First Out (FIFO) where elements are added at the rear and removed from the front.",
+      "keywords": "fifo, enqueue dequeue, buffer, task scheduling queue, bread first search queue"
+    },
+    {
+      "concept_name": "Circular Queue",
+      "description": "A queue data structure that connects the last position back to the first position to make efficient use of fixed memory space without shifting elements.",
+      "keywords": "ring buffer, circular buffer, fixed size queue, modulo indexing"
+    },
+    {
+      "concept_name": "Double Ended Queue",
+      "description": "A sequence container that allows fast insertion and deletion at both its beginning and its end.",
+      "keywords": "deque, sliding window maximum, double ended buffer, bidirectional queue"
+    },
+    {
+      "concept_name": "Singly Linked List",
+      "description": "A linear collection of data nodes where each node contains a value and a pointer reference to the next node in the sequence.",
+      "keywords": "linked nodes, forward pointer, linear dynamic chain, head to tail traversal"
+    },
+    {
+      "concept_name": "Doubly Linked List",
+      "description": "A linear data structure where each node contains pointers to both the next node and the previous node, allowing bidirectional traversal.",
+      "keywords": "bidirectional traversal, prev next pointers, lru cache backing, node deletion o1"
+    },
+    {
+      "concept_name": "Circular Linked List",
+      "description": "A linked list variation where the last node points back to the first node instead of null, creating a continuous loop.",
+      "keywords": "round robin loop, circular traversal, looped chain, cycle buffer"
+    },
+    {
+      "concept_name": "Skip List",
+      "description": "A probabilistic data structure that enhances a sorted linked list with multiple layers of forward pointers for logarithmic search, insert, and delete.",
+      "keywords": "probabilistic hierarchy, fast linked list search, layered forwarding, log n search"
+    },
+    {
+      "concept_name": "Binary Search Tree",
+      "description": "A binary tree where the left child of a node contains only keys lesser than the node, and the right child contains keys greater than the node.",
+      "keywords": "bst, sorted tree, in order traversal, binary search property"
+    },
+    {
+      "concept_name": "AVL Tree",
+      "description": "A self-balancing binary search tree where the heights of the two child subtrees of any node differ by at most one, using rotations to maintain balance.",
+      "keywords": "self-balancing binary search tree, tree rotations, height balanced, logarithmic depth guarantee, balanced bst"
+    },
+    {
+      "concept_name": "Red-Black Tree",
+      "description": "A self-balancing binary search tree that uses node color properties and balancing rotations to ensure search operations run in logarithmic time.",
+      "keywords": "self-balancing binary search tree, color balancing, black height, java treemap, c++ std map, self balancing tree"
+    },
+    {
+      "concept_name": "B-Tree",
+      "description": "A self-balancing search tree designed for disk storage and database indexing where internal nodes can have many children and multiple keys.",
+      "keywords": "multiway search tree, disk block indexing, database engine index, balanced tree"
+    },
+    {
+      "concept_name": "B+ Tree",
+      "description": "A balanced multiway search tree where all data records are stored exclusively in leaf nodes linked sequentially, optimizing range queries in databases.",
+      "keywords": "leaf linked list, range query optimization, filesystem index, database storage engine"
+    },
+    {
+      "concept_name": "Segment Tree",
+      "description": "A tree data structure for storing intervals or segments, allowing fast range queries and point updates in logarithmic time.",
+      "keywords": "range query, range sum, range minimum query, interval updates"
+    },
+    {
+      "concept_name": "Fenwick Tree",
+      "description": "A binary indexed tree that efficiently calculates prefix sums and updates elements in an array in logarithmic time with minimal memory overhead.",
+      "keywords": "binary indexed tree, prefix sum query, bit tree, point update range query"
+    },
+    {
+      "concept_name": "Trie",
+      "description": "A tree-like retrieval data structure used for efficient prefix-based searching, autocomplete, and dictionary lookups where edges represent characters.",
+      "keywords": "prefix tree, autocomplete engine, radix tree, digital tree, character branch"
+    },
+    {
+      "concept_name": "Disjoint Set Union",
+      "description": "A data structure that keeps track of a partition of a set into disjoint subsets, supporting union and find operations nearly in constant time with path compression.",
+      "keywords": "union find, connected components, kruskal mst, path compression, rank heuristic"
+    },
+    {
+      "concept_name": "Bloom Filter",
+      "description": "A space-efficient probabilistic data structure used to test whether an element is a member of a set, allowing false positives but never false negatives.",
+      "keywords": "probabilistic set, membership test, hash bits, false positive rate, cache filter"
+    },
+    {
+      "concept_name": "Monotonic Stack",
+      "description": "A stack whose elements are always ordered strictly in increasing or decreasing order, used to find the next greater or smaller element in linear time.",
+      "keywords": "next greater element, previous smaller element, histogram rectangle, linear stack"
+    },
+    {
+      "concept_name": "Treap",
+      "description": "A randomized binary search tree where each node has both a key that satisfies the BST property and a randomly chosen priority that satisfies the heap property.",
+      "keywords": "randomized bst, cartesian tree, bst heap hybrid, balanced priority tree"
+    },
+    {
+      "concept_name": "Bellman-Ford Algorithm",
+      "description": "A graph algorithm that computes shortest paths from a single source vertex to all other vertices in a weighted digraph, correctly handling negative edge weights.",
+      "keywords": "negative edge weights, negative cycle detection, shortest path relaxation, dynamic programming graph"
+    },
+    {
+      "concept_name": "Floyd-Warshall Algorithm",
+      "description": "An all-pairs shortest path dynamic programming algorithm that finds shortest paths between all pairs of vertices in a weighted directed graph.",
+      "keywords": "all pairs shortest path, dynamic programming graph, distance matrix, transitive closure"
+    },
+    {
+      "concept_name": "Prim's Algorithm",
+      "description": "A greedy algorithm that finds a minimum spanning tree for a weighted undirected graph by growing a single tree from an arbitrary starting vertex.",
+      "keywords": "minimum spanning tree, mst, greedy graph, priority queue cut property"
+    },
+    {
+      "concept_name": "Kruskal's Algorithm",
+      "description": "A greedy algorithm that finds a minimum spanning tree in a weighted undirected graph by sorting all edges and adding them using Disjoint Set Union.",
+      "keywords": "minimum spanning tree, mst, edge sorting, disjoint set union, cycle prevention"
+    },
+    {
+      "concept_name": "Topological Sort",
+      "description": "A linear ordering of vertices in a directed acyclic graph such that for every directed edge from u to v, u comes before v in the ordering.",
+      "keywords": "dag dependency resolution, task scheduling order, build order, kahn algorithm"
+    },
+    {
+      "concept_name": "Tarjan's SCC Algorithm",
+      "description": "A depth first search based algorithm that finds all strongly connected components in a directed graph in linear time using low-link values and a stack.",
+      "keywords": "strongly connected components, scc, lowlink values, directed graph cycle decomposition"
+    },
+    {
+      "concept_name": "Kosaraju's Algorithm",
+      "description": "A two-pass depth first search algorithm that finds strongly connected components in a directed graph using the transpose graph.",
+      "keywords": "strongly connected components, graph transpose, two pass dfs, directed graph condensation"
+    },
+    {
+      "concept_name": "A* Search Algorithm",
+      "description": "A graph pathfinding and traversal algorithm that uses a heuristic function to estimate the cost to the goal, efficiently guiding the search toward target nodes.",
+      "keywords": "heuristic search, path finding, f cost g cost h cost, game navigation mesh"
+    },
+    {
+      "concept_name": "Ford-Fulkerson Algorithm",
+      "description": "A method for computing the maximum flow in a flow network by repeatedly finding augmenting paths from source to sink.",
+      "keywords": "maximum flow min cut, augmenting path, residual graph, capacity constraint"
+    },
+    {
+      "concept_name": "Dinic's Algorithm",
+      "description": "A polynomial-time algorithm for computing the maximum network flow in a graph using level graphs constructed via BFS and blocking flows via DFS.",
+      "keywords": "max flow, level graph, blocking flow, residual network, layered network"
+    },
+    {
+      "concept_name": "Kahn's Algorithm",
+      "description": "An algorithm for finding a topological ordering of a directed acyclic graph by repeatedly removing vertices with in-degree zero.",
+      "keywords": "in degree queue, dependency resolution, topological order, directed acyclic graph"
+    },
+    {
+      "concept_name": "Bidirectional Search",
+      "description": "A graph search algorithm that searches simultaneously forward from the initial state and backward from the goal state, meeting in the middle to reduce search space.",
+      "keywords": "meet in the middle, forward backward bfs, reduced branching factor, state space search"
+    },
+    {
+      "concept_name": "Cycle Detection",
+      "description": "Algorithms used to identify cycles in graphs, using coloring techniques in DFS or union-find in undirected graphs, or Floyd's algorithm in linked lists.",
+      "keywords": "graph loop detection, back edge detection, circular dependency, tortoise and hare"
+    },
+    {
+      "concept_name": "Bipartite Graph Check",
+      "description": "Determining whether a graph's vertices can be divided into two disjoint sets such that no two graph vertices within the same set are adjacent, using two-coloring.",
+      "keywords": "two coloring, odd cycle detection, graph partition, matching bipartite"
+    },
+    {
+      "concept_name": "Eulerian Path",
+      "description": "A trail in a finite graph that visits every edge exactly once, existing when at most two vertices have odd degree in an undirected connected graph.",
+      "keywords": "visit every edge once, degree parity, konigsberg bridges, hierholzer algorithm"
+    },
+    {
+      "concept_name": "Hamiltonian Path",
+      "description": "A path in an undirected or directed graph that visits each vertex exactly once, a classic NP-complete decision problem.",
+      "keywords": "visit every vertex once, np complete path, traveling salesman problem, graph tour"
+    },
+    {
+      "concept_name": "Johnson's Algorithm",
+      "description": "An algorithm to find shortest paths between all pairs of vertices in a sparse weighted directed graph using reweighting with Bellman-Ford and Dijkstra.",
+      "keywords": "all pairs sparse graph, potential reweighting, negative edges all pairs, dijkstra all pairs"
+    },
+    {
+      "concept_name": "Articulation Points",
+      "description": "Vertices in a connected graph whose removal increases the number of connected components, found in linear time using DFS discovery and low-link numbers.",
+      "keywords": "cut vertex, bridge graph, network vulnerability, biconnected components"
+    },
+    {
+      "concept_name": "Bridges in Graph",
+      "description": "Edges in a connected graph whose removal disconnects the graph, identified using DFS discovery times and ancestor back-edges.",
+      "keywords": "cut edge, critical network connection, biconnected component, lowlink edge"
+    },
+    {
+      "concept_name": "Maximum Bipartite Matching",
+      "description": "Finding the largest set of edges in a bipartite graph such that no two edges share an endpoint, solved using Hopcroft-Karp or max flow.",
+      "keywords": "job assignment problem, augmenting path matching, hopcroft karp, hall marriage"
+    },
+    {
+      "concept_name": "Merge Sort",
+      "description": "A stable divide-and-conquer sorting algorithm that divides an array into halves, sorts them recursively, and merges the sorted halves in linear time.",
+      "keywords": "divide and conquer, dividing an array, merging sorted halves, split and merge, merge-based sorting, stable sorting"
+    },
+    {
+      "concept_name": "Quick Sort",
+      "description": "An efficient, in-place sorting algorithm that partitions an array around a chosen pivot element and recursively sorts the sub-arrays.",
+      "keywords": "partition sort, pivot element, lomuto hoare partition, average o n log n"
+    },
+    {
+      "concept_name": "Heap Sort",
+      "description": "A comparison-based sorting algorithm that builds a max heap from the input data and repeatedly extracts the maximum element to produce a sorted array.",
+      "keywords": "in place o n log n sort, max heap extraction, complete binary tree sort"
+    },
+    {
+      "concept_name": "Counting Sort",
+      "description": "A non-comparison integer sorting algorithm that counts the occurrences of each distinct value in the input array to determine their sorted positions.",
+      "keywords": "non comparison sort, integer frequency count, linear time sort, small range sorting"
+    },
+    {
+      "concept_name": "Radix Sort",
+      "description": "A non-comparison sorting algorithm that sorts data with keys by grouping individual digits sharing the same significant position and value.",
+      "keywords": "digit by digit sort, least significant digit, most significant digit, linear time integer sort"
+    },
+    {
+      "concept_name": "Bucket Sort",
+      "description": "A distribution sort algorithm that partitions elements into a number of buckets, sorts each bucket individually, and concatenates the results.",
+      "keywords": "scatter gather sort, uniform distribution sort, fractional range sorting"
+    },
+    {
+      "concept_name": "TimSort",
+      "description": "A hybrid stable sorting algorithm derived from merge sort and insertion sort, designed to perform efficiently on real-world data containing ordered runs.",
+      "keywords": "python default sort, java arrays sort, natural runs, hybrid merge sort"
+    },
+    {
+      "concept_name": "Quickselect",
+      "description": "A selection algorithm derived from quicksort to find the k-th smallest element in an unordered list in expected linear time.",
+      "keywords": "kth smallest element, median selection, pivot partition selection, linear selection"
+    },
+    {
+      "concept_name": "Ternary Search",
+      "description": "A divide-and-conquer search algorithm that determines the maximum or minimum of a unimodal function by dividing the search range into three equal parts.",
+      "keywords": "unimodal function optimization, trisection search, divide into three parts"
+    },
+    {
+      "concept_name": "Exponential Search",
+      "description": "A search algorithm for unbounded or infinite sorted lists that finds the range where the key resides by doubling indices and then applies binary search.",
+      "keywords": "unbounded search, doubling search, sorted range finding, gallery search"
+    },
+    {
+      "concept_name": "Interpolation Search",
+      "description": "An algorithm for searching for a key in an indexed array that has been ordered by numerical values, estimating the probe position based on value distribution.",
+      "keywords": "linear interpolation probe, uniformly distributed sorted array, o log log n search"
+    },
+    {
+      "concept_name": "Knuth-Morris-Pratt Algorithm",
+      "description": "A string searching algorithm that searches for occurrences of a pattern within a text by using preprocessing information to avoid re-examining characters.",
+      "keywords": "kmp string matching, longest prefix suffix, pi table, linear time string search"
+    },
+    {
+      "concept_name": "Rabin-Karp Algorithm",
+      "description": "A string searching algorithm that uses hashing to find any one of a set of pattern strings in a text, computing rolling hashes in linear time.",
+      "keywords": "rolling hash, string search, pattern matching, polynomial hashing"
+    },
+    {
+      "concept_name": "Aho-Corasick Algorithm",
+      "description": "A string-searching algorithm that locates all occurrences of a finite set of keywords in a text simultaneously using a trie with failure links.",
+      "keywords": "multiple pattern matching, trie failure transitions, dictionary search, virus scanner"
+    },
+    {
+      "concept_name": "Manacher's Algorithm",
+      "description": "A linear-time algorithm for finding the longest palindromic substring in a given string by taking advantage of palindrome symmetry.",
+      "keywords": "longest palindromic substring, linear time palindrome, radius array, center expansion"
+    },
+    {
+      "concept_name": "Z-Algorithm",
+      "description": "A linear-time string algorithm that computes for each position in a string the length of the longest substring starting from that position matching the prefix.",
+      "keywords": "z array, string prefix matching, pattern search linear time, pattern occurrence"
+    },
+    {
+      "concept_name": "Boyer-Moore Algorithm",
+      "description": "An efficient string-search algorithm that skips characters using bad character and good suffix heuristic tables, scanning pattern from right to left.",
+      "keywords": "bad character rule, good suffix heuristic, right to left scanning, fast text search"
+    },
+    {
+      "concept_name": "Kadane's Algorithm",
+      "description": "A dynamic programming algorithm to find the contiguous subarray within a one-dimensional array of numbers that has the largest sum in linear time.",
+      "keywords": "maximum subarray sum, contiguous array sum, linear scan dp, largest profit window"
+    },
+    {
+      "concept_name": "Sliding Window Technique",
+      "description": "An algorithmic paradigm that converts nested loops into a single loop by maintaining a dynamic or fixed-length window over sequential data.",
+      "keywords": "subarray window, two pointer window, substring frequency, contiguous sequence"
+    },
+    {
+      "concept_name": "Two Pointers Technique",
+      "description": "An algorithmic approach where two indices iterate across a data structure simultaneously to solve searching or partitioning problems in linear time.",
+      "keywords": "two pointer scan, sorted pair sum, array reversal, in place partition"
+    },
+    {
+      "concept_name": "Longest Common Subsequence",
+      "description": "A classic dynamic programming problem finding the longest subsequence present in both given sequences in the same relative order.",
+      "keywords": "lcs, diff algorithm, sequence alignment, dynamic programming grid"
+    },
+    {
+      "concept_name": "Longest Increasing Subsequence",
+      "description": "The problem of finding the length of the longest subsequence of a given sequence such that all elements of the subsequence are sorted in increasing order.",
+      "keywords": "lis, patience sorting, dynamic programming binary search, o n log n lis"
+    },
+    {
+      "concept_name": "0-1 Knapsack Problem",
+      "description": "An optimization problem where items with specific weights and values must be selected to maximize total value without exceeding a weight capacity constraint.",
+      "keywords": "knapsack dynamic programming, bounded capacity, value maximization, pseudo polynomial dp"
+    },
+    {
+      "concept_name": "Coin Change Problem",
+      "description": "A classic dynamic programming problem calculating the minimum number of coins needed to make a given amount of money from given coin denominations.",
+      "keywords": "minimum coins, unbounded knapsack, change making dp, denomination count"
+    },
+    {
+      "concept_name": "Matrix Chain Multiplication",
+      "description": "A dynamic programming algorithm to determine the most efficient way to multiply a given sequence of matrices by choosing optimal parenthesization.",
+      "keywords": "parenthesization optimization, dynamic programming interval, cost minimization"
+    },
+    {
+      "concept_name": "Edit Distance",
+      "description": "A dynamic programming algorithm quantifying how dissimilar two strings are to one another by measuring the minimum number of operations required to transform one into the other.",
+      "keywords": "levenshtein distance, spell check, string transformation, insert delete replace"
+    },
+    {
+      "concept_name": "Traveling Salesperson Problem",
+      "description": "An NP-hard optimization problem that asks for the shortest possible route that visits each city exactly once and returns to the origin city.",
+      "keywords": "tsp, held karp algorithm, np hard tour, minimum cost cycle"
+    },
+    {
+      "concept_name": "Master Theorem",
+      "description": "A mathematical method providing a cookbook solution in asymptotic terms for recurrence relations of divide-and-conquer algorithms.",
+      "keywords": "recurrence relation solving, asymptotic complexity, divide and conquer bounds"
+    },
+    {
+      "concept_name": "Euclidean Algorithm",
+      "description": "An efficient method for computing the greatest common divisor (GCD) of two integers by repeatedly taking remainders.",
+      "keywords": "greatest common divisor, gcd, integer remainder, coprimality"
+    },
+    {
+      "concept_name": "Extended Euclidean Algorithm",
+      "description": "An extension to the Euclidean algorithm that calculates the greatest common divisor of integers a and b, as well as the B\u00e9zout coefficients x and y.",
+      "keywords": "modular inverse, bezout identity, linear diophantine equation, rsa cryptography"
+    },
+    {
+      "concept_name": "Sieve of Eratosthenes",
+      "description": "An ancient and efficient algorithm for finding all prime numbers up to any given limit by iteratively marking the multiples of each prime as composite.",
+      "keywords": "prime number generation, composite marking, prime sieve, number theory"
+    },
+    {
+      "concept_name": "Fast Fourier Transform",
+      "description": "An algorithm that computes the Discrete Fourier Transform of a sequence in O(n log n) time, widely used in signal processing and fast polynomial multiplication.",
+      "keywords": "fft, polynomial multiplication, signal processing, divide and conquer frequency"
+    },
+    {
+      "concept_name": "Convex Hull",
+      "description": "The smallest convex polygon that contains all points of a set in the plane, computed by algorithms like Graham scan or Quickhull in O(n log n) time.",
+      "keywords": "computational geometry, graham scan, jarvis march, enclosing boundary"
+    },
+    {
+      "concept_name": "Reservoir Sampling",
+      "description": "A family of randomized algorithms for choosing a sample of k items from a list of n items over a data stream where n is unknown or extremely large.",
+      "keywords": "stream sampling, random uniform selection, unknown stream size, randomized k items"
+    },
+    {
+      "concept_name": "Fisher-Yates Shuffle",
+      "description": "An algorithm for generating a random permutation of a finite sequence in linear time with equal probability for all permutations.",
+      "keywords": "array randomization, in place uniform shuffle, unbiased permutation"
+    },
+    {
+      "concept_name": "Process",
+      "description": "An executing instance of a computer program that includes program code, process control block, memory address space, and allocated resources.",
+      "keywords": "pcb, executing program, virtual address space, execution state"
+    },
+    {
+      "concept_name": "Thread",
+      "description": "The smallest sequence of programmed instructions that can be managed independently by an operating system scheduler, sharing address space with sibling threads.",
+      "keywords": "lightweight process, shared memory thread, tls thread local storage, concurrent execution"
+    },
+    {
+      "concept_name": "Mutex",
+      "description": "A mutual exclusion synchronization primitive that prevents multiple threads from concurrently accessing a shared critical section.",
+      "keywords": "mutual exclusion, lock unlock, critical section guard, thread safety"
+    },
+    {
+      "concept_name": "Semaphore",
+      "description": "A synchronization variable used to control access to a common resource by multiple processes, maintaining an integer counter adjusted via wait and signal operations.",
+      "keywords": "counting semaphore, binary semaphore, wait signal, resource pooling"
+    },
+    {
+      "concept_name": "Deadlock",
+      "description": "A state in which each process in a set is waiting for a resource that is held by another process in the same set, resulting in permanent stagnation.",
+      "keywords": "circular wait, mutual exclusion hold wait no preemption, coffman conditions, thread freeze"
+    },
+    {
+      "concept_name": "Banker's Algorithm",
+      "description": "A resource allocation and deadlock avoidance algorithm that tests for safety by simulating the allocation of predetermined maximum possible amounts of all resources.",
+      "keywords": "deadlock avoidance, safe state, resource allocation matrix, maximum claim"
+    },
+    {
+      "concept_name": "Virtual Memory",
+      "description": "A memory management capability that provides an idealized abstraction of the storage resources available on a machine, mapping virtual addresses to physical frames.",
+      "keywords": "virtual address translation, page table, demand paging, memory isolation"
+    },
+    {
+      "concept_name": "Paging",
+      "description": "A memory management scheme by which an operating system stores and retrieves data from secondary storage for use in main memory in same-size blocks called pages.",
+      "keywords": "page table, frame allocation, virtual page, memory fragmentation reduction"
+    },
+    {
+      "concept_name": "Translation Lookaside Buffer",
+      "description": "A high-speed hardware memory cache that stores recent translations of virtual memory to physical memory addresses to speed up memory access.",
+      "keywords": "tlb, page table cache, memory access accelerator, tlb hit tlb miss"
+    },
+    {
+      "concept_name": "Page Fault",
+      "description": "An interrupt raised by the memory management unit when a process accesses a memory page that is not currently mapped into physical RAM.",
+      "keywords": "mmu interrupt, demand paging, swap fetch, missing page frame"
+    },
+    {
+      "concept_name": "Thrashing",
+      "description": "A condition in which computer virtual memory subsystem is in a constant state of paging, rapidly exchanging data in memory for data on disk, degrading performance.",
+      "keywords": "excessive paging, cpu underutilization, working set collapse, memory exhaustion"
+    },
+    {
+      "concept_name": "Context Switch",
+      "description": "The process of storing the state of a thread or process so that it can be restored and resume execution at a later point, enabling multitasking.",
+      "keywords": "cpu register save, pcb switch, kernel dispatcher, scheduling overhead"
+    },
+    {
+      "concept_name": "Round Robin Scheduling",
+      "description": "A preemptive process scheduling algorithm that assigns each process an equal fixed time slice or quantum in cyclic order.",
+      "keywords": "time quantum, preemptive scheduling, cyclic process queue, fair cpu sharing"
+    },
+    {
+      "concept_name": "Shortest Job First",
+      "description": "A process scheduling policy that selects the waiting process with the smallest execution time to execute next, minimizing average waiting time.",
+      "keywords": "sjf, minimum average wait time, burst time scheduling, optimal scheduling"
+    },
+    {
+      "concept_name": "Inter-Process Communication",
+      "description": "Mechanisms provided by the operating system that allow distinct processes to communicate and synchronize their actions across address space boundaries.",
+      "keywords": "ipc, pipes, message queues, shared memory, unix domain sockets"
+    },
+    {
+      "concept_name": "Shared Memory",
+      "description": "An efficient inter-process communication mechanism where multiple processes map the same physical memory region into their respective virtual address spaces.",
+      "keywords": "fast ipc, zero copy communication, memory mapping, concurrent memory region"
+    },
+    {
+      "concept_name": "Direct Memory Access",
+      "description": "A hardware feature that allows certain hardware subsystems to access main system memory independently of the central processing unit.",
+      "keywords": "dma controller, cpu bypass, fast device io, asynchronous memory transfer"
+    },
+    {
+      "concept_name": "Cache Coherence",
+      "description": "The uniformity of shared resource data that ends up stored in multiple local caches across different processing cores, managed by protocols like MESI.",
+      "keywords": "mesi protocol, multi core cache consistency, false sharing, bus snooping"
+    },
+    {
+      "concept_name": "System Call",
+      "description": "The programmatic way in which a computer program requests a service from the kernel of the operating system it is executed on.",
+      "keywords": "syscall, kernel trap, user mode switch, kernel privilege request"
+    },
+    {
+      "concept_name": "Inode",
+      "description": "A data structure in Unix-style file systems that describes a file-system object such as a file or directory, storing metadata like permissions, size, and data block pointers.",
+      "keywords": "file metadata, block pointers, permissions size, unix filesystem object"
+    },
+    {
+      "concept_name": "TCP Three-Way Handshake",
+      "description": "The protocol mechanism used to establish a reliable connection between client and server using SYN, SYN-ACK, and ACK message exchanges.",
+      "keywords": "syn syn-ack ack, connection establishment, sequence number synchronization, reliable socket"
+    },
+    {
+      "concept_name": "Sliding Window Protocol",
+      "description": "A data transmission protocol used in TCP to provide reliable, in-order delivery of network packets while maximizing channel utilization.",
+      "keywords": "flow control, sender receiver window, sequence buffering, cumulative acknowledgment"
+    },
+    {
+      "concept_name": "Domain Name System",
+      "description": "The hierarchical naming system for computers and services connected to the Internet, translating human-readable hostnames into numeric IP addresses.",
+      "keywords": "dns resolution, a record, nameserver, cname, ip translation"
+    },
+    {
+      "concept_name": "Address Resolution Protocol",
+      "description": "A communication protocol used for discovering the link layer address, such as a MAC address, associated with a given internet layer IP address.",
+      "keywords": "arp table, ip to mac address, local network broadcast, link layer translation"
+    },
+    {
+      "concept_name": "Dynamic Host Configuration Protocol",
+      "description": "A network management protocol used to dynamically assign an IP address and other network configuration parameters to each device on a network.",
+      "keywords": "dhcp, ip lease, dora process, automatic network setup"
+    },
+    {
+      "concept_name": "Network Address Translation",
+      "description": "A method of mapping an entire local network to a single external IP address by modifying network address information in the IP packet headers.",
+      "keywords": "nat, router gateway, private ip translation, port address translation"
+    },
+    {
+      "concept_name": "Border Gateway Protocol",
+      "description": "The exterior gateway protocol designed to route traffic between autonomous systems across the global backbone of the Internet.",
+      "keywords": "bgp, autonomous system routing, path vector protocol, internet backbone"
+    },
+    {
+      "concept_name": "Transport Layer Security",
+      "description": "A cryptographic protocol designed to provide communications security and privacy over a computer network using encryption and certificate validation.",
+      "keywords": "tls, ssl, encryption handshake, https security, public key certificate"
+    },
+    {
+      "concept_name": "WebSockets",
+      "description": "A computer communications protocol providing full-duplex, bidirectional communication channels over a single persistent TCP connection.",
+      "keywords": "bidirectional socket, real time connection, low latency duplex, event stream"
+    },
+    {
+      "concept_name": "gRPC",
+      "description": "A high-performance, open-source universal remote procedure call framework developed by Google, utilizing HTTP/2 transport and Protocol Buffers.",
+      "keywords": "rpc framework, protocol buffers, http2 streaming, microservice communication"
+    },
+    {
+      "concept_name": "Load Balancer",
+      "description": "A device or service that distributes network or application traffic across a cluster of servers to improve responsiveness and reliability.",
+      "keywords": "traffic distribution, round robin balancer, reverse proxy, health check failover"
+    },
+    {
+      "concept_name": "Consistent Hashing",
+      "description": "A distributed hashing scheme that minimizes the number of keys that must be remapped when the hash table size changes, essential for distributed caching.",
+      "keywords": "hash ring, virtual nodes, distributed cache partition, minimal key migration"
+    },
+    {
+      "concept_name": "CAP Theorem",
+      "description": "A theorem in distributed computing stating that it is impossible for a distributed data store to simultaneously provide Consistency, Availability, and Partition tolerance.",
+      "keywords": "consistency availability partition tolerance, distributed tradeoff, pacelc theorem"
+    },
+    {
+      "concept_name": "Raft Consensus Algorithm",
+      "description": "A consensus algorithm designed to be understandable, providing distributed state machine replication through leader election, log replication, and safety rules.",
+      "keywords": "distributed consensus, leader election, log replication, state machine replication"
+    },
+    {
+      "concept_name": "Paxos Algorithm",
+      "description": "A family of protocols for solving consensus in a network of unreliable or fallible processors, ensuring distributed nodes agree on a single data value.",
+      "keywords": "distributed agreement, proposer acceptor learner, fault tolerant consensus"
+    },
+    {
+      "concept_name": "Eventual Consistency",
+      "description": "A consistency model used in distributed computing where, in the absence of new updates, all replicas will eventually converge to return the same value.",
+      "keywords": "lazy replication, distributed convergence, dynamo architecture, eventual sync"
+    },
+    {
+      "concept_name": "Two-Phase Commit Protocol",
+      "description": "A distributed algorithm that coordinates all participating nodes in a distributed database transaction to commit or roll back synchronously.",
+      "keywords": "2pc, atomic distributed transaction, prepare commit phase, transaction coordinator"
+    },
+    {
+      "concept_name": "Content Delivery Network",
+      "description": "A geographically distributed network of proxy servers and data centers that provides high availability and performance by distributing content close to end users.",
+      "keywords": "cdn, edge caching, latency reduction, distributed edge nodes"
+    },
+    {
+      "concept_name": "Reverse Proxy",
+      "description": "A proxy server that sits behind a firewall in a private network and directs client requests to the appropriate backend server.",
+      "keywords": "nginx proxy, ssl termination, request routing, backend isolation"
+    },
+    {
+      "concept_name": "Circuit Breaker Pattern",
+      "description": "A design pattern in microservices used to detect failures and prevent cascading failures by failing fast when an external service is unavailable.",
+      "keywords": "fail fast, cascading failure prevention, resilience, half open state"
+    },
+    {
+      "concept_name": "ACID Properties",
+      "description": "A set of properties of database transactions intended to guarantee data validity despite errors, power failures, and concurrent execution.",
+      "keywords": "atomicity consistency isolation durability, database transaction guarantee, rollback safety"
+    },
+    {
+      "concept_name": "Database Normalization",
+      "description": "The process of structuring a relational database in accordance with normal forms to reduce data redundancy and improve data integrity.",
+      "keywords": "normal forms, 1nf 2nf 3nf bcnf, redundancy reduction, dependency preservation"
+    },
+    {
+      "concept_name": "Write-Ahead Logging",
+      "description": "A standard database technique for providing atomicity and durability where modifications are written to a sequential log on disk before being applied to the tables.",
+      "keywords": "wal, crash recovery, transaction log, durability guarantee, append only log"
+    },
+    {
+      "concept_name": "Multi-Version Concurrency Control",
+      "description": "A concurrency control method commonly used by database management systems to provide concurrent access to data without read-write locking conflicts.",
+      "keywords": "mvcc, snapshot isolation, non blocking reads, row versioning"
+    },
+    {
+      "concept_name": "Two-Phase Locking",
+      "description": "A concurrency control method that guarantees serializability in database systems by separating a transaction into growing and shrinking lock phases.",
+      "keywords": "2pl, strict 2pl, transaction serializability, lock acquisition release"
+    },
+    {
+      "concept_name": "JSON Web Token",
+      "description": "An open, industry-standard RFC 7519 method for securely transmitting information between parties as a verifiable JSON object signed with a cryptographic signature.",
+      "keywords": "browser authentication, jwt, stateless authentication, bearer token, signature verification, claims header, web authentication"
+    },
+    {
+      "concept_name": "Cross-Origin Resource Sharing",
+      "description": "A browser security mechanism that uses HTTP headers to allow a server to indicate any origins other than its own from which a browser should permit loading resources.",
+      "keywords": "cors, preflight options request, access control allow origin, web security"
+    },
+    {
+      "concept_name": "Cross-Site Scripting",
+      "description": "A web security vulnerability that enables attackers to inject malicious scripts into web pages viewed by other users.",
+      "keywords": "xss, malicious script injection, input sanitization, content security policy"
+    },
+    {
+      "concept_name": "Cross-Site Request Forgery",
+      "description": "An attack that forces an authenticated end user to execute unwanted actions on a web application in which they are currently authenticated.",
+      "keywords": "csrf, unauthorized action, anti csrf token, same site cookie attribute"
+    },
+    {
+      "concept_name": "SQL Injection",
+      "description": "A code injection technique that exploits vulnerabilities in an application's database layer by inserting malicious SQL statements into entry fields.",
+      "keywords": "sqli, database exploitation, parameterized queries, prepared statement defense"
+    },
+    {
+      "concept_name": "Inverted Index",
+      "description": "A database index storing a mapping from words or tokens to their locations in a document or set of documents, forming the core data structure of search engines.",
+      "keywords": "postings list, full text search, document retrieval, search engine indexing"
+    },
+    {
+      "concept_name": "Term Frequency-Inverse Document Frequency",
+      "description": "A numerical statistic that reflects how important a word is to a document in a collection or corpus, commonly used in information retrieval.",
+      "keywords": "tf idf, document relevance, term weighting, search query scoring"
+    },
+    {
+      "concept_name": "Transformer Architecture",
+      "description": "A deep learning architecture relying on self-attention mechanisms to compute representations of input sequences without using recurrent networks.",
+      "keywords": "self attention, multi head attention, deep learning sequence model, llm backbone"
+    },
+    {
+      "concept_name": "Retrieval-Augmented Generation",
+      "description": "An AI framework that combines the power of large language models with external factual knowledge retrieved dynamically from a vector database.",
+      "keywords": "rag, vector search llm, knowledge retrieval, hallucination reduction"
+    },
+    {
+      "concept_name": "Vector Embeddings",
+      "description": "High-dimensional numerical array representations of text, images, or audio that capture their semantic meaning and relationships in vector space.",
+      "keywords": "dense vectors, cosine similarity, semantic search, representation learning"
+    },
+    {
+      "concept_name": "Singleton Pattern",
+      "description": "A software design pattern that restricts the instantiation of a class to one single instance and provides a global access point to that instance.",
+      "keywords": "single instance, global access, design pattern creational, private constructor"
+    },
+    {
+      "concept_name": "Observer Pattern",
+      "description": "A design pattern in which an object maintains a list of its dependents, called observers, and notifies them automatically of any state changes.",
+      "keywords": "pub sub, event listener, state notification, reactive dependency"
+    },
+    {
+      "concept_name": "Dependency Injection",
+      "description": "A software engineering design pattern where one object supplies the dependencies of another object, decoupling client creation from business logic.",
+      "keywords": "inversion of control, loose coupling, testability, software modularity"
+    },
+    {
+      "concept_name": "Microservices Architecture",
+      "description": "An architectural approach to developing a single application as a suite of small, independently deployable services running in their own processes.",
+      "keywords": "independent deployment, service mesh, distributed services, loose coupling"
+    },
+    {
+      "concept_name": "Zero-Knowledge Proof",
+      "description": "A cryptographic method by which one party can prove to another that a given statement is true without conveying any information apart from the statement's validity.",
+      "keywords": "zkp, cryptographic verification, privacy preserving proof, zk snark"
+    },
+    {
+      "concept_name": "Bloom Filter Membership",
+      "description": "Space-efficient probabilistic structure that queries whether an item has been previously recorded in an index with small controllable false positive risk.",
+      "keywords": "probabilistic membership, bit array hashing, fast negative check, cache protection"
+    },
+    {
+      "concept_name": "Consensus Protocol",
+      "description": "Fault-tolerant coordination algorithm used in distributed clusters so all participating replicas reach agreement on a unified log of events.",
+      "keywords": "distributed agreement, quorum voting, state machine synchronization, raft paxos"
+    },
+    {
+      "concept_name": "Garbage Collection",
+      "description": "Automatic memory management feature where runtime environments reclaim dynamically allocated memory occupied by objects no longer referenced by the program.",
+      "keywords": "automatic memory reclamation, mark and sweep, generational gc, memory leak prevention"
+    },
+    {
+      "concept_name": "Just-In-Time Compilation",
+      "description": "A technique in virtual machine runtimes that compiles bytecode into native machine instructions at runtime to improve execution speed over interpretation.",
+      "keywords": "jit compiler, hotspot compilation, native machine code, runtime optimization"
+    },
+    {
+      "concept_name": "Copy-On-Write",
+      "description": "An optimization strategy where shared resources are duplicated only when a task attempts to modify them, heavily utilized in operating system fork calls.",
+      "keywords": "cow, deferred copying, memory conservation, fork process optimization"
+    },
+    {
+      "concept_name": "Read-Copy-Update",
+      "description": "A synchronization mechanism in operating system kernels that allows concurrent read access without locks while updates occur on a private copy.",
+      "keywords": "rcu, lockless reads, kernel synchronization, read intensive performance"
+    },
+    {
+      "concept_name": "Monolithic Kernel",
+      "description": "An operating system architecture where the entire operating system, including device drivers and file systems, runs in supervisor mode in kernel space.",
+      "keywords": "kernel space execution, high speed syscalls, unified address space os, linux architecture"
+    },
+    {
+      "concept_name": "Microkernel",
+      "description": "A minimal operating system architecture that moves non-essential services like file systems and drivers into user space to enhance stability and modularity.",
+      "keywords": "user space services, minimal kernel core, ipc message passing, crash isolation"
+    },
+    {
+      "concept_name": "Content Security Policy",
+      "description": "An HTTP header standard that allows site operators to restrict the resources browsers are allowed to load, mitigating XSS and data injection attacks.",
+      "keywords": "csp header, xss mitigation, script whitelist, browser security policy"
+    },
+    {
+      "concept_name": "OAuth 2.0",
+      "description": "An industry-standard authorization framework that enables third-party applications to obtain limited access to an HTTP service on behalf of a resource owner.",
+      "keywords": "browser authentication, authorization framework, access token, authorization code flow, delegated permissions, web authentication"
+    },
+    {
+      "concept_name": "Command Query Responsibility Segregation",
+      "description": "An architectural pattern that separates read and update operations for a data store, enabling independent scaling and optimization for reading and writing.",
+      "keywords": "cqrs, read model write model, event sourcing pair, performance segregation"
+    },
+    {
+      "concept_name": "Domain-Driven Design",
+      "description": "A software development approach that focuses on modeling software to match a domain according to input from that domain's experts.",
+      "keywords": "ddd, bounded context, aggregate root, entity value object, domain model"
+    },
+    {
+      "concept_name": "Write-Back Cache",
+      "description": "A caching method in computer architecture where data is written only to the cache initially, with writes to main memory postponed until cache lines are replaced.",
+      "keywords": "delayed write, dirty cache line, write performance optimization, cache memory write"
+    },
+    {
+      "concept_name": "Write-Through Cache",
+      "description": "A caching storage approach where data is written to both the cache and underlying main storage simultaneously, guaranteeing memory consistency.",
+      "keywords": "synchronous write, memory consistency, reliable cache, dual update cache"
+    },
+    {
+      "concept_name": "Pipelining",
+      "description": "A processor execution implementation technique where multiple instructions are overlapped in execution across sequential hardware stages.",
+      "keywords": "instruction pipeline, fetch decode execute, branch prediction, hazards stall"
+    },
+    {
+      "concept_name": "Abstract Syntax Tree",
+      "description": "A tree representation of the abstract syntactic structure of source code written in a programming language, used by compilers during semantic analysis.",
+      "keywords": "ast, syntax tree, compiler frontend, parse tree abstraction, code representation"
+    },
+    {
+      "concept_name": "Intermediate Representation",
+      "description": "A machine-independent representation of code used by a compiler between the source language frontend and the target machine backend, such as LLVM IR.",
+      "keywords": "compiler ir, llvm bytecode, machine independent code, intermediate language"
+    },
+    {
+      "concept_name": "Lexical Analysis",
+      "description": "The first phase of a compiler that converts a sequence of characters into a sequence of meaningful tokens using regular expressions and finite automata.",
+      "keywords": "lexer, scanner, tokenization, regular grammar scanner, compiler phase"
+    },
+    {
+      "concept_name": "Static Single Assignment",
+      "description": "A compiler intermediate representation property where each variable is assigned exactly once, greatly simplifying optimization and dead code elimination.",
+      "keywords": "ssa form, variable versioning, compiler optimization, phi node function"
+    },
+    {
+      "concept_name": "Lamport Timestamp",
+      "description": "A logical clock algorithm used to determine the partial ordering of events in a distributed system without relying on physical synchronized clocks.",
+      "keywords": "logical clock, distributed event ordering, causality tracking, partial order"
+    },
+    {
+      "concept_name": "Vector Clock",
+      "description": "A distributed systems algorithm for generating a partial ordering of events and detecting causality violations and concurrency across nodes using clock vectors.",
+      "keywords": "vector timestamp, causal ordering, distributed concurrency detection, conflict resolution"
+    },
+    {
+      "concept_name": "Byzantine Fault Tolerance",
+      "description": "The dependability of a distributed computing system in the presence of arbitrary or malicious component failures where nodes may send conflicting information.",
+      "keywords": "bft, arbitrary failure, malicious nodes, blockchain consensus, pbft"
+    },
+    {
+      "concept_name": "Gossip Protocol",
+      "description": "A decentralized communication protocol based on epidemic spread used by distributed systems to disseminate information and discover node cluster membership.",
+      "keywords": "epidemic protocol, peer to peer dissemination, cluster membership, decentralized sync"
+    },
+    {
+      "concept_name": "Split-Brain Syndrome",
+      "description": "A condition in distributed computing clusters where network partitions cause disconnected node subgroups to believe they are the sole surviving primary cluster.",
+      "keywords": "network partition, cluster divergence, quorum fencing, dual master hazard"
+    },
+    {
+      "concept_name": "Quorum",
+      "description": "The minimum number of votes or participating nodes that a distributed transaction or consensus protocol must obtain before proceeding with an operation.",
+      "keywords": "quorum read write, majority vote, distributed consensus threshold, split brain prevention"
+    },
+    {
+      "concept_name": "Public Key Cryptography",
+      "description": "A cryptographic system that uses pairs of keys: public keys which may be disseminated widely, and private keys which are known only to the owner.",
+      "keywords": "asymmetric cryptography, rsa ecc, key pair, encryption decryption, digital signature"
+    },
+    {
+      "concept_name": "Diffie-Hellman Key Exchange",
+      "description": "A mathematical method of securely exchanging cryptographic keys over a public channel without prior shared secrets, based on discrete logarithms.",
+      "keywords": "key agreement, public channel key exchange, discrete logarithm problem, shared secret"
+    },
+    {
+      "concept_name": "Digital Signature",
+      "description": "A mathematical scheme for demonstrating the authenticity and non-repudiation of digital messages using asymmetric cryptography and cryptographic hash functions.",
+      "keywords": "non repudiation, message integrity, signer verification, asymmetric signature"
+    },
+    {
+      "concept_name": "Salted Password Hashing",
+      "description": "A cryptographic defense technique that appends a unique random string to a password before hashing it to defend against precomputed rainbow table attacks.",
+      "keywords": "password salt, rainbow table defense, bcrypt argon2, cryptographic stretching"
+    },
+    {
+      "concept_name": "Man-in-the-Middle Attack",
+      "description": "A cyberattack where the attacker secretly intercepts and potentially relays communications between two parties who believe they are communicating directly.",
+      "keywords": "mitm, packet interception, eavesdropping, certificate pinning defense"
+    },
+    {
+      "concept_name": "Replay Attack",
+      "description": "A network attack in which a valid data transmission is maliciously or fraudulently repeated or delayed, defended against using nonces and timestamps.",
+      "keywords": "packet replay, nonce verification, timestamp expiration, cryptographic challenge"
+    },
+    {
+      "concept_name": "Timing Attack",
+      "description": "A side-channel attack in which the attacker attempts to compromise a cryptosystem by analyzing the time taken to execute cryptographic algorithms.",
+      "keywords": "side channel, execution duration analysis, constant time comparison defense"
+    },
+    {
+      "concept_name": "Same-Origin Policy",
+      "description": "A critical web browser security mechanism that restricts how a document or script loaded from one origin can interact with a resource from another origin.",
+      "keywords": "sop, browser isolation, cross origin security, domain port protocol match"
+    },
+    {
+      "concept_name": "HTTP/2 Multiplexing",
+      "description": "A web performance feature that allows multiple concurrent HTTP requests and responses to be sent asynchronously over a single TCP connection.",
+      "keywords": "stream multiplexing, head of line blocking reduction, binary framing layer"
+    },
+    {
+      "concept_name": "HTTP/3 QUIC Protocol",
+      "description": "A next-generation transport layer network protocol designed by Google using UDP to provide multiplexed connections with zero roundtrip connection establishment.",
+      "keywords": "quic protocol, udp transport, zero rtt handshake, packet loss resilience"
+    },
+    {
+      "concept_name": "Server-Sent Events",
+      "description": "A server push technology enabling a browser to receive automatic, asynchronous updates from a server via an HTTP connection without client polling.",
+      "keywords": "sse, unidirectional server push, text event stream, real time updates"
+    },
+    {
+      "concept_name": "Service Worker",
+      "description": "A client-side programmable network proxy running in the browser background that intercepts network requests, enabling offline caching and background synchronization.",
+      "keywords": "pwa offline proxy, cache storage api, background sync, network interception"
+    },
+    {
+      "concept_name": "Database Sharding",
+      "description": "A horizontal database architecture pattern where large datasets are partitioned across separate database server instances using a sharding key.",
+      "keywords": "horizontal partitioning, shared nothing database, shard key router, database scaling"
+    },
+    {
+      "concept_name": "Read Replica",
+      "description": "A secondary copy of a database instance that handles read-only queries to relieve traffic from the primary read-write master database.",
+      "keywords": "read scaling, master slave replication, offload query load, replication lag"
+    },
+    {
+      "concept_name": "Materialized View",
+      "description": "A database object containing the cached results of a query stored physically on disk to accelerate expensive analytical and aggregate queries.",
+      "keywords": "precomputed query, cached aggregate, refresh on commit, query acceleration"
+    },
+    {
+      "concept_name": "Connection Pooling",
+      "description": "A database optimization pattern where a cache of database connections is maintained so that connections can be reused for subsequent requests rather than reopened.",
+      "keywords": "connection reuse, latency reduction, connection limit control, connection pooler"
+    },
+    {
+      "concept_name": "Containerization",
+      "description": "An operating system-level virtualization method for deploying and running distributed applications without launching an entire virtual machine for each app.",
+      "keywords": "docker container, cgroups namespaces, lightweight virtualization, app packaging"
+    },
+    {
+      "concept_name": "Infrastructure as Code",
+      "description": "The management and provisioning of infrastructure through machine-readable definition files such as Terraform or Ansible rather than manual configuration.",
+      "keywords": "iac, terraform declarative, reproducible infrastructure, cloud orchestration"
+    },
+    {
+      "concept_name": "Immutable Infrastructure",
+      "description": "An infrastructure management paradigm where servers and deployment units are never modified in place after deployment, but replaced entirely with new versions.",
+      "keywords": "stateless replacement, zero configuration drift, golden image deployment"
+    },
+    {
+      "concept_name": "Service Mesh",
+      "description": "A dedicated infrastructure layer for facilitating service-to-service communications between microservices using sidecar proxies like Envoy.",
+      "keywords": "sidecar proxy, istio envoy, mTLS encryption, microservice observability"
+    },
+    {
+      "concept_name": "Blue-Green Deployment",
+      "description": "A deployment release strategy that utilizes two identical environments (blue and green) to minimize downtime and risk when rolling out new application versions.",
+      "keywords": "zero downtime release, instant rollback, router traffic switch, release strategy"
+    },
+    {
+      "concept_name": "Canary Deployment",
+      "description": "A technique to reduce the risk of introducing a new software version in production by slowly rolling out the change to a small subset of users before full rollout.",
+      "keywords": "progressive rollout, phased release, traffic percentage routing, blast radius reduction"
+    },
+    {
+      "concept_name": "Chaos Engineering",
+      "description": "The discipline of experimenting on a software system in production to build confidence in the system's capability to withstand turbulent unexpected conditions.",
+      "keywords": "fault injection, chaos monkey, resilience testing, system weakness discovery"
+    },
+    {
+      "concept_name": "Horizontal Pod Autoscaling",
+      "description": "A Kubernetes capability that automatically scales the number of pods in a deployment up or down based on observed CPU utilization or custom application metrics.",
+      "keywords": "hpa, dynamic scaling, resource utilization threshold, kubernetes scaling"
+    },
+    {
+      "concept_name": "Strategy Pattern",
+      "description": "A behavioral software design pattern that enables selecting an algorithm's runtime implementation dynamically from a family of interchangeable algorithms.",
+      "keywords": "interchangeable algorithms, runtime selection, behavioral pattern, policy pattern"
+    },
+    {
+      "concept_name": "Command Pattern",
+      "description": "A behavioral design pattern in which an object is used to encapsulate all information needed to perform an action or trigger an event at a later time.",
+      "keywords": "action encapsulation, undo redo history, transactional execution, task queue"
+    },
+    {
+      "concept_name": "Builder Pattern",
+      "description": "A creational design pattern that lets you produce different types and representations of complex objects step by step using a clear construction interface.",
+      "keywords": "step by step construction, complex object creation, fluent api, telescoping constructor fix"
+    },
+    {
+      "concept_name": "Decorator Pattern",
+      "description": "A structural design pattern that lets you attach new behaviors to objects by placing these objects inside special wrapper objects that contain the behaviors.",
+      "keywords": "wrapper class, dynamic behavior extension, open closed principle, layered decorator"
+    },
+    {
+      "concept_name": "Adapter Pattern",
+      "description": "A structural design pattern that allows objects with incompatible interfaces to collaborate by providing a wrapper with a compatible interface.",
+      "keywords": "wrapper interface, legacy integration, interface conversion, structural adapter"
+    },
+    {
+      "concept_name": "Facade Pattern",
+      "description": "A structural design pattern that provides a simplified, higher-level interface to an otherwise complex subsystem of classes or libraries.",
+      "keywords": "simplified api, subsystem wrapper, complexity shielding, unified entrypoint"
+    },
+    {
+      "concept_name": "Proxy Pattern",
+      "description": "A structural design pattern that lets you provide a substitute or placeholder for another object to control access, perform lazy loading, or cache results.",
+      "keywords": "virtual proxy, protection proxy, lazy initialization, caching access control"
+    },
+    {
+      "concept_name": "State Pattern",
+      "description": "A behavioral design pattern that allows an object to alter its behavior when its internal state changes, appearing as if the object changed its class.",
+      "keywords": "finite state machine, state transition object, behavioral state, state polymorphism"
+    },
+    {
+      "concept_name": "Factory Method Pattern",
+      "description": "A creational design pattern that provides an interface for creating objects in a superclass, but allows subclasses to alter the type of objects created.",
+      "keywords": "virtual constructor, creational polymorphism, subclass instantiation, object creation"
+    },
+    {
+      "concept_name": "Abstract Factory Pattern",
+      "description": "A creational design pattern that lets you produce families of related or dependent objects without specifying their concrete classes.",
+      "keywords": "family of objects, toolkit pattern, concrete factory, cross platform widget"
+    },
+    {
+      "concept_name": "Publish-Subscribe Pattern",
+      "description": "A messaging pattern where senders of messages do not program the messages to be sent directly to specific receivers, but publish to message brokers.",
+      "keywords": "pub sub, message broker, decoupled event bus, kafka rabbitmq"
+    },
+    {
+      "concept_name": "Deadlock Detection Algorithm",
+      "description": "A graph algorithm that continuously monitors resource allocation graphs for directed cycles to detect when processes are in an unrecoverable deadlock.",
+      "keywords": "wait for graph, cycle detection deadlock, graph cycle check, recovery preemption"
+    },
+    {
+      "concept_name": "Bitmap Index",
+      "description": "A specialized database index that uses bit arrays (bitmaps) to quickly answer queries across low-cardinality columns using bitwise Boolean operations.",
+      "keywords": "low cardinality index, bitwise and or, data warehousing index, fast boolean filtering"
+    },
+    {
+      "concept_name": "Write Amplification",
+      "description": "An undesirable phenomenon in solid-state storage where the physical amount of data written to flash memory is a multiple of the logical data intended to be written.",
+      "keywords": "flash storage, ssd endurance, block erase cycle, lsm tree compaction"
+    },
+    {
+      "concept_name": "Log-Structured Merge-Tree",
+      "description": "A data structure widely used in modern key-value databases that provides high write throughput by buffering writes in memory and flushing sequential SSTables.",
+      "keywords": "lsm tree, sstable, rocksdb leveldb, write optimized storage, memtable flush"
+    },
+    {
+      "concept_name": "Dynamic Programming",
+      "description": "An algorithmic paradigm that solves complex problems by breaking them down into overlapping subproblems and optimal substructure, caching intermediate results via memoization or tabulation.",
+      "keywords": "overlapping subproblems, optimal substructure, memoization, tabulation, bottom-up approach, top-down approach, dynamic programming, state transition"
+    }
+  ]
+}

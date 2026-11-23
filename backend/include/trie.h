@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#define TRIE_ALPHABET_SIZE 27
+#define TRIE_ALPHABET_SIZE 37 /* 'a'-'z' (0-25), ' ' (26), '0'-'9' (27-36) */
 #define TOP_K_SIZE 10
 
 /* Cached suggestion representation used inside Trie nodes */

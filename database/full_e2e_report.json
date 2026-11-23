@@ -1,0 +1,929 @@
+{
+  "health": {
+    "status": "ok",
+    "service": "IntelliSuggest C DSA Core",
+    "database_driver": "SQLite (Local Embedded)",
+    "database": "connected",
+    "persistence": "healthy",
+    "pending_writes": 0,
+    "persisted_writes": 0,
+    "failed_writes": 0
+  },
+  "analytics": {
+    "total_keywords": 1071,
+    "active_keywords": 1071,
+    "expired_keywords": 0,
+    "total_searches": 1,
+    "demo_searches": 500,
+    "trie_total_words": 1071,
+    "trie_total_nodes": 14670,
+    "hash_load_factor": 0.52294921875,
+    "hash_collisions": 226,
+    "pending_writes": 0,
+    "persisted_writes": 0,
+    "failed_writes": 0
+  },
+  "prefixes": {
+    "mac": {
+      "count": 5,
+      "cached_latency_us": 20.599990844726562,
+      "heap_latency_us": 41.100006103515625,
+      "all_start_with_prefix": true,
+      "is_sorted_by_freq": true,
+      "cached_heap_equivalent": true,
+      "suggestions": [
+        [
+          "machine learning",
+          225
+        ],
+        [
+          "mac address",
+          110
+        ],
+        [
+          "macos",
+          70
+        ],
+        [
+          "machine code",
+          45
+        ],
+        [
+          "macro processor",
+          30
+        ]
+      ]
+    },
+    "ipv": {
+      "count": 4,
+      "cached_latency_us": 13.699996948242188,
+      "heap_latency_us": 53.399993896484375,
+      "all_start_with_prefix": true,
+      "is_sorted_by_freq": true,
+      "cached_heap_equivalent": true,
+      "suggestions": [
+        [
+          "ipv addressing",
+          22
+        ],
+        [
+          "ipv6 addressing",
+          22
+        ],
+        [
+          "ipv packet header",
+          20
+        ],
+        [
+          "ipv4 packet header",
+          20
+        ]
+      ]
+    },
+    "sha": {
+      "count": 4,
+      "cached_latency_us": 17.5,
+      "heap_latency_us": 33.00001525878906,
+      "all_start_with_prefix": true,
+      "is_sorted_by_freq": true,
+      "cached_heap_equivalent": true,
+      "suggestions": [
+        [
+          "sha 256 hash",
+          26
+        ],
+        [
+          "sha hash",
+          26
+        ],
+        [
+          "shared memory ipc",
+          24
+        ],
+        [
+          "shadow dom",
+          22
+        ]
+      ]
+    },
+    "http": {
+      "count": 10,
+      "cached_latency_us": 17.499984741210938,
+      "heap_latency_us": 100.40000915527344,
+      "all_start_with_prefix": true,
+      "is_sorted_by_freq": true,
+      "cached_heap_equivalent": true,
+      "suggestions": [
+        [
+          "http",
+          205
+        ],
+        [
+          "https",
+          200
+        ],
+        [
+          "http status codes",
+          28
+        ],
+        [
+          "http request methods",
+          26
+        ],
+        [
+          "http 2 multiplexing",
+          24
+        ],
+        [
+          "http headers",
+          24
+        ],
+        [
+          "http multiplexing",
+          24
+        ],
+        [
+          "http 3 quic protocol",
+          22
+        ],
+        [
+          "http quic protocol",
+          22
+        ],
+        [
+          "http persistent connection",
+          20
+        ]
+      ]
+    },
+    "word": {
+      "count": 3,
+      "cached_latency_us": 16.900009155273438,
+      "heap_latency_us": 42.100006103515625,
+      "all_start_with_prefix": true,
+      "is_sorted_by_freq": true,
+      "cached_heap_equivalent": true,
+      "suggestions": [
+        [
+          "word break problem",
+          25
+        ],
+        [
+          "word embeddings word2vec",
+          24
+        ],
+        [
+          "word embeddings wordvec",
+          24
+        ]
+      ]
+    },
+    "ext": {
+      "count": 3,
+      "cached_latency_us": 11.800003051757812,
+      "heap_latency_us": 54.9000244140625,
+      "all_start_with_prefix": true,
+      "is_sorted_by_freq": true,
+      "cached_heap_equivalent": true,
+      "suggestions": [
+        [
+          "extended euclidean algorithm",
+          24
+        ],
+        [
+          "ext file system",
+          20
+        ],
+        [
+          "ext4 file system",
+          20
+        ]
+      ]
+    },
+    "ma": {
+      "count": 10,
+      "cached_latency_us": 13.100006103515625,
+      "heap_latency_us": 148.2999725341797,
+      "all_start_with_prefix": true,
+      "is_sorted_by_freq": true,
+      "cached_heap_equivalent": true,
+      "suggestions": [
+        [
+          "machine learning",
+          225
+        ],
+        [
+          "mac address",
+          110
+        ],
+        [
+          "max heap",
+          84
+        ],
+        [
+          "matrix",
+          80
+        ],
+        [
+          "matrix multiplication",
+          75
+        ],
+        [
+          "macos",
+          70
+        ],
+        [
+          "machine code",
+          45
+        ],
+        [
+          "macro processor",
+          30
+        ],
+        [
+          "master theorem",
+          26
+        ],
+        [
+          "matrix chain multiplication dp",
+          26
+        ]
+      ]
+    },
+    "mach": {
+      "count": 2,
+      "cached_latency_us": 8.80000305175781,
+      "heap_latency_us": 28.999984741210938,
+      "all_start_with_prefix": true,
+      "is_sorted_by_freq": true,
+      "cached_heap_equivalent": true,
+      "suggestions": [
+        [
+          "machine learning",
+          225
+        ],
+        [
+          "machine code",
+          45
+        ]
+      ]
+    },
+    "py": {
+      "count": 1,
+      "cached_latency_us": 7.0000152587890625,
+      "heap_latency_us": 19.399978637695312,
+      "all_start_with_prefix": true,
+      "is_sorted_by_freq": true,
+      "cached_heap_equivalent": true,
+      "suggestions": [
+        [
+          "python",
+          151
+        ]
+      ]
+    },
+    "jav": {
+      "count": 2,
+      "cached_latency_us": 12.5,
+      "heap_latency_us": 18.5,
+      "all_start_with_prefix": true,
+      "is_sorted_by_freq": true,
+      "cached_heap_equivalent": true,
+      "suggestions": [
+        [
+          "javascript",
+          450
+        ],
+        [
+          "java",
+          430
+        ]
+      ]
+    },
+    "bin": {
+      "count": 5,
+      "cached_latency_us": 19.199996948242188,
+      "heap_latency_us": 96.3000030517578,
+      "all_start_with_prefix": true,
+      "is_sorted_by_freq": true,
+      "cached_heap_equivalent": true,
+      "suggestions": [
+        [
+          "binary search",
+          320
+        ],
+        [
+          "binary tree",
+          180
+        ],
+        [
+          "binary search tree",
+          96
+        ],
+        [
+          "binomial distribution",
+          22
+        ],
+        [
+          "binomial heap",
+          18
+        ]
+      ]
+    },
+    "tr": {
+      "count": 10,
+      "cached_latency_us": 10.699996948242188,
+      "heap_latency_us": 93.1999969482422,
+      "all_start_with_prefix": true,
+      "is_sorted_by_freq": true,
+      "cached_heap_equivalent": true,
+      "suggestions": [
+        [
+          "trie",
+          260
+        ],
+        [
+          "transformers",
+          115
+        ],
+        [
+          "transaction isolation",
+          82
+        ],
+        [
+          "trie node",
+          78
+        ],
+        [
+          "translation lookaside buffer",
+          26
+        ],
+        [
+          "traceroute",
+          22
+        ],
+        [
+          "treap",
+          22
+        ],
+        [
+          "trivy container scanner",
+          20
+        ],
+        [
+          "trap instruction",
+          18
+        ],
+        [
+          "trie compaction",
+          16
+        ]
+      ]
+    },
+    "has": {
+      "count": 5,
+      "cached_latency_us": 16.800003051757812,
+      "heap_latency_us": 44.600006103515625,
+      "all_start_with_prefix": true,
+      "is_sorted_by_freq": true,
+      "cached_heap_equivalent": true,
+      "suggestions": [
+        [
+          "hash table",
+          265
+        ],
+        [
+          "hash map",
+          94
+        ],
+        [
+          "hash set",
+          86
+        ],
+        [
+          "haskell",
+          26
+        ],
+        [
+          "hash join",
+          25
+        ]
+      ]
+    },
+    "doc": {
+      "count": 8,
+      "cached_latency_us": 12.499984741210938,
+      "heap_latency_us": 99.90000915527344,
+      "all_start_with_prefix": true,
+      "is_sorted_by_freq": true,
+      "cached_heap_equivalent": true,
+      "suggestions": [
+        [
+          "docker",
+          270
+        ],
+        [
+          "docker compose multi container",
+          26
+        ],
+        [
+          "docker multi stage build",
+          26
+        ],
+        [
+          "dockerfile instructions",
+          26
+        ],
+        [
+          "docker image layer caching",
+          24
+        ],
+        [
+          "docker volume persistence",
+          24
+        ],
+        [
+          "document database",
+          24
+        ],
+        [
+          "docker network bridge",
+          22
+        ]
+      ]
+    },
+    "net": {
+      "count": 10,
+      "cached_latency_us": 14.299972534179688,
+      "heap_latency_us": 153.3999786376953,
+      "all_start_with_prefix": true,
+      "is_sorted_by_freq": true,
+      "cached_heap_equivalent": true,
+      "suggestions": [
+        [
+          "networking jitter buffer",
+          24
+        ],
+        [
+          "networking routing table prefix",
+          22
+        ],
+        [
+          "networking frame forwarding",
+          19
+        ],
+        [
+          "networking bandwidth delay",
+          17
+        ],
+        [
+          "networking flow control window",
+          14
+        ],
+        [
+          "networking checksum error",
+          13
+        ],
+        [
+          "networking congestion avoidance",
+          12
+        ],
+        [
+          "networking latency roundtrip",
+          12
+        ],
+        [
+          "networking packet filtering",
+          11
+        ],
+        [
+          "networking segment reassembly",
+          11
+        ]
+      ]
+    }
+  },
+  "forgotten_name": [
+    {
+      "query": "shortest path algorithm",
+      "expected": "Dijkstra Algorithm",
+      "top_name": "Johnson's Algorithm",
+      "top_score": 1,
+      "top3": [
+        [
+          "Johnson's Algorithm",
+          1
+        ],
+        [
+          "Breadth First Search",
+          0.99
+        ],
+        [
+          "Bellman-Ford Algorithm",
+          0.99
+        ]
+      ],
+      "semantically_relevant": false
+    },
+    {
+      "query": "prefix-based searching",
+      "expected": "Trie",
+      "top_name": "Depth First Search",
+      "top_score": 0.99,
+      "top3": [
+        [
+          "Depth First Search",
+          0.99
+        ],
+        [
+          "Trie",
+          0.99
+        ],
+        [
+          "Interpolation Search",
+          0.99
+        ]
+      ],
+      "semantically_relevant": true
+    },
+    {
+      "query": "last in first out",
+      "expected": "Stack",
+      "top_name": "Stack",
+      "top_score": 0.99,
+      "top3": [
+        [
+          "Stack",
+          0.99
+        ],
+        [
+          "Queue",
+          0.5
+        ],
+        [
+          "Depth First Search",
+          0.267
+        ]
+      ],
+      "semantically_relevant": true
+    },
+    {
+      "query": "minimum spanning tree",
+      "expected": "Prim's Algorithm",
+      "top_name": "Prim's Algorithm",
+      "top_score": 0.99,
+      "top3": [
+        [
+          "Prim's Algorithm",
+          0.99
+        ],
+        [
+          "Kruskal's Algorithm",
+          0.99
+        ],
+        [
+          "Trie",
+          0.81
+        ]
+      ],
+      "semantically_relevant": true
+    },
+    {
+      "query": "self-balancing binary search tree",
+      "expected": "AVL Tree",
+      "top_name": "Binary Search",
+      "top_score": 0.9964285714285713,
+      "top3": [
+        [
+          "Binary Search",
+          0.996
+        ],
+        [
+          "Binary Search Tree",
+          0.99
+        ],
+        [
+          "AVL Tree",
+          0.99
+        ]
+      ],
+      "semantically_relevant": true
+    },
+    {
+      "query": "fast key-value lookup",
+      "expected": "Hash Table",
+      "top_name": "Hash Table",
+      "top_score": 0.99,
+      "top3": [
+        [
+          "Hash Table",
+          0.99
+        ],
+        [
+          "Diffie-Hellman Key Exchange",
+          0.671
+        ],
+        [
+          "0-1 Knapsack Problem",
+          0.6
+        ]
+      ],
+      "semantically_relevant": true
+    },
+    {
+      "query": "database transaction durability",
+      "expected": "ACID Properties",
+      "top_name": "ACID Properties",
+      "top_score": 0.99,
+      "top3": [
+        [
+          "ACID Properties",
+          0.99
+        ],
+        [
+          "Write-Ahead Logging",
+          0.99
+        ],
+        [
+          "Database Sharding",
+          0.99
+        ]
+      ],
+      "semantically_relevant": true
+    },
+    {
+      "query": "browser authentication",
+      "expected": "JSON Web Token",
+      "top_name": "JSON Web Token",
+      "top_score": 0.99,
+      "top3": [
+        [
+          "JSON Web Token",
+          0.99
+        ],
+        [
+          "OAuth 2.0",
+          0.9
+        ],
+        [
+          "Content Security Policy",
+          0.3
+        ]
+      ],
+      "semantically_relevant": true
+    },
+    {
+      "query": "network communication protocol",
+      "expected": "Address Resolution Protocol",
+      "top_name": "Address Resolution Protocol",
+      "top_score": 1,
+      "top3": [
+        [
+          "Address Resolution Protocol",
+          1
+        ],
+        [
+          "Dynamic Host Configuration Protocol",
+          0.833
+        ],
+        [
+          "Gossip Protocol",
+          0.833
+        ]
+      ],
+      "semantically_relevant": true
+    },
+    {
+      "query": "overlapping subproblems",
+      "expected": "Dynamic Programming",
+      "top_name": "Dynamic Programming",
+      "top_score": 0.99,
+      "top3": [
+        [
+          "Dynamic Programming",
+          0.99
+        ],
+        [
+          "Pipelining",
+          0.1
+        ]
+      ],
+      "semantically_relevant": true
+    },
+    {
+      "query": "sorting by dividing and merging",
+      "expected": "Merge Sort",
+      "top_name": "Merge Sort",
+      "top_score": 0.99,
+      "top3": [
+        [
+          "Merge Sort",
+          0.99
+        ],
+        [
+          "Counting Sort",
+          0.99
+        ],
+        [
+          "Bucket Sort",
+          0.99
+        ]
+      ],
+      "semantically_relevant": true
+    },
+    {
+      "query": "finding cycles in graphs",
+      "expected": "Cycle Detection",
+      "top_name": "Cycle Detection",
+      "top_score": 0.99,
+      "top3": [
+        [
+          "Cycle Detection",
+          0.99
+        ],
+        [
+          "Deadlock Detection Algorithm",
+          0.99
+        ],
+        [
+          "Bipartite Graph Check",
+          0.767
+        ]
+      ],
+      "semantically_relevant": true
+    },
+    {
+      "query": "first in first out linear structure",
+      "expected": "Queue",
+      "top_name": "Stack",
+      "top_score": 0.99,
+      "top3": [
+        [
+          "Stack",
+          0.99
+        ],
+        [
+          "Queue",
+          0.99
+        ],
+        [
+          "Log-Structured Merge-Tree",
+          0.49
+        ]
+      ],
+      "semantically_relevant": true
+    },
+    {
+      "query": "probabilistic membership testing",
+      "expected": "Bloom Filter Membership",
+      "top_name": "Bloom Filter",
+      "top_score": 0.99,
+      "top3": [
+        [
+          "Bloom Filter",
+          0.99
+        ],
+        [
+          "Bloom Filter Membership",
+          0.863
+        ],
+        [
+          "Chaos Engineering",
+          0.45
+        ]
+      ],
+      "semantically_relevant": true
+    },
+    {
+      "query": "public key asymmetric encryption",
+      "expected": "Public Key Cryptography",
+      "top_name": "Public Key Cryptography",
+      "top_score": 0.99,
+      "top3": [
+        [
+          "Public Key Cryptography",
+          0.99
+        ],
+        [
+          "Diffie-Hellman Key Exchange",
+          0.99
+        ],
+        [
+          "Transport Layer Security",
+          0.919
+        ]
+      ],
+      "semantically_relevant": true
+    },
+    {
+      "query": "distributed consensus algorithm",
+      "expected": "Consensus Protocol",
+      "top_name": "Raft Consensus Algorithm",
+      "top_score": 0.99,
+      "top3": [
+        [
+          "Raft Consensus Algorithm",
+          0.99
+        ],
+        [
+          "Paxos Algorithm",
+          0.99
+        ],
+        [
+          "Consensus Protocol",
+          0.99
+        ]
+      ],
+      "semantically_relevant": true
+    },
+    {
+      "query": "container virtualization engine",
+      "expected": "Containerization",
+      "top_name": "Inverted Index",
+      "top_score": 0.5625,
+      "top3": [
+        [
+          "Inverted Index",
+          0.562
+        ],
+        [
+          "Containerization",
+          0.562
+        ],
+        [
+          "Trie",
+          0.45
+        ]
+      ],
+      "semantically_relevant": true
+    },
+    {
+      "query": "deep learning natural language model with attention",
+      "expected": "Transformer Architecture",
+      "top_name": "Transformer Architecture",
+      "top_score": 0.99,
+      "top3": [
+        [
+          "Transformer Architecture",
+          0.99
+        ],
+        [
+          "Intermediate Representation",
+          0.562
+        ],
+        [
+          "Vector Embeddings",
+          0.375
+        ]
+      ],
+      "semantically_relevant": true
+    },
+    {
+      "query": "hierarchical domain name resolution",
+      "expected": "Domain Name System",
+      "top_name": "Domain Name System",
+      "top_score": 0.99,
+      "top3": [
+        [
+          "Domain Name System",
+          0.99
+        ],
+        [
+          "Domain-Driven Design",
+          0.531
+        ],
+        [
+          "Address Resolution Protocol",
+          0.25
+        ]
+      ],
+      "semantically_relevant": true
+    },
+    {
+      "query": "cryptographic secure hashing function",
+      "expected": "Salted Password Hashing",
+      "top_name": "Salted Password Hashing",
+      "top_score": 0.99,
+      "top3": [
+        [
+          "Salted Password Hashing",
+          0.99
+        ],
+        [
+          "Consistent Hashing",
+          0.933
+        ],
+        [
+          "Hash Table",
+          0.867
+        ]
+      ],
+      "semantically_relevant": true
+    }
+  ],
+  "admin": {
+    "unauthorized_rejected": true,
+    "keyword_crud_pass": true,
+    "concept_crud_pass": true
+  }
+}

@@ -4,7 +4,7 @@
 #include <string.h>
 #include <ctype.h>
 
-/* Convert normalized character ('a'-'z' or ' ') to index 0-26 */
+/* Convert normalized character ('a'-'z', ' ', '0'-'9') to index 0-36 */
 int trie_char_to_index(char c) {
     if (c >= 'a' && c <= 'z') {
         return c - 'a';
@@ -12,10 +12,13 @@ int trie_char_to_index(char c) {
     if (c == ' ') {
         return 26;
     }
+    if (c >= '0' && c <= '9') {
+        return 27 + (c - '0');
+    }
     return -1;
 }
 
-/* Convert index 0-26 back to character */
+/* Convert index 0-36 back to character */
 char trie_index_to_char(int index) {
     if (index >= 0 && index < 26) {
         return (char)('a' + index);
@@ -23,10 +26,13 @@ char trie_index_to_char(int index) {
     if (index == 26) {
         return ' ';
     }
+    if (index >= 27 && index <= 36) {
+        return (char)('0' + (index - 27));
+    }
     return '\0';
 }
 
-/* Normalize string: lowercase, collapses spaces, strips unsupported chars */
+/* Normalize string: lowercase, collapses spaces, preserves digits and alphanumeric terms */
 char* trie_normalize(const char *input) {
     if (!input) return NULL;
     size_t len = strlen(input);
@@ -41,7 +47,10 @@ char* trie_normalize(const char *input) {
         if (isalpha(c)) {
             cleaned[out_idx++] = (char)tolower(c);
             prev_space = false;
-        } else if (isspace(c) || c == '-' || c == '_') {
+        } else if (isdigit(c)) {
+            cleaned[out_idx++] = (char)c;
+            prev_space = false;
+        } else if (isspace(c) || c == '-' || c == '_' || c == '/') {
             if (!prev_space) {
                 cleaned[out_idx++] = ' ';
                 prev_space = true;

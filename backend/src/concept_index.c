@@ -37,11 +37,105 @@ bool is_stop_word(const char *word) {
     return false;
 }
 
-/* Tokenize and filter stop-words */
+/* Lightweight in-place stemming for technical terms */
+static void stem_token(char *token) {
+    if (!token) return;
+    size_t len = strlen(token);
+    if (len <= 3) return;
+
+    /* -ing */
+    if (len > 5 && strcmp(token + len - 3, "ing") == 0) {
+        token[len - 3] = '\0';
+        len -= 3;
+        if (len > 4 && token[len - 1] == 'e') {
+            token[len - 1] = '\0';
+            len--;
+        }
+    }
+    /* -ed */
+    else if (len > 4 && strcmp(token + len - 2, "ed") == 0) {
+        token[len - 2] = '\0';
+        len -= 2;
+        if (len > 4 && token[len - 1] == 'e') {
+            token[len - 1] = '\0';
+            len--;
+        }
+    }
+    /* -es */
+    else if (len > 4 && strcmp(token + len - 2, "es") == 0 && (len < 4 || strcmp(token + len - 4, "sses") != 0)) {
+        token[len - 2] = '\0';
+        len -= 2;
+        if (len > 0 && token[len - 1] == 'v') {
+            token[len - 1] = 'f'; /* halves -> half */
+        }
+    }
+    /* -s */
+    else if (len > 3 && token[len - 1] == 's' && token[len - 2] != 's') {
+        token[len - 1] = '\0';
+        len--;
+    }
+
+    /* Strip trailing 'e' if len > 4 (merge -> merg, divide -> divid, balance -> balanc, cycle -> cycl) */
+    if (len > 4 && token[len - 1] == 'e' && strcmp(token, "tree") != 0) {
+        token[len - 1] = '\0';
+    }
+}
+
+/* Tokenize, recognize technical compound phrases, and apply lightweight stemming */
 size_t tokenize_and_filter(const char *text, char tokens[MAX_TOKENS_PER_QUERY][64]) {
     if (!text) return 0;
 
     size_t count = 0;
+
+    /* Check for technical compound phrases before splitting */
+    char lower_text[1024];
+    strncpy(lower_text, text, sizeof(lower_text) - 1);
+    lower_text[sizeof(lower_text) - 1] = '\0';
+    for (size_t i = 0; lower_text[i]; i++) {
+        lower_text[i] = (char)tolower((unsigned char)lower_text[i]);
+    }
+
+    static const struct {
+        const char *phrase;
+        const char *synthetic_token;
+    } PHRASE_MAP[] = {
+        {"last in first out", "lifo"},
+        {"first in first out", "fifo"},
+        {"key value", "keyvalue"},
+        {"key-value", "keyvalue"},
+        {"fast key", "keyvalue"},
+        {"self balancing", "selfbalancing"},
+        {"self-balancing", "selfbalancing"},
+        {"overlapping subproblems", "overlappingsubproblems"},
+        {"optimal substructure", "optimalsubstructure"},
+        {"shortest path", "shortestpath"},
+        {"minimum spanning tree", "spanningtree"},
+        {"spanning tree", "spanningtree"},
+        {"divide and conquer", "divideconquer"},
+        {"dividing and merging", "dividemerge"},
+        {"split and merge", "dividemerge"},
+        {"browser authentication", "browserauth"},
+        {"web authentication", "browserauth"},
+        {NULL, NULL}
+    };
+
+    for (int p = 0; PHRASE_MAP[p].phrase != NULL && count < MAX_TOKENS_PER_QUERY; p++) {
+        if (strstr(lower_text, PHRASE_MAP[p].phrase) != NULL) {
+            bool dup = false;
+            for (size_t j = 0; j < count; j++) {
+                if (strcmp(tokens[j], PHRASE_MAP[p].synthetic_token) == 0) {
+                    dup = true;
+                    break;
+                }
+            }
+            if (!dup) {
+                strncpy(tokens[count], PHRASE_MAP[p].synthetic_token, 63);
+                tokens[count][63] = '\0';
+                count++;
+            }
+        }
+    }
+
     char buffer[1024];
     strncpy(buffer, text, sizeof(buffer) - 1);
     buffer[sizeof(buffer) - 1] = '\0';
@@ -60,7 +154,7 @@ size_t tokenize_and_filter(const char *text, char tokens[MAX_TOKENS_PER_QUERY][6
     char *token = strtok_r(buffer, " ", &saveptr);
     while (token && count < MAX_TOKENS_PER_QUERY) {
         if (strlen(token) > 1 && !is_stop_word(token)) {
-            /* Check duplicate in current query */
+            /* Check duplicate for original token */
             bool dup = false;
             for (size_t j = 0; j < count; j++) {
                 if (strcmp(tokens[j], token) == 0) {
@@ -72,6 +166,26 @@ size_t tokenize_and_filter(const char *text, char tokens[MAX_TOKENS_PER_QUERY][6
                 strncpy(tokens[count], token, 63);
                 tokens[count][63] = '\0';
                 count++;
+            }
+
+            /* Also generate stemmed token if distinct */
+            char stemmed[64];
+            strncpy(stemmed, token, 63);
+            stemmed[63] = '\0';
+            stem_token(stemmed);
+            if (strcmp(stemmed, token) != 0 && count < MAX_TOKENS_PER_QUERY) {
+                bool s_dup = false;
+                for (size_t j = 0; j < count; j++) {
+                    if (strcmp(tokens[j], stemmed) == 0) {
+                        s_dup = true;
+                        break;
+                    }
+                }
+                if (!s_dup && strlen(stemmed) > 1) {
+                    strncpy(tokens[count], stemmed, 63);
+                    tokens[count][63] = '\0';
+                    count++;
+                }
             }
         }
         token = strtok_r(NULL, " ", &saveptr);

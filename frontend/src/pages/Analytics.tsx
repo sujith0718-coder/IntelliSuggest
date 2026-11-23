@@ -93,10 +93,15 @@ export const AnalyticsPage: React.FC = () => {
       {/* Primary KPI Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <MetricCard
-          title="Total Searches Submitted"
+          title="Total User Searches"
           value={summary?.total_searches ?? 0}
-          subtitle="Audit log events in database"
+          subtitle={
+            summary?.demo_searches && summary.demo_searches > 0
+              ? `Real user queries (+${summary.demo_searches} demo events)`
+              : "Live user audit events in DB"
+          }
           icon={<Search className="w-5 h-5 text-teal-400" />}
+          badge={summary?.demo_searches ? "Demo Filtered" : undefined}
         />
         <MetricCard
           title="Active Keywords In-Memory"
@@ -258,9 +263,16 @@ export const AnalyticsPage: React.FC = () => {
                   key={item.id}
                   className="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80 text-xs hover:border-slate-700 transition-colors"
                 >
-                  <span className="font-semibold text-slate-200 truncate max-w-[140px]">{item.keyword}</span>
+                  <div className="flex items-center space-x-2 truncate max-w-[170px]">
+                    <span className="font-semibold text-slate-200 truncate">{item.keyword}</span>
+                    {item.is_demo && (
+                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 flex-shrink-0">
+                        Demo
+                      </span>
+                    )}
+                  </div>
                   <span className="text-slate-500 font-mono text-[11px]">
-                    {item.searched_at ? new Date(item.searched_at).toLocaleTimeString() : 'Just now'}
+                    {item.searched_at ? new Date(item.searched_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : 'Recent'}
                   </span>
                 </div>
               ))

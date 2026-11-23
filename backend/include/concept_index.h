@@ -5,7 +5,7 @@
 #include <stddef.h>
 
 #define MAX_CONCEPT_KEYWORDS 10
-#define MAX_CONCEPTS 256
+#define MAX_CONCEPTS 512
 #define MAX_TOKENS_PER_QUERY 32
 
 /* Concept record */

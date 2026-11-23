@@ -406,8 +406,8 @@ bool db_cloud_record_search(const char *keyword, int *out_new_frequency, const c
     /* Record search history */
     char hist_sql[512];
     snprintf(hist_sql, sizeof(hist_sql),
-             "INSERT INTO search_history(keyword_id, searched_at) "
-             "SELECT id, '%s' FROM keywords WHERE keyword = '%s';",
+             "INSERT INTO search_history(keyword_id, searched_at, is_demo) "
+             "SELECT id, '%s', 0 FROM keywords WHERE keyword = '%s';",
              now, esc);
     cJSON *r2 = execute_cloud_sql(hist_sql);
     if (r2) cJSON_Delete(r2);
@@ -590,7 +590,7 @@ size_t db_cloud_get_recent_history(size_t limit, DBHistoryRecord **out_records) 
 
     char sql[512];
     snprintf(sql, sizeof(sql),
-             "SELECT sh.id, k.keyword, sh.searched_at "
+             "SELECT sh.id, k.keyword, sh.searched_at, COALESCE(sh.is_demo, 0) AS is_demo "
              "FROM search_history sh JOIN keywords k ON sh.keyword_id = k.id "
              "ORDER BY sh.id DESC LIMIT %zu;", limit > 0 ? limit : 20);
 
@@ -618,6 +618,8 @@ size_t db_cloud_get_recent_history(size_t limit, DBHistoryRecord **out_records) 
         cJSON *sa = cJSON_GetObjectItem(row, "searched_at");
 
         records[i].id = id ? id->valueint : 0;
+        cJSON *dem = cJSON_GetObjectItem(row, "is_demo");
+        records[i].is_demo = dem ? (dem->valueint == 1) : false;
         if (kw && kw->valuestring) strncpy(records[i].keyword, kw->valuestring, sizeof(records[i].keyword) - 1);
         if (sa && sa->valuestring) strncpy(records[i].searched_at, sa->valuestring, sizeof(records[i].searched_at) - 1);
     }
@@ -727,7 +729,8 @@ bool db_cloud_get_analytics_summary(DBAnalyticsSummary *out_summary) {
         "SELECT "
         "(SELECT count(*) FROM keywords) AS total_kw, "
         "(SELECT count(*) FROM keywords WHERE is_active = 1) AS active_kw, "
-        "(SELECT count(*) FROM search_history) AS total_sh, "
+        "(SELECT count(*) FROM search_history WHERE is_demo = 0) AS total_sh, "
+        "(SELECT count(*) FROM search_history WHERE is_demo = 1) AS demo_sh, "
         "(SELECT count(*) FROM keywords WHERE is_active = 0) AS expired_kw;";
 
     cJSON *res = execute_cloud_sql(sql);
@@ -739,11 +742,13 @@ bool db_cloud_get_analytics_summary(DBAnalyticsSummary *out_summary) {
         cJSON *tkw = cJSON_GetObjectItem(row0, "total_kw");
         cJSON *akw = cJSON_GetObjectItem(row0, "active_kw");
         cJSON *tsh = cJSON_GetObjectItem(row0, "total_sh");
+        cJSON *dsh = cJSON_GetObjectItem(row0, "demo_sh");
         cJSON *ekw = cJSON_GetObjectItem(row0, "expired_kw");
 
         if (tkw) out_summary->total_keywords = (size_t)tkw->valueint;
         if (akw) out_summary->active_keywords = (size_t)akw->valueint;
         if (tsh) out_summary->total_searches = (size_t)tsh->valueint;
+        if (dsh) out_summary->demo_searches = (size_t)dsh->valueint;
         if (ekw) out_summary->expired_keywords = (size_t)ekw->valueint;
     }
 

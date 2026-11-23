@@ -12,6 +12,7 @@ typedef struct {
     int id;
     char keyword[128];
     char searched_at[32];
+    bool is_demo;
 } DBHistoryRecord;
 
 /* Keyword record */
@@ -30,6 +31,7 @@ typedef struct {
     size_t active_keywords;
     size_t total_searches;
     size_t expired_keywords;
+    size_t demo_searches;
 } DBAnalyticsSummary;
 
 /* Concept Record */

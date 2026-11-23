@@ -121,10 +121,12 @@ bool db_create_schema(void) {
         "  id INTEGER PRIMARY KEY AUTOINCREMENT,"
         "  keyword_id INTEGER NOT NULL,"
         "  searched_at TEXT NOT NULL,"
+        "  is_demo INTEGER DEFAULT 0,"
         "  FOREIGN KEY(keyword_id) REFERENCES keywords(id) ON DELETE CASCADE"
         ");"
         "CREATE INDEX IF NOT EXISTS idx_sh_keyword ON search_history(keyword_id);"
         "CREATE INDEX IF NOT EXISTS idx_sh_time ON search_history(searched_at DESC);"
+        "CREATE INDEX IF NOT EXISTS idx_sh_demo ON search_history(is_demo);"
         "CREATE TABLE IF NOT EXISTS concepts ("
         "  id INTEGER PRIMARY KEY AUTOINCREMENT,"
         "  concept_name TEXT UNIQUE NOT NULL,"
@@ -151,6 +153,11 @@ bool db_create_schema(void) {
         if (errmsg) sqlite3_free(errmsg);
         return false;
     }
+
+    /* Auto-migrate existing database to add is_demo if missing */
+    sqlite3_exec(g_db, "ALTER TABLE search_history ADD COLUMN is_demo INTEGER DEFAULT 0;", NULL, NULL, NULL);
+    sqlite3_exec(g_db, "CREATE INDEX IF NOT EXISTS idx_sh_demo ON search_history(is_demo);", NULL, NULL, NULL);
+
     return true;
 }
 
@@ -302,7 +309,7 @@ bool db_record_search(const char *keyword, int *out_new_frequency, const char *s
     /* 3. Record in search_history */
     if (kw_id > 0) {
         sqlite3_stmt *stmt3 = NULL;
-        const char *hist_sql = "INSERT INTO search_history(keyword_id, searched_at) VALUES(?, ?);";
+        const char *hist_sql = "INSERT INTO search_history(keyword_id, searched_at, is_demo) VALUES(?, ?, 0);";
         if (sqlite3_prepare_v2(g_db, hist_sql, -1, &stmt3, NULL) == SQLITE_OK) {
             sqlite3_bind_int(stmt3, 1, kw_id);
             sqlite3_bind_text(stmt3, 2, now, -1, SQLITE_STATIC);
@@ -500,7 +507,7 @@ size_t db_get_recent_history(size_t limit, DBHistoryRecord **out_records) {
 
     sqlite3_stmt *stmt = NULL;
     const char *sql =
-        "SELECT h.id, k.keyword, h.searched_at "
+        "SELECT h.id, k.keyword, h.searched_at, COALESCE(h.is_demo, 0) "
         "FROM search_history h "
         "JOIN keywords k ON h.keyword_id = k.id "
         "ORDER BY h.id DESC LIMIT ?;";
@@ -519,6 +526,7 @@ size_t db_get_recent_history(size_t limit, DBHistoryRecord **out_records) {
         records[count].id = sqlite3_column_int(stmt, 0);
         const char *kw = (const char *)sqlite3_column_text(stmt, 1);
         const char *time_str = (const char *)sqlite3_column_text(stmt, 2);
+        records[count].is_demo = (sqlite3_column_int(stmt, 3) == 1);
 
         strncpy(records[count].keyword, kw ? kw : "", sizeof(records[count].keyword) - 1);
         records[count].keyword[sizeof(records[count].keyword) - 1] = '\0';
@@ -664,9 +672,10 @@ bool db_get_analytics_summary(DBAnalyticsSummary *out_summary) {
     }
 
     sqlite3_stmt *s2 = NULL;
-    if (sqlite3_prepare_v2(g_db, "SELECT COUNT(*) FROM search_history;", -1, &s2, NULL) == SQLITE_OK) {
+    if (sqlite3_prepare_v2(g_db, "SELECT COUNT(CASE WHEN is_demo = 0 THEN 1 END), COUNT(CASE WHEN is_demo = 1 THEN 1 END) FROM search_history;", -1, &s2, NULL) == SQLITE_OK) {
         if (sqlite3_step(s2) == SQLITE_ROW) {
             out_summary->total_searches = (size_t)sqlite3_column_int(s2, 0);
+            out_summary->demo_searches = (size_t)sqlite3_column_int(s2, 1);
         }
         sqlite3_finalize(s2);
     }

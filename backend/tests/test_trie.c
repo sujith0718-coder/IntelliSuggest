@@ -30,8 +30,12 @@ void test_trie_lifecycle_and_normalization(void) {
     free(norm1);
 
     char *norm2 = trie_normalize("C++ & Algorithms-101!");
-    TEST_ASSERT(strcmp(norm2, "c algorithms") == 0, "Strips symbols and punctuation properly");
+    TEST_ASSERT(strcmp(norm2, "c algorithms 101") == 0, "Preserves digits in technical alphanumeric keywords");
     free(norm2);
+
+    char *norm3 = trie_normalize("SHA-256 Hash & IPv6 Addressing / HTTP/2");
+    TEST_ASSERT(strcmp(norm3, "sha 256 hash ipv6 addressing http 2") == 0, "Normalizes technical terms with digits and slashes");
+    free(norm3);
 
     trie_free(trie);
     TEST_ASSERT(true, "trie_free executed cleanly without memory crash");

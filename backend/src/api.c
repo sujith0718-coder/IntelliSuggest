@@ -529,6 +529,7 @@ static int handle_history(struct mg_connection *conn, void *cbdata) {
         cJSON_AddNumberToObject(item, "id", records[i].id);
         cJSON_AddStringToObject(item, "keyword", records[i].keyword);
         cJSON_AddStringToObject(item, "searched_at", records[i].searched_at);
+        cJSON_AddBoolToObject(item, "is_demo", records[i].is_demo);
         cJSON_AddItemToArray(arr, item);
     }
     cJSON_AddItemToObject(resp, "history", arr);
@@ -622,6 +623,7 @@ static int handle_analytics(struct mg_connection *conn, void *cbdata) {
     cJSON_AddNumberToObject(resp, "active_keywords", (double)summary.active_keywords);
     cJSON_AddNumberToObject(resp, "expired_keywords", (double)summary.expired_keywords);
     cJSON_AddNumberToObject(resp, "total_searches", (double)summary.total_searches);
+    cJSON_AddNumberToObject(resp, "demo_searches", (double)summary.demo_searches);
     cJSON_AddNumberToObject(resp, "trie_total_words", (double)trie_words);
     cJSON_AddNumberToObject(resp, "trie_total_nodes", (double)trie_nodes);
     cJSON_AddNumberToObject(resp, "hash_load_factor", (double)load_factor);

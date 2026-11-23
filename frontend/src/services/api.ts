@@ -28,6 +28,7 @@ export interface HistoryItem {
   id: number;
   keyword: string;
   searched_at: string;
+  is_demo?: boolean;
 }
 
 export interface PopularItem {
@@ -42,6 +43,7 @@ export interface AnalyticsSummary {
   active_keywords: number;
   expired_keywords?: number;
   total_searches: number;
+  demo_searches?: number;
   trie_total_words: number;
   trie_total_nodes: number;
   hash_load_factor: number;

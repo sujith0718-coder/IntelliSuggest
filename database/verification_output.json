@@ -1,0 +1,421 @@
+{
+  "health": {
+    "status": "ok",
+    "service": "IntelliSuggest C DSA Core",
+    "database_driver": "SQLite (Local Embedded)",
+    "database": "connected",
+    "persistence": "healthy",
+    "pending_writes": 0,
+    "persisted_writes": 0,
+    "failed_writes": 0
+  },
+  "analytics_initial": {
+    "total_keywords": 1067,
+    "active_keywords": 1067,
+    "expired_keywords": 0,
+    "total_searches": 2,
+    "demo_searches": 500,
+    "trie_total_words": 1051,
+    "trie_total_nodes": 14478,
+    "hash_load_factor": 0.51318359375,
+    "hash_collisions": 217,
+    "pending_writes": 0,
+    "persisted_writes": 0,
+    "failed_writes": 0
+  },
+  "prefix_tests": {
+    "py": {
+      "count": 1,
+      "cached_latency_us": 7.4999847412109375,
+      "heap_latency_us": 16.600021362304688,
+      "is_sorted_by_freq": true,
+      "top_suggestions": [
+        [
+          "python",
+          151
+        ]
+      ]
+    },
+    "jav": {
+      "count": 2,
+      "cached_latency_us": 7.9000091552734375,
+      "heap_latency_us": 21.199996948242188,
+      "is_sorted_by_freq": true,
+      "top_suggestions": [
+        [
+          "javascript",
+          450
+        ],
+        [
+          "java",
+          430
+        ]
+      ]
+    },
+    "bin": {
+      "count": 5,
+      "cached_latency_us": 12.300003051757812,
+      "heap_latency_us": 44.899993896484375,
+      "is_sorted_by_freq": true,
+      "top_suggestions": [
+        [
+          "binary search",
+          320
+        ],
+        [
+          "binary tree",
+          180
+        ],
+        [
+          "binary search tree",
+          96
+        ],
+        [
+          "binomial distribution",
+          22
+        ],
+        [
+          "binomial heap",
+          18
+        ]
+      ]
+    },
+    "tr": {
+      "count": 10,
+      "cached_latency_us": 110,
+      "heap_latency_us": 83.90000915527344,
+      "is_sorted_by_freq": true,
+      "top_suggestions": [
+        [
+          "trie",
+          260
+        ],
+        [
+          "transformers",
+          115
+        ],
+        [
+          "transaction isolation",
+          82
+        ],
+        [
+          "trie node",
+          78
+        ],
+        [
+          "translation lookaside buffer",
+          26
+        ]
+      ]
+    },
+    "gra": {
+      "count": 10,
+      "cached_latency_us": 16.5,
+      "heap_latency_us": 81.50001525878906,
+      "is_sorted_by_freq": true,
+      "top_suggestions": [
+        [
+          "graph",
+          175
+        ],
+        [
+          "graphql",
+          130
+        ],
+        [
+          "gradient boosting",
+          86
+        ],
+        [
+          "graph theory",
+          84
+        ],
+        [
+          "grafana",
+          82
+        ]
+      ]
+    },
+    "has": {
+      "count": 5,
+      "cached_latency_us": 10.100006103515625,
+      "heap_latency_us": 40.399993896484375,
+      "is_sorted_by_freq": true,
+      "top_suggestions": [
+        [
+          "hash table",
+          265
+        ],
+        [
+          "hash map",
+          94
+        ],
+        [
+          "hash set",
+          86
+        ],
+        [
+          "haskell",
+          26
+        ],
+        [
+          "hash join",
+          25
+        ]
+      ]
+    },
+    "doc": {
+      "count": 8,
+      "cached_latency_us": 13.699996948242188,
+      "heap_latency_us": 86.89999389648438,
+      "is_sorted_by_freq": true,
+      "top_suggestions": [
+        [
+          "docker",
+          270
+        ],
+        [
+          "docker compose multi container",
+          26
+        ],
+        [
+          "docker multi stage build",
+          26
+        ],
+        [
+          "dockerfile instructions",
+          26
+        ],
+        [
+          "docker image layer caching",
+          24
+        ]
+      ]
+    },
+    "mac": {
+      "count": 1,
+      "cached_latency_us": 7.20001220703125,
+      "heap_latency_us": 19.699996948242188,
+      "is_sorted_by_freq": true,
+      "top_suggestions": [
+        [
+          "machine learning",
+          225
+        ]
+      ]
+    },
+    "net": {
+      "count": 10,
+      "cached_latency_us": 13.70001220703125,
+      "heap_latency_us": 166.59999084472656,
+      "is_sorted_by_freq": true,
+      "top_suggestions": [
+        [
+          "networking jitter buffer",
+          24
+        ],
+        [
+          "networking routing table prefix",
+          22
+        ],
+        [
+          "networking frame forwarding",
+          19
+        ],
+        [
+          "networking bandwidth delay",
+          17
+        ],
+        [
+          "networking flow control window",
+          14
+        ]
+      ]
+    },
+    "rea": {
+      "count": 9,
+      "cached_latency_us": 9.30000305175781,
+      "heap_latency_us": 74.10000610351562,
+      "is_sorted_by_freq": true,
+      "top_suggestions": [
+        [
+          "react",
+          380
+        ],
+        [
+          "react hooks",
+          28
+        ],
+        [
+          "react redux",
+          26
+        ],
+        [
+          "react router",
+          26
+        ],
+        [
+          "read replica",
+          25
+        ]
+      ]
+    }
+  },
+  "frequency_tests": {
+    "no_increment_on_type": true,
+    "increment_on_submit": true,
+    "cache_heap_sync": true,
+    "initial_freq": 28,
+    "final_freq": 29
+  },
+  "forgotten_name_tests": [
+    {
+      "query": "shortest path algorithm",
+      "top_match": "Dijkstra Algorithm",
+      "score": 0.99,
+      "count": 5
+    },
+    {
+      "query": "prefix-based searching",
+      "top_match": "Trie",
+      "score": 0.75,
+      "count": 5
+    },
+    {
+      "query": "last in first out",
+      "top_match": "Queue",
+      "score": 0.3375,
+      "count": 5
+    },
+    {
+      "query": "minimum spanning tree",
+      "top_match": "Prim's Algorithm",
+      "score": 0.99,
+      "count": 5
+    },
+    {
+      "query": "self-balancing binary search tree",
+      "top_match": "Binary Search",
+      "score": 0.99,
+      "count": 5
+    },
+    {
+      "query": "fast key-value lookup",
+      "top_match": "Diffie-Hellman Key Exchange",
+      "score": 0.625,
+      "count": 5
+    },
+    {
+      "query": "database transaction durability",
+      "top_match": "ACID Properties",
+      "score": 0.99,
+      "count": 5
+    },
+    {
+      "query": "browser authentication",
+      "top_match": "Same-Origin Policy",
+      "score": 0.3375,
+      "count": 5
+    },
+    {
+      "query": "network communication protocol",
+      "top_match": "Address Resolution Protocol",
+      "score": 1,
+      "count": 5
+    },
+    {
+      "query": "overlapping subproblems",
+      "top_match": "NONE",
+      "score": 0,
+      "count": 0
+    },
+    {
+      "query": "sorting by dividing and merging",
+      "top_match": "Kruskal's Algorithm",
+      "score": 0.3,
+      "count": 5
+    },
+    {
+      "query": "finding cycles in graphs",
+      "top_match": "Cycle Detection",
+      "score": 0.25,
+      "count": 5
+    },
+    {
+      "query": "first in first out linear structure",
+      "top_match": "Queue",
+      "score": 0.75,
+      "count": 5
+    },
+    {
+      "query": "probabilistic membership testing",
+      "top_match": "Bloom Filter Membership",
+      "score": 0.9583333333333333,
+      "count": 5
+    },
+    {
+      "query": "public key asymmetric encryption",
+      "top_match": "Public Key Cryptography",
+      "score": 0.99,
+      "count": 5
+    },
+    {
+      "query": "distributed consensus algorithm",
+      "top_match": "Consensus Protocol",
+      "score": 1,
+      "count": 5
+    },
+    {
+      "query": "container virtualization engine",
+      "top_match": "Containerization",
+      "score": 0.625,
+      "count": 5
+    },
+    {
+      "query": "deep learning natural language model with attention",
+      "top_match": "Transformer Architecture",
+      "score": 0.99,
+      "count": 5
+    },
+    {
+      "query": "hierarchical domain name resolution",
+      "top_match": "Domain Name System",
+      "score": 0.99,
+      "count": 5
+    },
+    {
+      "query": "cryptographic secure hashing function",
+      "top_match": "Salted Password Hashing",
+      "score": 0.75,
+      "count": 5
+    }
+  ],
+  "analytics_verification": {
+    "total_keywords": 1067,
+    "trie_total_words": 1051,
+    "trie_total_nodes": 14478,
+    "total_searches": 3,
+    "demo_searches": 500,
+    "hash_load_factor": 0.51318359375,
+    "hash_collisions": 217,
+    "pending_writes": 0,
+    "persisted_writes": 1,
+    "failed_writes": 0,
+    "trending_count": 10,
+    "history_total_retrieved": 15,
+    "history_demo_count": 13,
+    "history_real_count": 2
+  },
+  "admin_tests": {
+    "security": {
+      "post_keyword_unauth_status": 401,
+      "delete_keyword_unauth_status": 401,
+      "post_concept_unauth_status": 401,
+      "unauth_properly_rejected": true
+    },
+    "crud": {
+      "keyword_crud_success": true,
+      "concept_crud_success": true
+    }
+  }
+}

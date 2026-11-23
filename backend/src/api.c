@@ -73,6 +73,17 @@ static char* read_request_body(struct mg_connection *conn) {
     return strdup(buffer);
 }
 
+/* GET /api/health */
+static int handle_health(struct mg_connection *conn, void *cbdata) {
+    (void)cbdata;
+    const struct mg_request_info *req = mg_get_request_info(conn);
+    if (strcmp(req->request_method, "OPTIONS") == 0) return handle_cors_options(conn);
+    cJSON *resp = cJSON_CreateObject();
+    cJSON_AddStringToObject(resp, "status", "ok");
+    cJSON_AddStringToObject(resp, "service", "IntelliSuggest C DSA Core");
+    return send_json(conn, 200, resp);
+}
+
 /* GET /api/suggestions?prefix={prefix}&mode={cached|heap} */
 static int handle_suggestions(struct mg_connection *conn, void *cbdata) {
     const struct mg_request_info *req = mg_get_request_info(conn);
@@ -509,6 +520,7 @@ void api_server_start(ServerContext *ctx) {
     }
 
     /* Register REST handlers */
+    mg_set_request_handler(g_mg_ctx, "/api/health", handle_health, ctx);
     mg_set_request_handler(g_mg_ctx, "/api/suggestions", handle_suggestions, ctx);
     mg_set_request_handler(g_mg_ctx, "/api/search", handle_search_submit, ctx);
     mg_set_request_handler(g_mg_ctx, "/api/popular", handle_popular, ctx);

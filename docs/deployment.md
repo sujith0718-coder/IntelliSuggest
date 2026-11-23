@@ -48,3 +48,4 @@ docker logs -f intellisuggest-app
 # Open in browser:
 # http://localhost:8080
 ```
+

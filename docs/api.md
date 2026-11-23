@@ -100,3 +100,4 @@ The IntelliSuggest backend exposes HTTP endpoints through the embedded CivetWeb 
 - `POST /api/keywords/cleanup`: Trigger expiration cleanup (e.g., > 90 days inactive).
 - `GET /api/analytics`: Aggregate statistics (total keywords, total searches, cache hit rate).
 - `GET /api/performance`: Live performance benchmarking metrics.
+

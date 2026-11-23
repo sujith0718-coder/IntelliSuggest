@@ -1,0 +1,25 @@
+{
+  "benchmarks": [
+    {
+      "dataset_size": 10000,
+      "heap": {"avg_us": 677.24, "p50_us": 582.00, "p95_us": 1771.20, "p99_us": 2444.90, "qps": 1477},
+      "cached": {"avg_us": 1.58, "p50_us": 1.10, "p95_us": 3.50, "p99_us": 6.20, "qps": 631305},
+      "speedup": 427.5,
+      "update_latency_us": 8074.83
+    },
+    {
+      "dataset_size": 25000,
+      "heap": {"avg_us": 1535.96, "p50_us": 1681.50, "p95_us": 3160.00, "p99_us": 4149.70, "qps": 651},
+      "cached": {"avg_us": 1.92, "p50_us": 1.60, "p95_us": 3.60, "p99_us": 5.50, "qps": 521523},
+      "speedup": 801.0,
+      "update_latency_us": 19232.41
+    },
+    {
+      "dataset_size": 50000,
+      "heap": {"avg_us": 3436.17, "p50_us": 3723.80, "p95_us": 7165.80, "p99_us": 9469.60, "qps": 291},
+      "cached": {"avg_us": 2.93, "p50_us": 2.30, "p95_us": 5.30, "p99_us": 10.30, "qps": 341691},
+      "speedup": 1174.1,
+      "update_latency_us": 40247.23
+    }
+  ]
+}

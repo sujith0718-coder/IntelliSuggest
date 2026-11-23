@@ -43,3 +43,4 @@ Trade-Off Matrix:
 | Consistency Risk  | None (computed live)      | Requires cache propagation |
 +-------------------+---------------------------+----------------------------+
 ```
+

@@ -27,3 +27,4 @@
 - In-memory structures are volatile; when the server restarts or crashes, all frequency updates and search histories are lost.
 - SQLite provides ACID durability, persistent storage, and relational integrity.
 - In-memory structures provide sub-millisecond query execution without disk bottlenecks.
+

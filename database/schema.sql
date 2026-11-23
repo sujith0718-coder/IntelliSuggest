@@ -58,3 +58,4 @@ CREATE TABLE IF NOT EXISTS search_metrics (
     metric_value REAL NOT NULL,
     recorded_at TEXT NOT NULL
 );
+

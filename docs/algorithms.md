@@ -60,3 +60,4 @@ Suppose a prefix like `"s"` matches $M = 10,000$ keywords.
 
 - **Approach A (Dynamic Heap Extraction)**: At query time, traverse from root to the prefix node, then perform DFS on the subtree to collect all matching words and feed them through the Min Heap.
 - **Approach B (Precomputed Top-10 Cache)**: Every node stores the precomputed Top-10 suggestions for its prefix. Query latency drops to $O(L + K)$. When a keyword frequency updates, only ancestors along its path are updated.
+

@@ -74,3 +74,4 @@ try:
         print(f"Status: {resp.status}, Content Length: {len(html)}, Title present: {'IntelliSuggest' in html}")
 except Exception as e:
     print(f"Frontend load error: {e}")
+

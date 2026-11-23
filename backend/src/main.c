@@ -8,6 +8,7 @@
  */
 
 #include "api.h"
+#include "database.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -87,11 +88,22 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    /* Determine SQLite database path: check DATABASE_PATH env var (e.g. /var/data/intellisuggest.db on Render) */
+    /* Determine database driver and target: support DATABASE_DRIVER, SQLITECLOUD_URL, and DATABASE_PATH */
+    const char *driver_env = getenv("DATABASE_DRIVER");
     const char *db_path = "intellisuggest.db";
-    const char *db_env = getenv("DATABASE_PATH");
-    if (db_env && strlen(db_env) > 0) {
-        db_path = db_env;
+    const char *cloud_url = getenv("SQLITECLOUD_URL");
+
+    if (driver_env && (strcmp(driver_env, "sqlitecloud") == 0 || strcmp(driver_env, "cloud") == 0)) {
+        if (cloud_url && strlen(cloud_url) > 0) {
+            db_path = cloud_url;
+        } else {
+            db_path = "sqlitecloud://";
+        }
+    } else {
+        const char *db_env = getenv("DATABASE_PATH");
+        if (db_env && strlen(db_env) > 0) {
+            db_path = db_env;
+        }
     }
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--db") == 0 && i + 1 < argc) {
@@ -111,8 +123,10 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    /* Ensure target database directory exists */
-    ensure_parent_dir(db_path);
+    /* Ensure target database directory exists for local files */
+    if (strncmp(db_path, "sqlitecloud://", 14) != 0 && strncmp(db_path, "https://", 8) != 0) {
+        ensure_parent_dir(db_path);
+    }
 
     /* CLI test mode verification flag */
     if (argc > 1 && strcmp(argv[1], "--verify-only") == 0) {
@@ -122,7 +136,7 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, "Verification failed.\n");
             return EXIT_FAILURE;
         }
-        printf("[CLI Mode]: System verified successfully.\n");
+        printf("[CLI Mode]: System verified successfully. Active driver: %s\n", db_get_driver_name());
         api_server_cleanup(&ctx);
         return EXIT_SUCCESS;
     }
@@ -135,7 +149,7 @@ int main(int argc, char *argv[]) {
 
     api_server_start(&ctx);
 
-    printf("[Server]: Listening on 0.0.0.0:%d (Database: %s)\n", port, db_path);
+    printf("[Server]: Listening on 0.0.0.0:%d [Driver: %s]\n", port, db_get_driver_name());
     printf("[Server]: Press Ctrl+C to terminate.\n");
 
     while (g_running) {

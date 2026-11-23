@@ -31,6 +31,15 @@ typedef struct {
     size_t expired_keywords;
 } DBAnalyticsSummary;
 
+/* Database Driver Types */
+typedef enum {
+    DB_DRIVER_SQLITE_LOCAL = 0,
+    DB_DRIVER_SQLITE_CLOUD = 1
+} DBDriverType;
+
+DBDriverType db_get_driver_type(void);
+const char* db_get_driver_name(void);
+
 /* Lifecycle */
 bool db_init(const char *db_path);
 void db_close(void);

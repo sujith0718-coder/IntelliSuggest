@@ -108,6 +108,7 @@ static int handle_health(struct mg_connection *conn, void *cbdata) {
     cJSON *resp = cJSON_CreateObject();
     cJSON_AddStringToObject(resp, "status", "ok");
     cJSON_AddStringToObject(resp, "service", "IntelliSuggest C DSA Core");
+    cJSON_AddStringToObject(resp, "database_driver", db_get_driver_name());
     return send_json(conn, 200, resp);
 }
 
@@ -190,16 +191,23 @@ static int handle_search_submit(struct mg_connection *conn, void *cbdata) {
 
     int new_frequency = 0;
     LOCK();
-    /* 1. Persist to SQLite and append search history */
-    db_record_search(keyword, &new_frequency, NULL);
+    /* 1. Update in-memory Hash Table immediately */
+    hashtable_increment_frequency(ctx->hashmap, keyword, NULL, &new_frequency);
+    if (new_frequency <= 0) {
+        HashNode *hn = hashtable_search(ctx->hashmap, keyword);
+        new_frequency = hn ? hn->frequency : 1;
+    }
 
-    /* 2. Update in-memory Hash Table */
-    hashtable_increment_frequency(ctx->hashmap, keyword, NULL, NULL);
-
-    /* 3. Update Trie node and propagate cache up to root */
+    /* 2. Update Trie node and propagate cache up to root */
     trie_update_frequency(ctx->trie, keyword, new_frequency);
     ranking_propagate_cache_update(ctx->trie, keyword, new_frequency);
     UNLOCK();
+
+    /* 3. Persist to database (SQLite / SQLiteCloud) outside the in-memory DSA lock */
+    int db_freq = 0;
+    if (db_record_search(keyword, &db_freq, NULL) && db_freq > 0) {
+        new_frequency = db_freq;
+    }
 
     cJSON *resp = cJSON_CreateObject();
     cJSON_AddBoolToObject(resp, "success", true);

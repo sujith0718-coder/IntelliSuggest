@@ -24,6 +24,8 @@ add_library(intellisuggest_core STATIC
     src/heap.c
     src/ranking.c
     src/database.c
+    src/db_cloud.c
+    src/http_client.c
     src/concept_index.c
     src/api.c
     third_party/sqlite/sqlite3.c
@@ -39,11 +41,11 @@ target_compile_definitions(intellisuggest_core PRIVATE
     NO_SSL=1
 )
 
-# Windows socket & thread library, Linux pthread & dl & math
+# Windows socket, thread & WinHTTP; Linux pthread, dl, math & curl
 if (WIN32)
-    target_link_libraries(intellisuggest_core PUBLIC ws2_32 pthread psapi)
+    target_link_libraries(intellisuggest_core PUBLIC ws2_32 pthread psapi winhttp)
 else()
-    target_link_libraries(intellisuggest_core PUBLIC pthread dl m)
+    target_link_libraries(intellisuggest_core PUBLIC pthread dl m curl)
 endif()
 
 # Main executable
@@ -89,6 +91,12 @@ set_target_properties(test_database PROPERTIES
 add_executable(test_forgotten_search tests/test_forgotten_search.c)
 target_link_libraries(test_forgotten_search PRIVATE intellisuggest_core)
 set_target_properties(test_forgotten_search PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+)
+
+add_executable(test_sqlitecloud tests/test_sqlitecloud.c)
+target_link_libraries(test_sqlitecloud PRIVATE intellisuggest_core)
+set_target_properties(test_sqlitecloud PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
 )
 

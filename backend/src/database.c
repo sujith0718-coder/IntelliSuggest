@@ -1,4 +1,5 @@
 #include "database.h"
+#include "db_cloud.h"
 #include "sqlite3.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,6 +7,27 @@
 #include <time.h>
 
 static sqlite3 *g_db = NULL;
+static DBDriverType g_driver_type = DB_DRIVER_SQLITE_LOCAL;
+
+DBDriverType db_get_driver_type(void) {
+    return g_driver_type;
+}
+
+const char* db_get_driver_name(void) {
+    return (g_driver_type == DB_DRIVER_SQLITE_CLOUD) ? "SQLiteCloud (Remote)" : "SQLite (Local Embedded)";
+}
+
+static bool str_equals_ci(const char *a, const char *b) {
+    if (!a || !b) return false;
+    while (*a && *b) {
+        char ca = (*a >= 'A' && *a <= 'Z') ? (*a + 32) : *a;
+        char cb = (*b >= 'A' && *b <= 'Z') ? (*b + 32) : *b;
+        if (ca != cb) return false;
+        a++;
+        b++;
+    }
+    return (*a == '\0' && *b == '\0');
+}
 
 static void get_iso_now(char *buf, size_t len) {
     time_t now = time(NULL);
@@ -18,15 +40,39 @@ static void get_iso_now(char *buf, size_t len) {
 }
 
 bool db_init(const char *db_path) {
-    if (!db_path) return false;
+    /* Determine driver type: check DATABASE_DRIVER env var or URI scheme */
+    const char *driver_env = getenv("DATABASE_DRIVER");
+    bool want_cloud = false;
+    if (driver_env && (str_equals_ci(driver_env, "sqlitecloud") || str_equals_ci(driver_env, "cloud"))) {
+        want_cloud = true;
+    } else if (db_path && strncmp(db_path, "sqlitecloud://", 14) == 0) {
+        want_cloud = true;
+    }
+
+    if (want_cloud) {
+        g_driver_type = DB_DRIVER_SQLITE_CLOUD;
+        printf("[Database] Initializing SQLiteCloud remote driver (%s)...\n",
+               db_get_driver_name());
+        if (!db_cloud_init(db_path)) {
+            fprintf(stderr, "[Database Fatal Error] Failed to initialize SQLiteCloud remote driver. Aborting.\n");
+            return false;
+        }
+        return true;
+    }
+
+    /* Fallback / Local Driver (default) */
+    g_driver_type = DB_DRIVER_SQLITE_LOCAL;
+    const char *target_path = (db_path && strlen(db_path) > 0) ? db_path : "intellisuggest.db";
+    printf("[Database] Initializing SQLite local embedded driver (%s)...\n", target_path);
+
     if (g_db) {
         sqlite3_close(g_db);
         g_db = NULL;
     }
 
-    int rc = sqlite3_open(db_path, &g_db);
+    int rc = sqlite3_open(target_path, &g_db);
     if (rc != SQLITE_OK) {
-        fprintf(stderr, "[DB Error] Cannot open database %s: %s\n", db_path, sqlite3_errmsg(g_db));
+        fprintf(stderr, "[DB Error] Cannot open database %s: %s\n", target_path, sqlite3_errmsg(g_db));
         if (g_db) {
             sqlite3_close(g_db);
             g_db = NULL;
@@ -42,6 +88,10 @@ bool db_init(const char *db_path) {
 }
 
 void db_close(void) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        db_cloud_close();
+        return;
+    }
     if (g_db) {
         sqlite3_close(g_db);
         g_db = NULL;
@@ -49,6 +99,9 @@ void db_close(void) {
 }
 
 bool db_create_schema(void) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        return db_cloud_create_schema();
+    }
     if (!g_db) return false;
 
     const char *schema_sql =
@@ -101,6 +154,9 @@ bool db_create_schema(void) {
 }
 
 bool db_seed_from_csv(const char *csv_path) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        return db_cloud_seed_from_csv(csv_path);
+    }
     if (!g_db || !csv_path) return false;
 
     FILE *f = fopen(csv_path, "r");
@@ -155,6 +211,9 @@ bool db_seed_from_csv(const char *csv_path) {
 
 /* Hydrate Trie and Hash Table at server startup */
 size_t db_load_keywords_into_memory(Trie *trie, HashTable *ht) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        return db_cloud_load_keywords_into_memory(trie, ht);
+    }
     if (!g_db || !trie || !ht) return 0;
 
     sqlite3_stmt *stmt = NULL;
@@ -184,6 +243,9 @@ size_t db_load_keywords_into_memory(Trie *trie, HashTable *ht) {
 
 /* Record a search submission: update frequency, timestamps, and history log */
 bool db_record_search(const char *keyword, int *out_new_frequency, const char *searched_at) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        return db_cloud_record_search(keyword, out_new_frequency, searched_at);
+    }
     if (!g_db || !keyword) return false;
 
     char *norm = trie_normalize(keyword);
@@ -260,6 +322,9 @@ bool db_record_search(const char *keyword, int *out_new_frequency, const char *s
 
 /* Add keyword manually via Admin */
 bool db_add_keyword(const char *keyword, int initial_frequency, int *out_id) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        return db_cloud_add_keyword(keyword, initial_frequency, out_id);
+    }
     if (!g_db || !keyword) return false;
 
     char *norm = trie_normalize(keyword);
@@ -294,6 +359,9 @@ bool db_add_keyword(const char *keyword, int initial_frequency, int *out_id) {
 
 /* Update keyword details via Admin */
 bool db_update_keyword(int id, const char *keyword, int frequency, bool is_active) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        return db_cloud_update_keyword(id, keyword, frequency, is_active);
+    }
     if (!g_db || id <= 0) return false;
 
     sqlite3_stmt *stmt = NULL;
@@ -317,6 +385,9 @@ bool db_update_keyword(int id, const char *keyword, int frequency, bool is_activ
 
 /* Delete keyword by ID */
 bool db_delete_keyword(int id, char *out_deleted_keyword, size_t max_len) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        return db_cloud_delete_keyword(id, out_deleted_keyword, max_len);
+    }
     if (!g_db || id <= 0) return false;
 
     /* Get keyword string before deleting */
@@ -349,6 +420,9 @@ bool db_delete_keyword(int id, char *out_deleted_keyword, size_t max_len) {
 
 /* Cleanup keywords inactive for > days_threshold */
 size_t db_cleanup_expired(int days_threshold, char ***out_deleted_keywords) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        return db_cloud_cleanup_expired(days_threshold, out_deleted_keywords);
+    }
     if (!g_db || days_threshold <= 0) return 0;
 
     char cutoff[32];
@@ -415,6 +489,9 @@ size_t db_cleanup_expired(int days_threshold, char ***out_deleted_keywords) {
 
 /* Get recent searches */
 size_t db_get_recent_history(size_t limit, DBHistoryRecord **out_records) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        return db_cloud_get_recent_history(limit, out_records);
+    }
     if (!g_db || !out_records || limit == 0) {
         if (out_records) *out_records = NULL;
         return 0;
@@ -462,6 +539,9 @@ void db_free_history(DBHistoryRecord *records) {
 
 /* Get overall popular keywords */
 size_t db_get_popular_keywords(size_t limit, DBKeywordRecord **out_records) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        return db_cloud_get_popular_keywords(limit, out_records);
+    }
     if (!g_db || !out_records || limit == 0) {
         if (out_records) *out_records = NULL;
         return 0;
@@ -510,6 +590,9 @@ size_t db_get_popular_keywords(size_t limit, DBKeywordRecord **out_records) {
 
 /* Get all keywords */
 size_t db_get_all_keywords(DBKeywordRecord **out_records) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        return db_cloud_get_all_keywords(out_records);
+    }
     if (!g_db || !out_records) {
         if (out_records) *out_records = NULL;
         return 0;
@@ -562,6 +645,9 @@ void db_free_keywords(DBKeywordRecord *records) {
 
 /* Analytics Summary */
 bool db_get_analytics_summary(DBAnalyticsSummary *out_summary) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        return db_cloud_get_analytics_summary(out_summary);
+    }
     if (!g_db || !out_summary) return false;
 
     memset(out_summary, 0, sizeof(DBAnalyticsSummary));

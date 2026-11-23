@@ -15,7 +15,7 @@ RUN npm run build
 
 # STAGE 2: Build C Backend
 FROM alpine:3.19 AS backend-builder
-RUN apk add --no-cache build-base cmake
+RUN apk add --no-cache build-base cmake curl-dev
 
 WORKDIR /app
 COPY backend/ ./backend/
@@ -28,7 +28,7 @@ RUN cmake --build build --target intellisuggest
 
 # STAGE 3: Final Minimal Runtime Image
 FROM alpine:3.19
-RUN apk add --no-cache libgcc libstdc++ ca-certificates
+RUN apk add --no-cache libgcc libstdc++ ca-certificates libcurl
 
 WORKDIR /app
 

@@ -8,30 +8,34 @@ import {
   Hash,
   Activity,
   RefreshCw,
-  Cpu,
   Layers,
   CheckCircle2,
   PieChart,
-  HardDrive
+  HardDrive,
+  TrendingUp,
+  Server
 } from 'lucide-react';
 import { sounds } from '../utils/sound';
 
 export const AnalyticsPage: React.FC = () => {
   const [summary, setSummary] = useState<AnalyticsSummary | null>(null);
   const [popular, setPopular] = useState<PopularItem[]>([]);
+  const [trending, setTrending] = useState<PopularItem[]>([]);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchAnalytics = async () => {
     setIsLoading(true);
     try {
-      const [sumData, popData, histData] = await Promise.all([
+      const [sumData, popData, trendData, histData] = await Promise.all([
         api.getAnalytics(),
         api.getPopular(),
+        api.getTrending().catch(() => ({ trending: [] })),
         api.getHistory(),
       ]);
       setSummary(sumData);
       setPopular(popData.popular || []);
+      setTrending(trendData.trending || []);
       setHistory(histData.history || []);
     } catch (err) {
       console.error('Failed to load analytics:', err);
@@ -70,7 +74,7 @@ export const AnalyticsPage: React.FC = () => {
             Data Structure Metrics & Dashboard
           </h1>
           <p className="text-slate-400 text-xs sm:text-sm mt-1">
-            Real telemetry directly queried from in-memory C data structures and persistent SQLite storage.
+            Real telemetry directly queried from in-memory C data structures, persistence queue, and remote database.
           </p>
         </div>
         <button
@@ -91,7 +95,7 @@ export const AnalyticsPage: React.FC = () => {
         <MetricCard
           title="Total Searches Submitted"
           value={summary?.total_searches ?? 0}
-          subtitle="Audit log events in SQLite"
+          subtitle="Audit log events in database"
           icon={<Search className="w-5 h-5 text-teal-400" />}
         />
         <MetricCard
@@ -99,7 +103,7 @@ export const AnalyticsPage: React.FC = () => {
           value={summary?.active_keywords ?? 0}
           subtitle={`Out of ${summary?.total_keywords ?? 0} persisted records`}
           icon={<Database className="w-5 h-5 text-emerald-400" />}
-          badge="SQLite Synced"
+          badge="DB Synced"
         />
         <MetricCard
           title="Trie Nodes in RAM"
@@ -145,35 +149,42 @@ export const AnalyticsPage: React.FC = () => {
 
         <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 shadow-lg">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Top-10 Cache State</span>
-            <Cpu className="w-4 h-4 text-indigo-400" />
+            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Persistence Queue</span>
+            <Server className="w-4 h-4 text-indigo-400" />
           </div>
-          <div className="text-2xl font-bold font-mono text-white mb-1">Precomputed</div>
-          <p className="text-xs text-slate-400 mb-3">100% of active prefix nodes hold precomputed Top-10 suggestion vectors.</p>
-          <div className="flex items-center space-x-1.5 text-xs text-teal-400 font-medium">
+          <div className="flex items-baseline space-x-2 mb-1">
+            <span className="text-2xl font-bold font-mono text-white">
+              {summary?.pending_writes ?? 0}
+            </span>
+            <span className="text-xs font-mono text-slate-500">pending / 1024 cap</span>
+          </div>
+          <p className="text-xs text-slate-400 mb-3">
+            {summary?.persisted_writes ?? 0} persisted &bull; {summary?.failed_writes ?? 0} failed
+          </p>
+          <div className="flex items-center space-x-1.5 text-xs text-emerald-400 font-medium">
             <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Zero Query-Time Sifting Required</span>
+            <span>Asynchronous Worker Active</span>
           </div>
         </div>
       </div>
 
       {/* Visual Analytics & Search Events */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Popular Keywords Frequency Chart */}
         <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 shadow-xl">
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center space-x-2">
               <Activity className="w-4 h-4 text-teal-400" />
-              <h2 className="text-sm font-bold text-white uppercase tracking-wider">Top Keywords Distribution</h2>
+              <h2 className="text-sm font-bold text-white uppercase tracking-wider">All-Time Popular</h2>
             </div>
-            <span className="text-xs font-mono text-slate-500">Live Popularity</span>
+            <span className="text-xs font-mono text-slate-500">Frequency Rank</span>
           </div>
 
           <div className="space-y-3.5">
             {popular.length === 0 ? (
               <p className="text-xs text-slate-500 py-6 text-center">No keywords recorded.</p>
             ) : (
-              popular.map((item, idx) => {
+              popular.slice(0, 8).map((item, idx) => {
                 const maxFreq = popular[0]?.frequency || 1;
                 const percentage = Math.round((item.frequency / maxFreq) * 100);
                 return (
@@ -185,9 +196,9 @@ export const AnalyticsPage: React.FC = () => {
                       </span>
                       <span className="text-teal-400 font-mono font-bold">{item.frequency} hits</span>
                     </div>
-                    <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800/60">
+                    <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden border border-slate-800/60">
                       <div
-                        className="bg-gradient-to-r from-teal-500 via-emerald-400 to-cyan-400 h-2 rounded-full transition-all duration-500"
+                        className="bg-gradient-to-r from-teal-500 via-emerald-400 to-cyan-400 h-1.5 rounded-full transition-all duration-500"
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
@@ -198,28 +209,58 @@ export const AnalyticsPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Trending Searches (24h) */}
+        <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 shadow-xl">
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center space-x-2">
+              <TrendingUp className="w-4 h-4 text-amber-400" />
+              <h2 className="text-sm font-bold text-white uppercase tracking-wider">Trending (Last 24h)</h2>
+            </div>
+            <span className="text-xs font-mono text-slate-500">24h Velocity</span>
+          </div>
+
+          <div className="space-y-3">
+            {trending.length === 0 ? (
+              <p className="text-xs text-slate-500 py-6 text-center">No searches submitted in the last 24 hours.</p>
+            ) : (
+              trending.slice(0, 8).map((item, idx) => (
+                <div
+                  key={item.id}
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80 text-xs"
+                >
+                  <div className="flex items-center space-x-2">
+                    <span className="font-mono text-amber-400/80 text-[11px]">#{idx + 1}</span>
+                    <span className="font-semibold text-slate-200">{item.keyword}</span>
+                  </div>
+                  <span className="text-amber-400 font-mono font-bold text-[11px]">{item.frequency} queries</span>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
         {/* Recent Search Activity Timeline */}
         <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 shadow-xl">
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center space-x-2">
               <PieChart className="w-4 h-4 text-indigo-400" />
-              <h2 className="text-sm font-bold text-white uppercase tracking-wider">Recent Submitted Searches</h2>
+              <h2 className="text-sm font-bold text-white uppercase tracking-wider">Audit Log</h2>
             </div>
-            <span className="text-xs font-mono text-slate-500">Audit Trail</span>
+            <span className="text-xs font-mono text-slate-500">Recent Events</span>
           </div>
 
-          <div className="space-y-2.5">
+          <div className="space-y-2">
             {history.length === 0 ? (
-              <p className="text-xs text-slate-500 py-6 text-center">No search events recorded yet. Submit a search on the home view.</p>
+              <p className="text-xs text-slate-500 py-6 text-center">No search events recorded yet.</p>
             ) : (
-              history.map((item) => (
+              history.slice(0, 8).map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 text-xs hover:border-slate-700 transition-colors"
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80 text-xs hover:border-slate-700 transition-colors"
                 >
-                  <span className="font-semibold text-slate-200">{item.keyword}</span>
-                  <span className="text-slate-500 font-mono">
-                    {item.searched_at ? new Date(item.searched_at).toLocaleString() : 'Just now'}
+                  <span className="font-semibold text-slate-200 truncate max-w-[140px]">{item.keyword}</span>
+                  <span className="text-slate-500 font-mono text-[11px]">
+                    {item.searched_at ? new Date(item.searched_at).toLocaleTimeString() : 'Just now'}
                   </span>
                 </div>
               ))

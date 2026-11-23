@@ -3,6 +3,7 @@
 
 #include "trie.h"
 #include "hashmap.h"
+#include "concept_index.h"
 #include <stdbool.h>
 #include <stddef.h>
 
@@ -30,6 +31,14 @@ typedef struct {
     size_t total_searches;
     size_t expired_keywords;
 } DBAnalyticsSummary;
+
+/* Concept Record */
+typedef struct {
+    int id;
+    char concept_name[128];
+    char description[512];
+    char keywords[512];
+} DBConceptRecord;
 
 /* Database Driver Types */
 typedef enum {
@@ -65,6 +74,19 @@ void db_free_history(DBHistoryRecord *records);
 size_t db_get_popular_keywords(size_t limit, DBKeywordRecord **out_records);
 size_t db_get_all_keywords(DBKeywordRecord **out_records);
 void db_free_keywords(DBKeywordRecord *records);
+
+/* Trending & Expired Analytics */
+size_t db_get_trending_keywords(size_t limit, int hours_window, DBKeywordRecord **out_records);
+size_t db_get_expired_keywords(int days_threshold, DBKeywordRecord **out_records);
+
+/* Concept Management */
+size_t db_get_all_concepts(DBConceptRecord **out_records);
+bool db_get_concept_by_id(int id, DBConceptRecord *out_record);
+bool db_add_concept(const char *name, const char *description, const char *keywords, int *out_id);
+bool db_update_concept(int id, const char *name, const char *description, const char *keywords);
+bool db_delete_concept(int id);
+void db_free_concepts(DBConceptRecord *records);
+size_t db_load_concepts_into_memory(ConceptIndex *idx);
 
 bool db_get_analytics_summary(DBAnalyticsSummary *out_summary);
 

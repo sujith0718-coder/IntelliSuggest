@@ -41,6 +41,7 @@ Render builds and runs the unified container directly from the root `Dockerfile`
 | `PORT` | `10000` | Render listening port (CivetWeb binds to `0.0.0.0:10000`) |
 | `DATABASE_DRIVER` | `sqlitecloud` | Activates production SQLiteCloud remote driver |
 | `SQLITECLOUD_URL` | `sqlitecloud://<host>:8860/intellisuggest.sqlite?apikey=<api_key>` | Complete connection URI to SQLiteCloud |
+| `ADMIN_API_KEY` | *(your strong random token)* | Bearer authentication key protecting administrative APIs |
 | `CORS_ORIGIN` | `*` *(or your Vercel URL)* | Allows cross-origin requests from your frontend |
 
 ### Health Check Configuration:
@@ -92,12 +93,15 @@ $env:SQLITECLOUD_URL = "sqlitecloud://<host>:8860/intellisuggest.sqlite?apikey=<
 
 ### Running Test Suites:
 ```bash
-# Run all 132 local unit tests (100% offline)
+# Run all 163 local unit tests across 7 suites (100% offline)
 ./build/backend/bin/test_trie
 ./build/backend/bin/test_hashmap
 ./build/backend/bin/test_heap
 ./build/backend/bin/test_ranking
 ./build/backend/bin/test_database
+./build/backend/bin/test_forgotten_search
+./build/backend/bin/test_admin_auth
+```
 ./build/backend/bin/test_forgotten_search
 
 # Run live SQLiteCloud integration test suite

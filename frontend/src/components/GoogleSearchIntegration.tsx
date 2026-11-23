@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Globe, ExternalLink, Settings, Sparkles, BookOpen, Search, ArrowUpRight } from 'lucide-react';
 
+const DEFAULT_CX = 'c3865c5b66ea34ecb';
+
 interface GoogleSearchProps {
   query: string;
 }
 
 export const GoogleSearchIntegration: React.FC<GoogleSearchProps> = ({ query }) => {
   const [cx, setCx] = useState<string>(() => {
-    return localStorage.getItem('intellisuggest_google_cx') || '';
+    return localStorage.getItem('intellisuggest_google_cx') || DEFAULT_CX;
   });
   const [showConfig, setShowConfig] = useState(false);
   const [tempCx, setTempCx] = useState(cx);
@@ -17,10 +19,10 @@ export const GoogleSearchIntegration: React.FC<GoogleSearchProps> = ({ query }) 
   useEffect(() => {
     if (!cx) return;
 
-    const existingScript = document.getElementById('google-cse-script');
+    const existingScript = document.getElementById('google-pse-script');
     if (!existingScript) {
       const script = document.createElement('script');
-      script.id = 'google-cse-script';
+      script.id = 'google-pse-script';
       script.src = `https://cse.google.com/cse.js?cx=${cx}`;
       script.async = true;
       document.body.appendChild(script);

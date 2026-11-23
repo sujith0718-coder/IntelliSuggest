@@ -99,6 +99,41 @@ void test_synonyms_and_edge_cases(void) {
     concept_index_free(idx);
 }
 
+void test_dynamic_concept_mutations(void) {
+    printf("\n--- Test Suite 4: Dynamic Concept Updates & Deletions ---\n");
+    ConceptIndex *idx = concept_index_create();
+    concept_index_seed_defaults(idx);
+
+    /* 1. Add new concept dynamically */
+    TEST_ASSERT(concept_index_add(idx, 101, "Trie Data Structure",
+                                  "A tree-like data structure used to store and retrieve keys in a string dataset",
+                                  "prefix tree, autocomplete, digital tree"),
+                "Dynamically added 'Trie Data Structure' to in-memory index");
+
+    ConceptSearchResult *res = NULL;
+    size_t count = concept_index_search(idx, "prefix tree for autocomplete", 3, &res);
+    TEST_ASSERT(count > 0, "Query matched dynamically added concept");
+    TEST_ASSERT(strcmp(res[0].concept_name, "Trie Data Structure") == 0, "Top result is 'Trie Data Structure'");
+    concept_index_free_results(res);
+
+    /* 2. Update concept */
+    TEST_ASSERT(concept_index_update(idx, 101, "Radix Tree",
+                                     "Compact trie data structure optimized for space",
+                                     "compact prefix tree, compressed trie"),
+                "Updated concept to 'Radix Tree'");
+    count = concept_index_search(idx, "compressed trie", 3, &res);
+    TEST_ASSERT(count > 0 && strcmp(res[0].concept_name, "Radix Tree") == 0, "Updated concept retrieved via new synonyms");
+    concept_index_free_results(res);
+
+    /* 3. Delete concept */
+    TEST_ASSERT(concept_index_delete(idx, 101), "Deleted dynamic concept from inverted index");
+    count = concept_index_search(idx, "compressed trie", 3, &res);
+    TEST_ASSERT(count == 0, "Deleted concept yields zero matches in inverted index");
+    if (res) concept_index_free_results(res);
+
+    concept_index_free(idx);
+}
+
 int main(void) {
     printf("====================================================\n");
     printf("   INTELLISUGGEST - FORGOTTEN SEARCH TEST SUITE     \n");
@@ -107,6 +142,7 @@ int main(void) {
     test_tokenization_and_stop_words();
     test_direct_concept_queries();
     test_synonyms_and_edge_cases();
+    test_dynamic_concept_mutations();
 
     printf("\n====================================================\n");
     printf("Test Results: %d / %d passed (%.1f%%)\n",

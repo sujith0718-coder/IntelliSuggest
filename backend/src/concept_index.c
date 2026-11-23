@@ -91,6 +91,142 @@ ConceptIndex* concept_index_create(void) {
     return idx;
 }
 
+void concept_index_clear(ConceptIndex *idx) {
+    if (!idx) return;
+
+    for (size_t i = 0; i < idx->index_size; i++) {
+        PostingNode *curr = idx->index_entries[i].postings;
+        while (curr) {
+            PostingNode *next = curr->next;
+            free(curr);
+            curr = next;
+        }
+        idx->index_entries[i].postings = NULL;
+        idx->index_entries[i].token[0] = '\0';
+    }
+    idx->index_size = 0;
+    idx->concept_count = 0;
+}
+
+/* Forward declaration */
+static void add_posting(ConceptIndex *idx, const char *token, int concept_id, double weight);
+
+/* Helper to rebuild postings from current concepts array */
+static void rebuild_postings_from_concepts(ConceptIndex *idx) {
+    if (!idx) return;
+
+    /* Free existing postings */
+    for (size_t i = 0; i < idx->index_size; i++) {
+        PostingNode *curr = idx->index_entries[i].postings;
+        while (curr) {
+            PostingNode *next = curr->next;
+            free(curr);
+            curr = next;
+        }
+        idx->index_entries[i].postings = NULL;
+    }
+    idx->index_size = 0;
+
+    /* Re-index all concepts */
+    for (size_t c = 0; c < idx->concept_count; c++) {
+        ConceptRecord *cr = &idx->concepts[c];
+
+        /* Name tokens */
+        char name_tokens[MAX_TOKENS_PER_QUERY][64];
+        size_t n_tokens = tokenize_and_filter(cr->concept_name, name_tokens);
+        for (size_t i = 0; i < n_tokens; i++) {
+            add_posting(idx, name_tokens[i], cr->id, 4.0);
+        }
+
+        /* Keywords tokens */
+        for (size_t k = 0; k < cr->keyword_count; k++) {
+            char kw_tokens[MAX_TOKENS_PER_QUERY][64];
+            size_t kw_tok_cnt = tokenize_and_filter(cr->related_keywords[k], kw_tokens);
+            for (size_t i = 0; i < kw_tok_cnt; i++) {
+                add_posting(idx, kw_tokens[i], cr->id, 3.0);
+            }
+        }
+
+        /* Description tokens */
+        char desc_tokens[MAX_TOKENS_PER_QUERY][64];
+        size_t d_tokens = tokenize_and_filter(cr->description, desc_tokens);
+        for (size_t i = 0; i < d_tokens; i++) {
+            add_posting(idx, desc_tokens[i], cr->id, 1.5);
+        }
+    }
+}
+
+bool concept_index_update(ConceptIndex *idx, int id, const char *name, const char *description, const char *keywords_csv) {
+    if (!idx || !name || !description) return false;
+
+    /* Find existing concept */
+    ConceptRecord *target = NULL;
+    for (size_t i = 0; i < idx->concept_count; i++) {
+        if (idx->concepts[i].id == id) {
+            target = &idx->concepts[i];
+            break;
+        }
+    }
+
+    if (!target) {
+        return concept_index_add(idx, id, name, description, keywords_csv);
+    }
+
+    strncpy(target->concept_name, name, sizeof(target->concept_name) - 1);
+    target->concept_name[sizeof(target->concept_name) - 1] = '\0';
+
+    strncpy(target->description, description, sizeof(target->description) - 1);
+    target->description[sizeof(target->description) - 1] = '\0';
+
+    target->keyword_count = 0;
+    if (keywords_csv && strlen(keywords_csv) > 0) {
+        char kw_buf[512];
+        strncpy(kw_buf, keywords_csv, sizeof(kw_buf) - 1);
+        kw_buf[sizeof(kw_buf) - 1] = '\0';
+
+        char *saveptr = NULL;
+        char *item = strtok_r(kw_buf, ",;", &saveptr);
+        while (item && target->keyword_count < MAX_CONCEPT_KEYWORDS) {
+            while (*item == ' ') item++;
+            char *end = item + strlen(item) - 1;
+            while (end > item && *end == ' ') { *end = '\0'; end--; }
+
+            if (strlen(item) > 0) {
+                strncpy(target->related_keywords[target->keyword_count], item, 127);
+                target->related_keywords[target->keyword_count][127] = '\0';
+                target->keyword_count++;
+            }
+            item = strtok_r(NULL, ",;", &saveptr);
+        }
+    }
+
+    rebuild_postings_from_concepts(idx);
+    return true;
+}
+
+bool concept_index_delete(ConceptIndex *idx, int id) {
+    if (!idx || idx->concept_count == 0) return false;
+
+    size_t found_idx = (size_t)-1;
+    for (size_t i = 0; i < idx->concept_count; i++) {
+        if (idx->concepts[i].id == id) {
+            found_idx = i;
+            break;
+        }
+    }
+
+    if (found_idx == (size_t)-1) return false;
+
+    /* Shift remaining concepts */
+    for (size_t i = found_idx; i + 1 < idx->concept_count; i++) {
+        idx->concepts[i] = idx->concepts[i + 1];
+    }
+    idx->concept_count--;
+
+    rebuild_postings_from_concepts(idx);
+    return true;
+}
+
 void concept_index_free(ConceptIndex *idx) {
     if (!idx) return;
 

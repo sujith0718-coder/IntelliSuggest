@@ -56,6 +56,9 @@ void concept_index_free(ConceptIndex *idx);
 
 /* Adding Concepts */
 bool concept_index_add(ConceptIndex *idx, int id, const char *name, const char *description, const char *keywords_csv);
+bool concept_index_update(ConceptIndex *idx, int id, const char *name, const char *description, const char *keywords_csv);
+bool concept_index_delete(ConceptIndex *idx, int id);
+void concept_index_clear(ConceptIndex *idx);
 void concept_index_seed_defaults(ConceptIndex *idx);
 
 /* Tokenization & Text Preprocessing */

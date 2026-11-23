@@ -37,3 +37,4 @@ void http_response_free(HttpResponse *resp);
 #endif
 
 #endif /* HTTP_CLIENT_H */
+

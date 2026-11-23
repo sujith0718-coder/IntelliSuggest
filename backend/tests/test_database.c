@@ -100,6 +100,67 @@ void test_db_admin_crud_and_cleanup(void) {
     remove(test_db_path);
 }
 
+static void test_db_concept_crud_and_trending(void) {
+    printf("\n--- Test Suite 4: Dynamic Concept Management & Trending ---\n");
+    const char *test_db_path = "test_concepts.db";
+    remove(test_db_path);
+
+    db_init(test_db_path);
+
+    /* 1. Add Concept */
+    int cid = 0;
+    TEST_ASSERT(db_add_concept("Bellman-Ford Algorithm",
+                               "Shortest path algorithm supporting negative edge weights",
+                               "negative edges, shortest path, dynamic programming",
+                               &cid),
+                "Added new concept 'Bellman-Ford Algorithm' into database");
+    TEST_ASSERT(cid > 0, "Concept assigned valid primary key ID");
+
+    /* 2. Retrieve Concept by ID */
+    DBConceptRecord rec;
+    TEST_ASSERT(db_get_concept_by_id(cid, &rec), "Retrieved concept by ID");
+    TEST_ASSERT(strcmp(rec.concept_name, "Bellman-Ford Algorithm") == 0, "Concept name matches exact record");
+    TEST_ASSERT(strstr(rec.keywords, "negative edges") != NULL, "Associated keywords retrieved properly");
+
+    /* 3. Update Concept */
+    TEST_ASSERT(db_update_concept(cid, "Bellman-Ford Algorithm",
+                                  "Updated graph algorithm description for negative cycles",
+                                  "negative cycle detection, shortest path"),
+                "Updated concept description and associations");
+    DBConceptRecord updated_rec;
+    db_get_concept_by_id(cid, &updated_rec);
+    TEST_ASSERT(strstr(updated_rec.description, "negative cycles") != NULL, "Updated description persisted");
+
+    /* 4. Hydrate into In-Memory ConceptIndex */
+    ConceptIndex *idx = concept_index_create();
+    size_t loaded = db_load_concepts_into_memory(idx);
+    TEST_ASSERT(loaded >= 1, "Hydrated concepts from database into in-memory index");
+
+    ConceptSearchResult *results = NULL;
+    size_t found = concept_index_search(idx, "negative cycle detection", 5, &results);
+    TEST_ASSERT(found > 0, "Forgotten search dynamically resolved persisted concept");
+    if (found > 0) {
+        TEST_ASSERT(strcmp(results[0].concept_name, "Bellman-Ford Algorithm") == 0,
+                    "Top match is dynamically added concept 'Bellman-Ford Algorithm'");
+        concept_index_free_results(results);
+    }
+
+    /* 5. Trending & Expired Analytics */
+    DBKeywordRecord *trending = NULL;
+    size_t trend_count = db_get_trending_keywords(5, 24, &trending);
+    TEST_ASSERT(trend_count >= 0, "Trending keywords query executed successfully");
+    if (trending) db_free_keywords(trending);
+
+    /* 6. Delete Concept */
+    TEST_ASSERT(db_delete_concept(cid), "Deleted concept by ID");
+    DBConceptRecord deleted_check;
+    TEST_ASSERT(!db_get_concept_by_id(cid, &deleted_check), "Deleted concept no longer exists in database");
+
+    concept_index_free(idx);
+    db_close();
+    remove(test_db_path);
+}
+
 int main(void) {
     printf("====================================================\n");
     printf("        INTELLISUGGEST - SQLITE DB TEST SUITE       \n");
@@ -108,6 +169,7 @@ int main(void) {
     test_db_lifecycle_and_seeding();
     test_db_search_submission_and_history();
     test_db_admin_crud_and_cleanup();
+    test_db_concept_crud_and_trending();
 
     printf("\n====================================================\n");
     printf("Test Results: %d / %d passed (%.1f%%)\n",

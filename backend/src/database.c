@@ -1,5 +1,6 @@
 #include "database.h"
 #include "db_cloud.h"
+#include "concept_index.h"
 #include "sqlite3.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -653,10 +654,11 @@ bool db_get_analytics_summary(DBAnalyticsSummary *out_summary) {
     memset(out_summary, 0, sizeof(DBAnalyticsSummary));
 
     sqlite3_stmt *s1 = NULL;
-    if (sqlite3_prepare_v2(g_db, "SELECT COUNT(*), SUM(CASE WHEN is_active=1 THEN 1 ELSE 0 END) FROM keywords;", -1, &s1, NULL) == SQLITE_OK) {
+    if (sqlite3_prepare_v2(g_db, "SELECT COUNT(*), SUM(CASE WHEN is_active=1 THEN 1 ELSE 0 END), SUM(CASE WHEN is_active=0 THEN 1 ELSE 0 END) FROM keywords;", -1, &s1, NULL) == SQLITE_OK) {
         if (sqlite3_step(s1) == SQLITE_ROW) {
             out_summary->total_keywords = (size_t)sqlite3_column_int(s1, 0);
             out_summary->active_keywords = (size_t)sqlite3_column_int(s1, 1);
+            out_summary->expired_keywords = (size_t)sqlite3_column_int(s1, 2);
         }
         sqlite3_finalize(s1);
     }
@@ -670,5 +672,442 @@ bool db_get_analytics_summary(DBAnalyticsSummary *out_summary) {
     }
 
     return true;
+}
+
+/* Trending Keywords */
+size_t db_get_trending_keywords(size_t limit, int hours_window, DBKeywordRecord **out_records) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        return db_cloud_get_trending_keywords(limit, hours_window, out_records);
+    }
+    if (!g_db || !out_records || limit == 0) {
+        if (out_records) *out_records = NULL;
+        return 0;
+    }
+
+    if (hours_window <= 0) hours_window = 24;
+    time_t cutoff_t = time(NULL) - (time_t)(hours_window * 3600);
+    char cutoff_str[32];
+    struct tm *tm = gmtime(&cutoff_t);
+    if (tm) strftime(cutoff_str, sizeof(cutoff_str), "%Y-%m-%dT%H:%M:%SZ", tm);
+    else snprintf(cutoff_str, sizeof(cutoff_str), "1970-01-01T00:00:00Z");
+
+    sqlite3_stmt *stmt = NULL;
+    const char *sql =
+        "SELECT id, keyword, frequency, created_at, last_searched_at, is_active "
+        "FROM keywords WHERE is_active = 1 AND last_searched_at >= ? "
+        "ORDER BY frequency DESC LIMIT ?;";
+
+    size_t count = 0;
+    DBKeywordRecord *records = (DBKeywordRecord *)malloc(limit * sizeof(DBKeywordRecord));
+
+    if (sqlite3_prepare_v2(g_db, sql, -1, &stmt, NULL) == SQLITE_OK) {
+        sqlite3_bind_text(stmt, 1, cutoff_str, -1, SQLITE_STATIC);
+        sqlite3_bind_int(stmt, 2, (int)limit);
+
+        while (sqlite3_step(stmt) == SQLITE_ROW && count < limit) {
+            records[count].id = sqlite3_column_int(stmt, 0);
+            const char *kw = (const char *)sqlite3_column_text(stmt, 1);
+            records[count].frequency = sqlite3_column_int(stmt, 2);
+            const char *cr = (const char *)sqlite3_column_text(stmt, 3);
+            const char *ls = (const char *)sqlite3_column_text(stmt, 4);
+            records[count].is_active = (sqlite3_column_int(stmt, 5) == 1);
+
+            strncpy(records[count].keyword, kw ? kw : "", sizeof(records[count].keyword) - 1);
+            records[count].keyword[sizeof(records[count].keyword) - 1] = '\0';
+            strncpy(records[count].created_at, cr ? cr : "", sizeof(records[count].created_at) - 1);
+            records[count].created_at[sizeof(records[count].created_at) - 1] = '\0';
+            strncpy(records[count].last_searched_at, ls ? ls : "", sizeof(records[count].last_searched_at) - 1);
+            records[count].last_searched_at[sizeof(records[count].last_searched_at) - 1] = '\0';
+            count++;
+        }
+        sqlite3_finalize(stmt);
+    }
+
+    /* Fallback to top active keywords if few results in recent window */
+    if (count < limit) {
+        sqlite3_stmt *fb = NULL;
+        const char *fb_sql =
+            "SELECT id, keyword, frequency, created_at, last_searched_at, is_active "
+            "FROM keywords WHERE is_active = 1 ORDER BY frequency DESC LIMIT ?;";
+        if (sqlite3_prepare_v2(g_db, fb_sql, -1, &fb, NULL) == SQLITE_OK) {
+            sqlite3_bind_int(fb, 1, (int)limit);
+            while (sqlite3_step(fb) == SQLITE_ROW && count < limit) {
+                int kid = sqlite3_column_int(fb, 0);
+                bool already = false;
+                for (size_t i = 0; i < count; i++) {
+                    if (records[i].id == kid) { already = true; break; }
+                }
+                if (!already) {
+                    records[count].id = kid;
+                    const char *kw = (const char *)sqlite3_column_text(fb, 1);
+                    records[count].frequency = sqlite3_column_int(fb, 2);
+                    const char *cr = (const char *)sqlite3_column_text(fb, 3);
+                    const char *ls = (const char *)sqlite3_column_text(fb, 4);
+                    records[count].is_active = (sqlite3_column_int(fb, 5) == 1);
+
+                    strncpy(records[count].keyword, kw ? kw : "", sizeof(records[count].keyword) - 1);
+                    records[count].keyword[sizeof(records[count].keyword) - 1] = '\0';
+                    strncpy(records[count].created_at, cr ? cr : "", sizeof(records[count].created_at) - 1);
+                    records[count].created_at[sizeof(records[count].created_at) - 1] = '\0';
+                    strncpy(records[count].last_searched_at, ls ? ls : "", sizeof(records[count].last_searched_at) - 1);
+                    records[count].last_searched_at[sizeof(records[count].last_searched_at) - 1] = '\0';
+                    count++;
+                }
+            }
+            sqlite3_finalize(fb);
+        }
+    }
+
+    *out_records = records;
+    return count;
+}
+
+/* Expired Keywords */
+size_t db_get_expired_keywords(int days_threshold, DBKeywordRecord **out_records) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        return db_cloud_get_expired_keywords(days_threshold, out_records);
+    }
+    if (!g_db || !out_records) {
+        if (out_records) *out_records = NULL;
+        return 0;
+    }
+
+    if (days_threshold <= 0) days_threshold = 90;
+    time_t cutoff_t = time(NULL) - (time_t)(days_threshold * 86400);
+    char cutoff_str[32];
+    struct tm *tm = gmtime(&cutoff_t);
+    if (tm) strftime(cutoff_str, sizeof(cutoff_str), "%Y-%m-%dT%H:%M:%SZ", tm);
+    else snprintf(cutoff_str, sizeof(cutoff_str), "1970-01-01T00:00:00Z");
+
+    sqlite3_stmt *stmt = NULL;
+    const char *sql =
+        "SELECT id, keyword, frequency, created_at, last_searched_at, is_active "
+        "FROM keywords "
+        "WHERE is_active = 0 OR ("
+        "(last_searched_at IS NOT NULL AND last_searched_at < ?) OR "
+        "(last_searched_at IS NULL AND created_at < ?)) "
+        "ORDER BY id DESC LIMIT 50;";
+
+    if (sqlite3_prepare_v2(g_db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+        *out_records = NULL;
+        return 0;
+    }
+
+    sqlite3_bind_text(stmt, 1, cutoff_str, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, cutoff_str, -1, SQLITE_STATIC);
+
+    size_t cap = 16;
+    size_t count = 0;
+    DBKeywordRecord *records = (DBKeywordRecord *)malloc(cap * sizeof(DBKeywordRecord));
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        if (count >= cap) {
+            cap *= 2;
+            records = (DBKeywordRecord *)realloc(records, cap * sizeof(DBKeywordRecord));
+        }
+
+        records[count].id = sqlite3_column_int(stmt, 0);
+        const char *kw = (const char *)sqlite3_column_text(stmt, 1);
+        records[count].frequency = sqlite3_column_int(stmt, 2);
+        const char *cr = (const char *)sqlite3_column_text(stmt, 3);
+        const char *ls = (const char *)sqlite3_column_text(stmt, 4);
+        records[count].is_active = (sqlite3_column_int(stmt, 5) == 1);
+
+        strncpy(records[count].keyword, kw ? kw : "", sizeof(records[count].keyword) - 1);
+        records[count].keyword[sizeof(records[count].keyword) - 1] = '\0';
+        strncpy(records[count].created_at, cr ? cr : "", sizeof(records[count].created_at) - 1);
+        records[count].created_at[sizeof(records[count].created_at) - 1] = '\0';
+        strncpy(records[count].last_searched_at, ls ? ls : "", sizeof(records[count].last_searched_at) - 1);
+        records[count].last_searched_at[sizeof(records[count].last_searched_at) - 1] = '\0';
+        count++;
+    }
+
+    sqlite3_finalize(stmt);
+    *out_records = records;
+    return count;
+}
+
+/* Concept Management */
+size_t db_get_all_concepts(DBConceptRecord **out_records) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        return db_cloud_get_all_concepts(out_records);
+    }
+    if (!g_db || !out_records) {
+        if (out_records) *out_records = NULL;
+        return 0;
+    }
+
+    sqlite3_stmt *stmt = NULL;
+    const char *sql =
+        "SELECT c.id, c.concept_name, c.description, COALESCE(GROUP_CONCAT(ck.keyword, ', '), '') "
+        "FROM concepts c LEFT JOIN concept_keywords ck ON c.id = ck.concept_id "
+        "GROUP BY c.id ORDER BY c.id ASC;";
+
+    if (sqlite3_prepare_v2(g_db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+        *out_records = NULL;
+        return 0;
+    }
+
+    size_t cap = 16;
+    size_t count = 0;
+    DBConceptRecord *records = (DBConceptRecord *)malloc(cap * sizeof(DBConceptRecord));
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        if (count >= cap) {
+            cap *= 2;
+            records = (DBConceptRecord *)realloc(records, cap * sizeof(DBConceptRecord));
+        }
+
+        records[count].id = sqlite3_column_int(stmt, 0);
+        const char *name = (const char *)sqlite3_column_text(stmt, 1);
+        const char *desc = (const char *)sqlite3_column_text(stmt, 2);
+        const char *kws = (const char *)sqlite3_column_text(stmt, 3);
+
+        strncpy(records[count].concept_name, name ? name : "", sizeof(records[count].concept_name) - 1);
+        records[count].concept_name[sizeof(records[count].concept_name) - 1] = '\0';
+        strncpy(records[count].description, desc ? desc : "", sizeof(records[count].description) - 1);
+        records[count].description[sizeof(records[count].description) - 1] = '\0';
+        strncpy(records[count].keywords, kws ? kws : "", sizeof(records[count].keywords) - 1);
+        records[count].keywords[sizeof(records[count].keywords) - 1] = '\0';
+
+        count++;
+    }
+
+    sqlite3_finalize(stmt);
+    *out_records = records;
+    return count;
+}
+
+bool db_get_concept_by_id(int id, DBConceptRecord *out_record) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        return db_cloud_get_concept_by_id(id, out_record);
+    }
+    if (!g_db || !out_record || id <= 0) return false;
+
+    sqlite3_stmt *stmt = NULL;
+    const char *sql =
+        "SELECT c.id, c.concept_name, c.description, COALESCE(GROUP_CONCAT(ck.keyword, ', '), '') "
+        "FROM concepts c LEFT JOIN concept_keywords ck ON c.id = ck.concept_id "
+        "WHERE c.id = ? GROUP BY c.id;";
+
+    if (sqlite3_prepare_v2(g_db, sql, -1, &stmt, NULL) != SQLITE_OK) return false;
+    sqlite3_bind_int(stmt, 1, id);
+
+    bool found = false;
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        out_record->id = sqlite3_column_int(stmt, 0);
+        const char *name = (const char *)sqlite3_column_text(stmt, 1);
+        const char *desc = (const char *)sqlite3_column_text(stmt, 2);
+        const char *kws = (const char *)sqlite3_column_text(stmt, 3);
+
+        strncpy(out_record->concept_name, name ? name : "", sizeof(out_record->concept_name) - 1);
+        out_record->concept_name[sizeof(out_record->concept_name) - 1] = '\0';
+        strncpy(out_record->description, desc ? desc : "", sizeof(out_record->description) - 1);
+        out_record->description[sizeof(out_record->description) - 1] = '\0';
+        strncpy(out_record->keywords, kws ? kws : "", sizeof(out_record->keywords) - 1);
+        out_record->keywords[sizeof(out_record->keywords) - 1] = '\0';
+        found = true;
+    }
+    sqlite3_finalize(stmt);
+    return found;
+}
+
+bool db_add_concept(const char *name, const char *description, const char *keywords, int *out_id) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        return db_cloud_add_concept(name, description, keywords, out_id);
+    }
+    if (!g_db || !name || !description) return false;
+
+    sqlite3_stmt *stmt = NULL;
+    const char *sql = "INSERT INTO concepts (concept_name, description) VALUES (?, ?) ON CONFLICT(concept_name) DO UPDATE SET description = excluded.description;";
+    if (sqlite3_prepare_v2(g_db, sql, -1, &stmt, NULL) != SQLITE_OK) return false;
+
+    sqlite3_bind_text(stmt, 1, name, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, description, -1, SQLITE_STATIC);
+
+    int rc = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+    if (rc != SQLITE_DONE) return false;
+
+    int concept_id = (int)sqlite3_last_insert_rowid(g_db);
+    if (concept_id <= 0) {
+        sqlite3_stmt *q = NULL;
+        if (sqlite3_prepare_v2(g_db, "SELECT id FROM concepts WHERE concept_name = ?;", -1, &q, NULL) == SQLITE_OK) {
+            sqlite3_bind_text(q, 1, name, -1, SQLITE_STATIC);
+            if (sqlite3_step(q) == SQLITE_ROW) concept_id = sqlite3_column_int(q, 0);
+            sqlite3_finalize(q);
+        }
+    }
+    if (out_id) *out_id = concept_id;
+
+    /* Associate keywords */
+    if (concept_id > 0 && keywords && strlen(keywords) > 0) {
+        /* Clear old associations */
+        sqlite3_stmt *del = NULL;
+        if (sqlite3_prepare_v2(g_db, "DELETE FROM concept_keywords WHERE concept_id = ?;", -1, &del, NULL) == SQLITE_OK) {
+            sqlite3_bind_int(del, 1, concept_id);
+            sqlite3_step(del);
+            sqlite3_finalize(del);
+        }
+
+        char buf[512];
+        strncpy(buf, keywords, sizeof(buf) - 1);
+        buf[sizeof(buf) - 1] = '\0';
+        char *saveptr = NULL;
+        char *token = strtok_r(buf, ",;", &saveptr);
+        while (token) {
+            while (*token == ' ') token++;
+            char *end = token + strlen(token) - 1;
+            while (end > token && *end == ' ') { *end = '\0'; end--; }
+            if (strlen(token) > 0) {
+                sqlite3_stmt *ins = NULL;
+                if (sqlite3_prepare_v2(g_db, "INSERT INTO concept_keywords (concept_id, keyword) VALUES (?, ?);", -1, &ins, NULL) == SQLITE_OK) {
+                    sqlite3_bind_int(ins, 1, concept_id);
+                    sqlite3_bind_text(ins, 2, token, -1, SQLITE_STATIC);
+                    sqlite3_step(ins);
+                    sqlite3_finalize(ins);
+                }
+            }
+            token = strtok_r(NULL, ",;", &saveptr);
+        }
+    }
+    return true;
+}
+
+bool db_update_concept(int id, const char *name, const char *description, const char *keywords) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        return db_cloud_update_concept(id, name, description, keywords);
+    }
+    if (!g_db || id <= 0 || !name || !description) return false;
+
+    sqlite3_stmt *stmt = NULL;
+    const char *sql = "UPDATE concepts SET concept_name = ?, description = ? WHERE id = ?;";
+    if (sqlite3_prepare_v2(g_db, sql, -1, &stmt, NULL) != SQLITE_OK) return false;
+
+    sqlite3_bind_text(stmt, 1, name, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, description, -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 3, id);
+
+    int rc = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+    if (rc != SQLITE_DONE) return false;
+
+    /* Update keyword associations */
+    sqlite3_stmt *del = NULL;
+    if (sqlite3_prepare_v2(g_db, "DELETE FROM concept_keywords WHERE concept_id = ?;", -1, &del, NULL) == SQLITE_OK) {
+        sqlite3_bind_int(del, 1, id);
+        sqlite3_step(del);
+        sqlite3_finalize(del);
+    }
+
+    if (keywords && strlen(keywords) > 0) {
+        char buf[512];
+        strncpy(buf, keywords, sizeof(buf) - 1);
+        buf[sizeof(buf) - 1] = '\0';
+        char *saveptr = NULL;
+        char *token = strtok_r(buf, ",;", &saveptr);
+        while (token) {
+            while (*token == ' ') token++;
+            char *end = token + strlen(token) - 1;
+            while (end > token && *end == ' ') { *end = '\0'; end--; }
+            if (strlen(token) > 0) {
+                sqlite3_stmt *ins = NULL;
+                if (sqlite3_prepare_v2(g_db, "INSERT INTO concept_keywords (concept_id, keyword) VALUES (?, ?);", -1, &ins, NULL) == SQLITE_OK) {
+                    sqlite3_bind_int(ins, 1, id);
+                    sqlite3_bind_text(ins, 2, token, -1, SQLITE_STATIC);
+                    sqlite3_step(ins);
+                    sqlite3_finalize(ins);
+                }
+            }
+            token = strtok_r(NULL, ",;", &saveptr);
+        }
+    }
+    return true;
+}
+
+bool db_delete_concept(int id) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        return db_cloud_delete_concept(id);
+    }
+    if (!g_db || id <= 0) return false;
+
+    sqlite3_stmt *del_kws = NULL;
+    if (sqlite3_prepare_v2(g_db, "DELETE FROM concept_keywords WHERE concept_id = ?;", -1, &del_kws, NULL) == SQLITE_OK) {
+        sqlite3_bind_int(del_kws, 1, id);
+        sqlite3_step(del_kws);
+        sqlite3_finalize(del_kws);
+    }
+
+    sqlite3_stmt *stmt = NULL;
+    if (sqlite3_prepare_v2(g_db, "DELETE FROM concepts WHERE id = ?;", -1, &stmt, NULL) != SQLITE_OK) return false;
+    sqlite3_bind_int(stmt, 1, id);
+    int rc = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+    return (rc == SQLITE_DONE);
+}
+
+void db_free_concepts(DBConceptRecord *records) {
+    if (records) free(records);
+}
+
+/* Load concepts into memory and hydrate inverted index */
+size_t db_load_concepts_into_memory(ConceptIndex *idx) {
+    if (g_driver_type == DB_DRIVER_SQLITE_CLOUD) {
+        return db_cloud_load_concepts_into_memory(idx);
+    }
+    if (!g_db || !idx) return 0;
+
+    /* Check if concepts table is empty, if so, seed defaults */
+    sqlite3_stmt *chk = NULL;
+    int concept_count = 0;
+    if (sqlite3_prepare_v2(g_db, "SELECT COUNT(*) FROM concepts;", -1, &chk, NULL) == SQLITE_OK) {
+        if (sqlite3_step(chk) == SQLITE_ROW) concept_count = sqlite3_column_int(chk, 0);
+        sqlite3_finalize(chk);
+    }
+
+    if (concept_count == 0) {
+        /* Seed default concepts into SQLite database */
+        db_add_concept("Memoization",
+            "A technique that stores previously computed results to avoid repeated calculations and optimize recursion",
+            "caching, dynamic programming, stored results, lookup table, cache", NULL);
+        db_add_concept("Dijkstra Algorithm",
+            "Algorithm that finds the shortest path between nodes in a weighted graph with non-negative edge weights",
+            "shortest path, graph search, priority queue, single source shortest path", NULL);
+        db_add_concept("HDMI Adapter",
+            "Device or cable used to connect a laptop or computer to a projector, monitor or external display",
+            "usb-c to hdmi converter, display adapter, projector connector, displayport to hdmi", NULL);
+        db_add_concept("Laptop Cooling Pad",
+            "External accessory used to cool a laptop and prevent thermal throttling or overheating with fans",
+            "cooling stand, laptop cooler, fan pad, thermal mat", NULL);
+        db_add_concept("Binary Search",
+            "Search algorithm that finds the position of a target value within a sorted array by repeatedly dividing the search range in half",
+            "divide and conquer, logarithmic search, sorted array lookup", NULL);
+        db_add_concept("LRU Cache",
+            "A caching data structure that evicts the least recently used elements first when capacity limit is reached",
+            "least recently used, cache eviction policy, doubly linked list hashmap", NULL);
+        db_add_concept("Depth First Search",
+            "Graph traversal algorithm that explores as deep as possible along each branch before backtracking",
+            "dfs, tree traversal, stack based search, recursion traversal", NULL);
+        db_add_concept("Breadth First Search",
+            "Graph traversal algorithm that explores all neighbor nodes at the present depth before moving to the next level",
+            "bfs, level order traversal, queue search, unweighted shortest path", NULL);
+        db_add_concept("Hash Table",
+            "Data structure that implements an associative array abstract data type, mapping keys to values using a hash function",
+            "hash map, dictionary, separate chaining, key value store", NULL);
+        db_add_concept("Min Heap",
+            "A complete binary tree data structure where the parent node is always less than or equal to its children",
+            "priority queue, binary heap, top-k ranking, heap sort", NULL);
+    }
+
+    DBConceptRecord *records = NULL;
+    size_t count = db_get_all_concepts(&records);
+    if (count > 0 && records) {
+        concept_index_clear(idx);
+        for (size_t i = 0; i < count; i++) {
+            concept_index_add(idx, records[i].id, records[i].concept_name, records[i].description, records[i].keywords);
+        }
+        db_free_concepts(records);
+    }
+    return count;
 }
 

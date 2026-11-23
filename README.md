@@ -93,11 +93,15 @@ The system was benchmarked using actual experiments across 10,000, 25,000, and 5
 
 ## 6. Unit & Integration Test Results
 
-132 total unit tests across 6 comprehensive test suites pass with 100% success:
+163 total unit tests across 7 comprehensive test suites pass with 100% success:
 
 - `test_trie`: **31 / 31 passed (100%)** — Lifecycle, normalization, exact search, prefix matching, subtree collection, node deletion.
 - `test_hashmap`: **27 / 27 passed (100%)** — Dynamic hashing (djb2), separate chaining, collision handling, automatic rehashing, frequency increments.
 - `test_heap`: **24 / 24 passed (100%)** — Sift up/down, conditional root replacement, descending extraction, equal frequency tie-breaking.
+- `test_ranking`: **26 / 26 passed (100%)** — Approach A vs Approach B equivalence, Top-10 cache propagation, dynamic re-ranking.
+- `test_database`: **33 / 33 passed (100%)** — Schema creation, hydration, search audit log, trending 24h calculation, expired filtering, concept CRUD.
+- `test_forgotten_search`: **22 / 22 passed (100%)** — Inverted index tokenization, stopword filtering, TF-IDF scoring, concept mutations (add/update/delete).
+- `test_admin_auth`: **11 / 11 passed (100%)** — ADMIN_API_KEY bearer authentication, constant-time validation, fail-closed posture, unauthorized route rejection.
 - `test_ranking`: **15 / 15 passed (100%)** — 100% result agreement between Approach A and Approach B, cache propagation, keyword insertion/deletion.
 - `test_database`: **20 / 20 passed (100%)** — SQLite schema creation, startup in-memory hydration, search submission logging, admin CRUD, expired keyword cleanup.
 - `test_forgotten_search`: **15 / 15 passed (100%)** — Stop-word removal, concept scoring, direct phrasing, synonyms, incomplete descriptions, no-match handling.

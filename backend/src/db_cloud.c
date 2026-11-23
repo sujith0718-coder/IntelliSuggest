@@ -1,9 +1,11 @@
 #include "db_cloud.h"
 #include "http_client.h"
+#include "concept_index.h"
 #include "cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <time.h>
 
 static char g_gateway_url[512] = {0};
@@ -28,11 +30,28 @@ static void escape_sql(const char *in, char *out, size_t out_len) {
         if (in[i] == '\'') {
             out[j++] = '\'';
             out[j++] = '\'';
-        } else {
+        } else if (in[i] == '\\') {
+            out[j++] = '\\';
+            out[j++] = '\\';
+        } else if ((unsigned char)in[i] >= 32 || in[i] == '\t') {
             out[j++] = in[i];
         }
     }
     out[j] = '\0';
+}
+
+/* Strict input validation for keywords to prevent injection and malformed tokens */
+static bool validate_keyword_input(const char *in) {
+    if (!in) return false;
+    size_t len = strlen(in);
+    if (len == 0 || len > 120) return false;
+    for (size_t i = 0; i < len; i++) {
+        unsigned char c = (unsigned char)in[i];
+        if (!isalnum(c) && c != ' ' && c != '-' && c != '_' && c != '.') {
+            return false;
+        }
+    }
+    return true;
 }
 
 static bool parse_sqlitecloud_url(const char *url, char *gateway_url, size_t gw_len,
@@ -355,6 +374,7 @@ size_t db_cloud_load_keywords_into_memory(Trie *trie, HashTable *ht) {
 
 bool db_cloud_record_search(const char *keyword, int *out_new_frequency, const char *searched_at) {
     if (!g_cloud_initialized || !keyword) return false;
+    if (!validate_keyword_input(keyword)) return false;
 
     char *norm = trie_normalize(keyword);
     if (!norm) return false;
@@ -729,4 +749,378 @@ bool db_cloud_get_analytics_summary(DBAnalyticsSummary *out_summary) {
 
     cJSON_Delete(res);
     return true;
+}
+
+/* Trending Keywords from SQLiteCloud */
+size_t db_cloud_get_trending_keywords(size_t limit, int hours_window, DBKeywordRecord **out_records) {
+    if (!g_cloud_initialized || !out_records) return 0;
+    if (hours_window <= 0) hours_window = 24;
+    if (limit == 0) limit = 10;
+
+    time_t cutoff_t = time(NULL) - (time_t)(hours_window * 3600);
+    char cutoff_str[32];
+    struct tm *tm = gmtime(&cutoff_t);
+    if (tm) strftime(cutoff_str, sizeof(cutoff_str), "%Y-%m-%dT%H:%M:%SZ", tm);
+    else snprintf(cutoff_str, sizeof(cutoff_str), "1970-01-01T00:00:00Z");
+
+    char sql[512];
+    snprintf(sql, sizeof(sql),
+             "SELECT id, keyword, frequency, created_at, COALESCE(last_searched_at, '') AS last_searched_at, is_active "
+             "FROM keywords WHERE is_active = 1 AND last_searched_at >= '%s' "
+             "ORDER BY frequency DESC LIMIT %zu;", cutoff_str, limit);
+
+    cJSON *res = execute_cloud_sql(sql);
+    size_t count = 0;
+    DBKeywordRecord *records = (DBKeywordRecord*)calloc(limit, sizeof(DBKeywordRecord));
+
+    if (res) {
+        cJSON *data = cJSON_GetObjectItem(res, "data");
+        if (cJSON_IsArray(data)) {
+            cJSON *row = NULL;
+            cJSON_ArrayForEach(row, data) {
+                if (count >= limit) break;
+                cJSON *id = cJSON_GetObjectItem(row, "id");
+                cJSON *kw = cJSON_GetObjectItem(row, "keyword");
+                cJSON *fr = cJSON_GetObjectItem(row, "frequency");
+                cJSON *ca = cJSON_GetObjectItem(row, "created_at");
+                cJSON *la = cJSON_GetObjectItem(row, "last_searched_at");
+                cJSON *ia = cJSON_GetObjectItem(row, "is_active");
+
+                records[count].id = id ? id->valueint : 0;
+                records[count].frequency = fr ? fr->valueint : 0;
+                records[count].is_active = ia ? (ia->valueint != 0) : true;
+                if (kw && kw->valuestring) strncpy(records[count].keyword, kw->valuestring, sizeof(records[count].keyword) - 1);
+                if (ca && ca->valuestring) strncpy(records[count].created_at, ca->valuestring, sizeof(records[count].created_at) - 1);
+                if (la && la->valuestring) strncpy(records[count].last_searched_at, la->valuestring, sizeof(records[count].last_searched_at) - 1);
+                count++;
+            }
+        }
+        cJSON_Delete(res);
+    }
+
+    /* Fallback if few recent searches */
+    if (count < limit) {
+        DBKeywordRecord *pop = NULL;
+        size_t pop_count = db_cloud_get_popular_keywords(limit, &pop);
+        for (size_t i = 0; i < pop_count && count < limit; i++) {
+            bool already = false;
+            for (size_t j = 0; j < count; j++) {
+                if (records[j].id == pop[i].id) { already = true; break; }
+            }
+            if (!already) {
+                records[count++] = pop[i];
+            }
+        }
+        if (pop) free(pop);
+    }
+
+    *out_records = records;
+    return count;
+}
+
+/* Expired Keywords from SQLiteCloud */
+size_t db_cloud_get_expired_keywords(int days_threshold, DBKeywordRecord **out_records) {
+    if (!g_cloud_initialized || !out_records) return 0;
+    if (days_threshold <= 0) days_threshold = 90;
+
+    time_t cutoff_t = time(NULL) - (time_t)(days_threshold * 86400);
+    char cutoff_str[32];
+    struct tm *tm = gmtime(&cutoff_t);
+    if (tm) strftime(cutoff_str, sizeof(cutoff_str), "%Y-%m-%dT%H:%M:%SZ", tm);
+    else snprintf(cutoff_str, sizeof(cutoff_str), "1970-01-01T00:00:00Z");
+
+    char sql[512];
+    snprintf(sql, sizeof(sql),
+             "SELECT id, keyword, frequency, created_at, COALESCE(last_searched_at, '') AS last_searched_at, is_active "
+             "FROM keywords WHERE is_active = 0 OR ("
+             "(last_searched_at IS NOT NULL AND last_searched_at < '%s') OR "
+             "(last_searched_at IS NULL AND created_at < '%s')) "
+             "ORDER BY id DESC LIMIT 50;", cutoff_str, cutoff_str);
+
+    cJSON *res = execute_cloud_sql(sql);
+    if (!res) { *out_records = NULL; return 0; }
+
+    cJSON *data = cJSON_GetObjectItem(res, "data");
+    if (!cJSON_IsArray(data)) { cJSON_Delete(res); *out_records = NULL; return 0; }
+
+    size_t count = (size_t)cJSON_GetArraySize(data);
+    if (count == 0) { cJSON_Delete(res); *out_records = NULL; return 0; }
+
+    DBKeywordRecord *records = (DBKeywordRecord*)calloc(count, sizeof(DBKeywordRecord));
+    for (size_t i = 0; i < count; i++) {
+        cJSON *row = cJSON_GetArrayItem(data, (int)i);
+        cJSON *id = cJSON_GetObjectItem(row, "id");
+        cJSON *kw = cJSON_GetObjectItem(row, "keyword");
+        cJSON *fr = cJSON_GetObjectItem(row, "frequency");
+        cJSON *ca = cJSON_GetObjectItem(row, "created_at");
+        cJSON *la = cJSON_GetObjectItem(row, "last_searched_at");
+        cJSON *ia = cJSON_GetObjectItem(row, "is_active");
+
+        records[i].id = id ? id->valueint : 0;
+        records[i].frequency = fr ? fr->valueint : 0;
+        records[i].is_active = ia ? (ia->valueint != 0) : false;
+        if (kw && kw->valuestring) strncpy(records[i].keyword, kw->valuestring, sizeof(records[i].keyword) - 1);
+        if (ca && ca->valuestring) strncpy(records[i].created_at, ca->valuestring, sizeof(records[i].created_at) - 1);
+        if (la && la->valuestring) strncpy(records[i].last_searched_at, la->valuestring, sizeof(records[i].last_searched_at) - 1);
+    }
+
+    cJSON_Delete(res);
+    *out_records = records;
+    return count;
+}
+
+/* Concept Management in SQLiteCloud */
+size_t db_cloud_get_all_concepts(DBConceptRecord **out_records) {
+    if (!g_cloud_initialized || !out_records) return 0;
+
+    const char *sql =
+        "SELECT c.id, c.concept_name, c.description, COALESCE(GROUP_CONCAT(ck.keyword, ', '), '') AS keywords "
+        "FROM concepts c LEFT JOIN concept_keywords ck ON c.id = ck.concept_id "
+        "GROUP BY c.id ORDER BY c.id ASC;";
+
+    cJSON *res = execute_cloud_sql(sql);
+    if (!res) { *out_records = NULL; return 0; }
+
+    cJSON *data = cJSON_GetObjectItem(res, "data");
+    if (!cJSON_IsArray(data)) { cJSON_Delete(res); *out_records = NULL; return 0; }
+
+    size_t count = (size_t)cJSON_GetArraySize(data);
+    if (count == 0) { cJSON_Delete(res); *out_records = NULL; return 0; }
+
+    DBConceptRecord *records = (DBConceptRecord*)calloc(count, sizeof(DBConceptRecord));
+    for (size_t i = 0; i < count; i++) {
+        cJSON *row = cJSON_GetArrayItem(data, (int)i);
+        cJSON *id = cJSON_GetObjectItem(row, "id");
+        cJSON *nm = cJSON_GetObjectItem(row, "concept_name");
+        cJSON *ds = cJSON_GetObjectItem(row, "description");
+        cJSON *kw = cJSON_GetObjectItem(row, "keywords");
+
+        records[i].id = id ? id->valueint : 0;
+        if (nm && nm->valuestring) strncpy(records[i].concept_name, nm->valuestring, sizeof(records[i].concept_name) - 1);
+        if (ds && ds->valuestring) strncpy(records[i].description, ds->valuestring, sizeof(records[i].description) - 1);
+        if (kw && kw->valuestring) strncpy(records[i].keywords, kw->valuestring, sizeof(records[i].keywords) - 1);
+    }
+
+    cJSON_Delete(res);
+    *out_records = records;
+    return count;
+}
+
+bool db_cloud_get_concept_by_id(int id, DBConceptRecord *out_record) {
+    if (!g_cloud_initialized || !out_record || id <= 0) return false;
+
+    char sql[256];
+    snprintf(sql, sizeof(sql),
+             "SELECT c.id, c.concept_name, c.description, COALESCE(GROUP_CONCAT(ck.keyword, ', '), '') AS keywords "
+             "FROM concepts c LEFT JOIN concept_keywords ck ON c.id = ck.concept_id "
+             "WHERE c.id = %d GROUP BY c.id;", id);
+
+    cJSON *res = execute_cloud_sql(sql);
+    if (!res) return false;
+
+    cJSON *data = cJSON_GetObjectItem(res, "data");
+    bool found = false;
+    if (cJSON_IsArray(data) && cJSON_GetArraySize(data) > 0) {
+        cJSON *row = cJSON_GetArrayItem(data, 0);
+        cJSON *cid = cJSON_GetObjectItem(row, "id");
+        cJSON *nm = cJSON_GetObjectItem(row, "concept_name");
+        cJSON *ds = cJSON_GetObjectItem(row, "description");
+        cJSON *kw = cJSON_GetObjectItem(row, "keywords");
+
+        out_record->id = cid ? cid->valueint : id;
+        if (nm && nm->valuestring) strncpy(out_record->concept_name, nm->valuestring, sizeof(out_record->concept_name) - 1);
+        if (ds && ds->valuestring) strncpy(out_record->description, ds->valuestring, sizeof(out_record->description) - 1);
+        if (kw && kw->valuestring) strncpy(out_record->keywords, kw->valuestring, sizeof(out_record->keywords) - 1);
+        found = true;
+    }
+    cJSON_Delete(res);
+    return found;
+}
+
+bool db_cloud_add_concept(const char *name, const char *description, const char *keywords, int *out_id) {
+    if (!g_cloud_initialized || !name || !description) return false;
+
+    char esc_nm[256], esc_ds[1024];
+    escape_sql(name, esc_nm, sizeof(esc_nm));
+    escape_sql(description, esc_ds, sizeof(esc_ds));
+
+    char sql[1536];
+    snprintf(sql, sizeof(sql),
+             "INSERT INTO concepts (concept_name, description) VALUES ('%s', '%s') "
+             "ON CONFLICT(concept_name) DO UPDATE SET description = '%s';",
+             esc_nm, esc_ds, esc_ds);
+
+    cJSON *res = execute_cloud_sql(sql);
+    if (!res) return false;
+    cJSON_Delete(res);
+
+    int concept_id = 0;
+    char sel_sql[512];
+    snprintf(sel_sql, sizeof(sel_sql), "SELECT id FROM concepts WHERE concept_name = '%s';", esc_nm);
+    cJSON *r2 = execute_cloud_sql(sel_sql);
+    if (r2) {
+        cJSON *data = cJSON_GetObjectItem(r2, "data");
+        if (cJSON_IsArray(data) && cJSON_GetArraySize(data) > 0) {
+            cJSON *row = cJSON_GetArrayItem(data, 0);
+            cJSON *id_item = cJSON_GetObjectItem(row, "id");
+            if (id_item) concept_id = id_item->valueint;
+        }
+        cJSON_Delete(r2);
+    }
+    if (out_id) *out_id = concept_id;
+
+    if (concept_id > 0 && keywords && strlen(keywords) > 0) {
+        char del_sql[256];
+        snprintf(del_sql, sizeof(del_sql), "DELETE FROM concept_keywords WHERE concept_id = %d;", concept_id);
+        cJSON *rd = execute_cloud_sql(del_sql);
+        if (rd) cJSON_Delete(rd);
+
+        char buf[512];
+        strncpy(buf, keywords, sizeof(buf) - 1);
+        buf[sizeof(buf) - 1] = '\0';
+        char *saveptr = NULL;
+        char *token = strtok_r(buf, ",;", &saveptr);
+        while (token) {
+            while (*token == ' ') token++;
+            char *end = token + strlen(token) - 1;
+            while (end > token && *end == ' ') { *end = '\0'; end--; }
+            if (strlen(token) > 0) {
+                char esc_kw[256];
+                escape_sql(token, esc_kw, sizeof(esc_kw));
+                char ins_sql[512];
+                snprintf(ins_sql, sizeof(ins_sql),
+                         "INSERT INTO concept_keywords (concept_id, keyword) VALUES (%d, '%s');",
+                         concept_id, esc_kw);
+                cJSON *ri = execute_cloud_sql(ins_sql);
+                if (ri) cJSON_Delete(ri);
+            }
+            token = strtok_r(NULL, ",;", &saveptr);
+        }
+    }
+    return true;
+}
+
+bool db_cloud_update_concept(int id, const char *name, const char *description, const char *keywords) {
+    if (!g_cloud_initialized || id <= 0 || !name || !description) return false;
+
+    char esc_nm[256], esc_ds[1024];
+    escape_sql(name, esc_nm, sizeof(esc_nm));
+    escape_sql(description, esc_ds, sizeof(esc_ds));
+
+    char sql[1536];
+    snprintf(sql, sizeof(sql),
+             "UPDATE concepts SET concept_name = '%s', description = '%s' WHERE id = %d;",
+             esc_nm, esc_ds, id);
+
+    cJSON *res = execute_cloud_sql(sql);
+    if (!res) return false;
+    cJSON_Delete(res);
+
+    char del_sql[256];
+    snprintf(del_sql, sizeof(del_sql), "DELETE FROM concept_keywords WHERE concept_id = %d;", id);
+    cJSON *rd = execute_cloud_sql(del_sql);
+    if (rd) cJSON_Delete(rd);
+
+    if (keywords && strlen(keywords) > 0) {
+        char buf[512];
+        strncpy(buf, keywords, sizeof(buf) - 1);
+        buf[sizeof(buf) - 1] = '\0';
+        char *saveptr = NULL;
+        char *token = strtok_r(buf, ",;", &saveptr);
+        while (token) {
+            while (*token == ' ') token++;
+            char *end = token + strlen(token) - 1;
+            while (end > token && *end == ' ') { *end = '\0'; end--; }
+            if (strlen(token) > 0) {
+                char esc_kw[256];
+                escape_sql(token, esc_kw, sizeof(esc_kw));
+                char ins_sql[512];
+                snprintf(ins_sql, sizeof(ins_sql),
+                         "INSERT INTO concept_keywords (concept_id, keyword) VALUES (%d, '%s');",
+                         id, esc_kw);
+                cJSON *ri = execute_cloud_sql(ins_sql);
+                if (ri) cJSON_Delete(ri);
+            }
+            token = strtok_r(NULL, ",;", &saveptr);
+        }
+    }
+    return true;
+}
+
+bool db_cloud_delete_concept(int id) {
+    if (!g_cloud_initialized || id <= 0) return false;
+
+    char del_kws[256];
+    snprintf(del_kws, sizeof(del_kws), "DELETE FROM concept_keywords WHERE concept_id = %d;", id);
+    cJSON *r1 = execute_cloud_sql(del_kws);
+    if (r1) cJSON_Delete(r1);
+
+    char del_c[256];
+    snprintf(del_c, sizeof(del_c), "DELETE FROM concepts WHERE id = %d;", id);
+    cJSON *r2 = execute_cloud_sql(del_c);
+    if (!r2) return false;
+    cJSON_Delete(r2);
+
+    return true;
+}
+
+size_t db_cloud_load_concepts_into_memory(ConceptIndex *idx) {
+    if (!g_cloud_initialized || !idx) return 0;
+
+    /* Check if cloud concepts empty, if so, seed defaults */
+    cJSON *chk = execute_cloud_sql("SELECT count(*) AS cnt FROM concepts;");
+    int count_in_db = 0;
+    if (chk) {
+        cJSON *data = cJSON_GetObjectItem(chk, "data");
+        if (cJSON_IsArray(data) && cJSON_GetArraySize(data) > 0) {
+            cJSON *row = cJSON_GetArrayItem(data, 0);
+            cJSON *cnt = cJSON_GetObjectItem(row, "cnt");
+            if (cnt) count_in_db = cnt->valueint;
+        }
+        cJSON_Delete(chk);
+    }
+
+    if (count_in_db == 0) {
+        db_cloud_add_concept("Memoization",
+            "A technique that stores previously computed results to avoid repeated calculations and optimize recursion",
+            "caching, dynamic programming, stored results, lookup table, cache", NULL);
+        db_cloud_add_concept("Dijkstra Algorithm",
+            "Algorithm that finds the shortest path between nodes in a weighted graph with non-negative edge weights",
+            "shortest path, graph search, priority queue, single source shortest path", NULL);
+        db_cloud_add_concept("HDMI Adapter",
+            "Device or cable used to connect a laptop or computer to a projector, monitor or external display",
+            "usb-c to hdmi converter, display adapter, projector connector, displayport to hdmi", NULL);
+        db_cloud_add_concept("Laptop Cooling Pad",
+            "External accessory used to cool a laptop and prevent thermal throttling or overheating with fans",
+            "cooling stand, laptop cooler, fan pad, thermal mat", NULL);
+        db_cloud_add_concept("Binary Search",
+            "Search algorithm that finds the position of a target value within a sorted array by repeatedly dividing the search range in half",
+            "divide and conquer, logarithmic search, sorted array lookup", NULL);
+        db_cloud_add_concept("LRU Cache",
+            "A caching data structure that evicts the least recently used elements first when capacity limit is reached",
+            "least recently used, cache eviction policy, doubly linked list hashmap", NULL);
+        db_cloud_add_concept("Depth First Search",
+            "Graph traversal algorithm that explores as deep as possible along each branch before backtracking",
+            "dfs, tree traversal, stack based search, recursion traversal", NULL);
+        db_cloud_add_concept("Breadth First Search",
+            "Graph traversal algorithm that explores all neighbor nodes at the present depth before moving to the next level",
+            "bfs, level order traversal, queue search, unweighted shortest path", NULL);
+        db_cloud_add_concept("Hash Table",
+            "Data structure that implements an associative array abstract data type, mapping keys to values using a hash function",
+            "hash map, dictionary, separate chaining, key value store", NULL);
+        db_cloud_add_concept("Min Heap",
+            "A complete binary tree data structure where the parent node is always less than or equal to its children",
+            "priority queue, binary heap, top-k ranking, heap sort", NULL);
+    }
+
+    DBConceptRecord *records = NULL;
+    size_t count = db_cloud_get_all_concepts(&records);
+    if (count > 0 && records) {
+        concept_index_clear(idx);
+        for (size_t i = 0; i < count; i++) {
+            concept_index_add(idx, records[i].id, records[i].concept_name, records[i].description, records[i].keywords);
+        }
+        free(records);
+    }
+    return count;
 }

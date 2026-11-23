@@ -82,8 +82,25 @@ size_t db_cloud_get_all_keywords(DBKeywordRecord **out_records);
  */
 bool db_cloud_get_analytics_summary(DBAnalyticsSummary *out_summary);
 
+/**
+ * Query trending and expired keywords from SQLiteCloud.
+ */
+size_t db_cloud_get_trending_keywords(size_t limit, int hours_window, DBKeywordRecord **out_records);
+size_t db_cloud_get_expired_keywords(int days_threshold, DBKeywordRecord **out_records);
+
+/**
+ * Concept management in SQLiteCloud.
+ */
+size_t db_cloud_get_all_concepts(DBConceptRecord **out_records);
+bool db_cloud_get_concept_by_id(int id, DBConceptRecord *out_record);
+bool db_cloud_add_concept(const char *name, const char *description, const char *keywords, int *out_id);
+bool db_cloud_update_concept(int id, const char *name, const char *description, const char *keywords);
+bool db_cloud_delete_concept(int id);
+size_t db_cloud_load_concepts_into_memory(ConceptIndex *idx);
+
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* DB_CLOUD_H */
+

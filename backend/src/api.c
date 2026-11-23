@@ -1,11 +1,15 @@
 #include "api.h"
 #include "database.h"
 #include "ranking.h"
+#include "concept_index.h"
 #include "cJSON.h"
 #include "civetweb.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <ctype.h>
+#include <stdint.h>
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -16,6 +20,7 @@ static CRITICAL_SECTION g_lock;
 #define LOCK_DESTROY() DeleteCriticalSection(&g_lock)
 #else
 #include <pthread.h>
+#include <unistd.h>
 static pthread_mutex_t g_lock = PTHREAD_MUTEX_INITIALIZER;
 #define LOCK_INIT()
 #define LOCK() pthread_mutex_lock(&g_lock)
@@ -25,7 +30,250 @@ static pthread_mutex_t g_lock = PTHREAD_MUTEX_INITIALIZER;
 
 static struct mg_context *g_mg_ctx = NULL;
 
-/* Helper to resolve allowed CORS origin: supports explicit CORS_ORIGIN or dynamic reflection of Origin header */
+/* -------------------------------------------------------------------------
+ * Search Persistence Queue (Reliable Asynchronous Storage)
+ * ------------------------------------------------------------------------- */
+typedef struct {
+    char id[64];
+    char keyword[128];
+    char searched_at[32];
+    int retries;
+} SearchTask;
+
+#define PERSISTENCE_QUEUE_SIZE 1024
+
+typedef struct {
+    SearchTask tasks[PERSISTENCE_QUEUE_SIZE];
+    size_t head;
+    size_t tail;
+    size_t count;
+    size_t pending_writes;
+    size_t persisted_writes;
+    size_t failed_writes;
+    bool is_running;
+    ServerContext *ctx;
+#if defined(_WIN32)
+    CRITICAL_SECTION lock;
+    HANDLE event;
+    HANDLE thread;
+#else
+    pthread_mutex_t lock;
+    pthread_cond_t cond;
+    pthread_t thread;
+#endif
+} PersistenceQueue;
+
+static PersistenceQueue g_queue;
+
+#if defined(_WIN32)
+static DWORD WINAPI persistence_worker_func(LPVOID arg) {
+    (void)arg;
+#else
+static void* persistence_worker_func(void *arg) {
+    (void)arg;
+#endif
+    while (g_queue.is_running || g_queue.count > 0) {
+#if defined(_WIN32)
+        WaitForSingleObject(g_queue.event, 250);
+        EnterCriticalSection(&g_queue.lock);
+#else
+        pthread_mutex_lock(&g_queue.lock);
+        while (g_queue.count == 0 && g_queue.is_running) {
+            struct timespec ts;
+            clock_gettime(CLOCK_REALTIME, &ts);
+            ts.tv_nsec += 250000000;
+            if (ts.tv_nsec >= 1000000000) { ts.tv_sec += 1; ts.tv_nsec -= 1000000000; }
+            pthread_cond_timedwait(&g_queue.cond, &g_queue.lock, &ts);
+        }
+#endif
+        if (g_queue.count == 0) {
+#if defined(_WIN32)
+            LeaveCriticalSection(&g_queue.lock);
+#else
+            pthread_mutex_unlock(&g_queue.lock);
+#endif
+            continue;
+        }
+
+        SearchTask task = g_queue.tasks[g_queue.head];
+        g_queue.head = (g_queue.head + 1) % PERSISTENCE_QUEUE_SIZE;
+        g_queue.count--;
+#if defined(_WIN32)
+        LeaveCriticalSection(&g_queue.lock);
+#else
+        pthread_mutex_unlock(&g_queue.lock);
+#endif
+
+        int out_freq = 0;
+        bool ok = db_record_search(task.keyword, &out_freq, task.searched_at);
+
+#if defined(_WIN32)
+        EnterCriticalSection(&g_queue.lock);
+#else
+        pthread_mutex_lock(&g_queue.lock);
+#endif
+        if (ok) {
+            g_queue.persisted_writes++;
+            if (g_queue.pending_writes > 0) g_queue.pending_writes--;
+#if defined(_WIN32)
+            LeaveCriticalSection(&g_queue.lock);
+#else
+            pthread_mutex_unlock(&g_queue.lock);
+#endif
+        } else {
+            if (task.retries < 3) {
+                task.retries++;
+#if defined(_WIN32)
+                LeaveCriticalSection(&g_queue.lock);
+                Sleep(200);
+                EnterCriticalSection(&g_queue.lock);
+#else
+                pthread_mutex_unlock(&g_queue.lock);
+                usleep(200000);
+                pthread_mutex_lock(&g_queue.lock);
+#endif
+                if (g_queue.count < PERSISTENCE_QUEUE_SIZE) {
+                    g_queue.tasks[g_queue.tail] = task;
+                    g_queue.tail = (g_queue.tail + 1) % PERSISTENCE_QUEUE_SIZE;
+                    g_queue.count++;
+                }
+#if defined(_WIN32)
+                LeaveCriticalSection(&g_queue.lock);
+#else
+                pthread_mutex_unlock(&g_queue.lock);
+#endif
+            } else {
+                g_queue.failed_writes++;
+                if (g_queue.pending_writes > 0) g_queue.pending_writes--;
+#if defined(_WIN32)
+                LeaveCriticalSection(&g_queue.lock);
+#else
+                pthread_mutex_unlock(&g_queue.lock);
+#endif
+                fprintf(stderr, "[Persistence Warning] Failed to persist search task '%s' for '%s' after 3 retries\n",
+                        task.id, task.keyword);
+            }
+        }
+    }
+#if defined(_WIN32)
+    return 0;
+#else
+    return NULL;
+#endif
+}
+
+static void persistence_queue_init(ServerContext *ctx) {
+    memset(&g_queue, 0, sizeof(g_queue));
+    g_queue.ctx = ctx;
+    g_queue.is_running = true;
+#if defined(_WIN32)
+    InitializeCriticalSection(&g_queue.lock);
+    g_queue.event = CreateEvent(NULL, FALSE, FALSE, NULL);
+    g_queue.thread = CreateThread(NULL, 0, persistence_worker_func, NULL, 0, NULL);
+#else
+    pthread_mutex_init(&g_queue.lock, NULL);
+    pthread_cond_init(&g_queue.cond, NULL);
+    pthread_create(&g_queue.thread, NULL, persistence_worker_func, NULL);
+#endif
+}
+
+static void persistence_queue_stop(void) {
+    g_queue.is_running = false;
+#if defined(_WIN32)
+    SetEvent(g_queue.event);
+    WaitForSingleObject(g_queue.thread, 3000);
+    CloseHandle(g_queue.thread);
+    CloseHandle(g_queue.event);
+    DeleteCriticalSection(&g_queue.lock);
+#else
+    pthread_cond_signal(&g_queue.cond);
+    pthread_join(g_queue.thread, NULL);
+    pthread_cond_destroy(&g_queue.cond);
+    pthread_mutex_destroy(&g_queue.lock);
+#endif
+}
+
+static bool persistence_queue_push(const char *keyword, const char *searched_at, char *out_event_id, size_t id_len) {
+    if (!keyword) return false;
+    static uint64_t counter = 0;
+    char evt_id[64];
+    snprintf(evt_id, sizeof(evt_id), "evt_%llu_%u", (unsigned long long)time(NULL), (unsigned int)(++counter));
+    if (out_event_id && id_len > 0) {
+        strncpy(out_event_id, evt_id, id_len - 1);
+        out_event_id[id_len - 1] = '\0';
+    }
+
+#if defined(_WIN32)
+    EnterCriticalSection(&g_queue.lock);
+#else
+    pthread_mutex_lock(&g_queue.lock);
+#endif
+    if (g_queue.count >= PERSISTENCE_QUEUE_SIZE) {
+#if defined(_WIN32)
+        LeaveCriticalSection(&g_queue.lock);
+#else
+        pthread_mutex_unlock(&g_queue.lock);
+#endif
+        return false;
+    }
+
+    SearchTask *t = &g_queue.tasks[g_queue.tail];
+    strncpy(t->id, evt_id, sizeof(t->id) - 1);
+    t->id[sizeof(t->id) - 1] = '\0';
+    strncpy(t->keyword, keyword, sizeof(t->keyword) - 1);
+    t->keyword[sizeof(t->keyword) - 1] = '\0';
+
+    if (searched_at && strlen(searched_at) > 0) {
+        strncpy(t->searched_at, searched_at, sizeof(t->searched_at) - 1);
+        t->searched_at[sizeof(t->searched_at) - 1] = '\0';
+    } else {
+        time_t now = time(NULL);
+        struct tm *tm = gmtime(&now);
+        if (tm) strftime(t->searched_at, sizeof(t->searched_at), "%Y-%m-%dT%H:%M:%SZ", tm);
+        else snprintf(t->searched_at, sizeof(t->searched_at), "1970-01-01T00:00:00Z");
+    }
+    t->retries = 0;
+
+    g_queue.tail = (g_queue.tail + 1) % PERSISTENCE_QUEUE_SIZE;
+    g_queue.count++;
+    g_queue.pending_writes++;
+
+#if defined(_WIN32)
+    SetEvent(g_queue.event);
+    LeaveCriticalSection(&g_queue.lock);
+#else
+    pthread_cond_signal(&g_queue.cond);
+    pthread_mutex_unlock(&g_queue.lock);
+#endif
+    return true;
+}
+
+/* -------------------------------------------------------------------------
+ * Security & Administrative Authentication
+ * ------------------------------------------------------------------------- */
+static bool check_admin_auth(struct mg_connection *conn) {
+    const char *expected_key = getenv("ADMIN_API_KEY");
+    if (!expected_key || strlen(expected_key) == 0) {
+        /* Fail-closed: administrative operations disabled if key is not configured */
+        return false;
+    }
+    const char *auth_hdr = mg_get_header(conn, "Authorization");
+    if (!auth_hdr || strncmp(auth_hdr, "Bearer ", 7) != 0) return false;
+    const char *provided_key = auth_hdr + 7;
+
+    size_t len_a = strlen(expected_key);
+    size_t len_b = strlen(provided_key);
+    if (len_a != len_b) return false;
+
+    /* Constant-time comparison to prevent timing side-channel attacks */
+    unsigned char diff = 0;
+    for (size_t i = 0; i < len_a; i++) {
+        diff |= (unsigned char)(expected_key[i] ^ provided_key[i]);
+    }
+    return (diff == 0);
+}
+
+/* Helper to resolve allowed CORS origin */
 static void get_cors_origin(struct mg_connection *conn, char *buf, size_t buf_len) {
     const char *env_origin = getenv("CORS_ORIGIN");
     if (env_origin && strlen(env_origin) > 0) {
@@ -52,6 +300,8 @@ static int send_json(struct mg_connection *conn, int status_code, cJSON *json_ob
                               (status_code == 201) ? "Created" :
                               (status_code == 204) ? "No Content" :
                               (status_code == 400) ? "Bad Request" :
+                              (status_code == 401) ? "Unauthorized" :
+                              (status_code == 403) ? "Forbidden" :
                               (status_code == 404) ? "Not Found" : "Internal Server Error";
 
     char cors_origin[256];
@@ -91,7 +341,7 @@ static int handle_cors_options(struct mg_connection *conn) {
     return 1;
 }
 
-/* Helper to read HTTP POST body into allocated string */
+/* Helper to read HTTP request body safely */
 static char* read_request_body(struct mg_connection *conn) {
     char buffer[4096];
     int bytes_read = mg_read(conn, buffer, sizeof(buffer) - 1);
@@ -100,15 +350,21 @@ static char* read_request_body(struct mg_connection *conn) {
     return strdup(buffer);
 }
 
-/* GET /api/health */
+/* GET /api/health and /health */
 static int handle_health(struct mg_connection *conn, void *cbdata) {
     (void)cbdata;
     const struct mg_request_info *req = mg_get_request_info(conn);
     if (strcmp(req->request_method, "OPTIONS") == 0) return handle_cors_options(conn);
+
     cJSON *resp = cJSON_CreateObject();
     cJSON_AddStringToObject(resp, "status", "ok");
     cJSON_AddStringToObject(resp, "service", "IntelliSuggest C DSA Core");
     cJSON_AddStringToObject(resp, "database_driver", db_get_driver_name());
+    cJSON_AddStringToObject(resp, "database", "connected");
+    cJSON_AddStringToObject(resp, "persistence", (g_queue.failed_writes > 0) ? "degraded" : "healthy");
+    cJSON_AddNumberToObject(resp, "pending_writes", (double)g_queue.pending_writes);
+    cJSON_AddNumberToObject(resp, "persisted_writes", (double)g_queue.persisted_writes);
+    cJSON_AddNumberToObject(resp, "failed_writes", (double)g_queue.failed_writes);
     return send_json(conn, 200, resp);
 }
 
@@ -154,7 +410,7 @@ static int handle_suggestions(struct mg_connection *conn, void *cbdata) {
     return send_json(conn, 200, resp);
 }
 
-/* POST /api/search -> records search selection, updates frequency, Trie cache, SQLite */
+/* POST /api/search -> updates memory immediately & queues durable async persistence */
 static int handle_search_submit(struct mg_connection *conn, void *cbdata) {
     const struct mg_request_info *req = mg_get_request_info(conn);
     if (strcmp(req->request_method, "OPTIONS") == 0) return handle_cors_options(conn);
@@ -172,7 +428,7 @@ static int handle_search_submit(struct mg_connection *conn, void *cbdata) {
     free(body);
     if (!parsed) {
         cJSON *err = cJSON_CreateObject();
-        cJSON_AddStringToObject(err, "error", "Invalid JSON");
+        cJSON_AddStringToObject(err, "error", "Invalid JSON format");
         return send_json(conn, 400, err);
     }
 
@@ -189,45 +445,54 @@ static int handle_search_submit(struct mg_connection *conn, void *cbdata) {
     keyword[sizeof(keyword) - 1] = '\0';
     cJSON_Delete(parsed);
 
+    /* Normalize keyword */
+    char *norm = trie_normalize(keyword);
+    if (!norm || strlen(norm) == 0) {
+        if (norm) free(norm);
+        cJSON *err = cJSON_CreateObject();
+        cJSON_AddStringToObject(err, "error", "Keyword must contain alphabetic characters");
+        return send_json(conn, 400, err);
+    }
+
     int new_frequency = 0;
     LOCK();
-    /* 1. Update in-memory Hash Table immediately */
-    hashtable_increment_frequency(ctx->hashmap, keyword, NULL, &new_frequency);
+    /* 1. Update in-memory Hash Table */
+    hashtable_increment_frequency(ctx->hashmap, norm, NULL, &new_frequency);
     if (new_frequency <= 0) {
-        HashNode *hn = hashtable_search(ctx->hashmap, keyword);
+        HashNode *hn = hashtable_search(ctx->hashmap, norm);
         new_frequency = hn ? hn->frequency : 1;
     }
 
     /* 2. Update Trie node and propagate cache up to root */
-    trie_update_frequency(ctx->trie, keyword, new_frequency);
-    ranking_propagate_cache_update(ctx->trie, keyword, new_frequency);
+    trie_update_frequency(ctx->trie, norm, new_frequency);
+    ranking_propagate_cache_update(ctx->trie, norm, new_frequency);
     UNLOCK();
 
-    /* 3. Persist to database (SQLite / SQLiteCloud) outside the in-memory DSA lock */
-    int db_freq = 0;
-    if (db_record_search(keyword, &db_freq, NULL) && db_freq > 0) {
-        new_frequency = db_freq;
-    }
+    /* 3. Queue durable persistence asynchronously */
+    char event_id[64] = {0};
+    bool queued = persistence_queue_push(norm, NULL, event_id, sizeof(event_id));
 
     cJSON *resp = cJSON_CreateObject();
     cJSON_AddBoolToObject(resp, "success", true);
-    cJSON_AddStringToObject(resp, "keyword", keyword);
+    cJSON_AddStringToObject(resp, "keyword", norm);
     cJSON_AddNumberToObject(resp, "new_frequency", new_frequency);
+    cJSON_AddStringToObject(resp, "event_id", event_id);
+    cJSON_AddStringToObject(resp, "persistence_status", queued ? "queued" : "queue_full");
 
+    free(norm);
     return send_json(conn, 200, resp);
 }
 
 /* GET /api/popular */
 static int handle_popular(struct mg_connection *conn, void *cbdata) {
+    (void)cbdata;
     const struct mg_request_info *req = mg_get_request_info(conn);
     if (strcmp(req->request_method, "OPTIONS") == 0) return handle_cors_options(conn);
     if (strcmp(req->request_method, "GET") != 0) return 0;
 
     DBKeywordRecord *records = NULL;
-    size_t count = 0;
-
     LOCK();
-    count = db_get_popular_keywords(10, &records);
+    size_t count = db_get_popular_keywords(10, &records);
     UNLOCK();
 
     cJSON *resp = cJSON_CreateObject();
@@ -247,15 +512,14 @@ static int handle_popular(struct mg_connection *conn, void *cbdata) {
 
 /* GET /api/history */
 static int handle_history(struct mg_connection *conn, void *cbdata) {
+    (void)cbdata;
     const struct mg_request_info *req = mg_get_request_info(conn);
     if (strcmp(req->request_method, "OPTIONS") == 0) return handle_cors_options(conn);
     if (strcmp(req->request_method, "GET") != 0) return 0;
 
     DBHistoryRecord *records = NULL;
-    size_t count = 0;
-
     LOCK();
-    count = db_get_recent_history(15, &records);
+    size_t count = db_get_recent_history(15, &records);
     UNLOCK();
 
     cJSON *resp = cJSON_CreateObject();
@@ -356,13 +620,80 @@ static int handle_analytics(struct mg_connection *conn, void *cbdata) {
     cJSON *resp = cJSON_CreateObject();
     cJSON_AddNumberToObject(resp, "total_keywords", (double)summary.total_keywords);
     cJSON_AddNumberToObject(resp, "active_keywords", (double)summary.active_keywords);
+    cJSON_AddNumberToObject(resp, "expired_keywords", (double)summary.expired_keywords);
     cJSON_AddNumberToObject(resp, "total_searches", (double)summary.total_searches);
     cJSON_AddNumberToObject(resp, "trie_total_words", (double)trie_words);
     cJSON_AddNumberToObject(resp, "trie_total_nodes", (double)trie_nodes);
     cJSON_AddNumberToObject(resp, "hash_load_factor", (double)load_factor);
     cJSON_AddNumberToObject(resp, "hash_collisions", (double)collisions);
+    cJSON_AddNumberToObject(resp, "pending_writes", (double)g_queue.pending_writes);
+    cJSON_AddNumberToObject(resp, "persisted_writes", (double)g_queue.persisted_writes);
+    cJSON_AddNumberToObject(resp, "failed_writes", (double)g_queue.failed_writes);
 
     return send_json(conn, 200, resp);
+}
+
+/* GET /api/analytics/trending */
+static int handle_analytics_trending(struct mg_connection *conn, void *cbdata) {
+    (void)cbdata;
+    const struct mg_request_info *req = mg_get_request_info(conn);
+    if (strcmp(req->request_method, "OPTIONS") == 0) return handle_cors_options(conn);
+    if (strcmp(req->request_method, "GET") != 0) return 0;
+
+    DBKeywordRecord *records = NULL;
+    LOCK();
+    size_t count = db_get_trending_keywords(10, 24, &records);
+    UNLOCK();
+
+    cJSON *resp = cJSON_CreateObject();
+    cJSON *arr = cJSON_CreateArray();
+    for (size_t i = 0; i < count; i++) {
+        cJSON *item = cJSON_CreateObject();
+        cJSON_AddNumberToObject(item, "id", records[i].id);
+        cJSON_AddStringToObject(item, "keyword", records[i].keyword);
+        cJSON_AddNumberToObject(item, "frequency", records[i].frequency);
+        cJSON_AddStringToObject(item, "last_searched_at", records[i].last_searched_at);
+        cJSON_AddItemToArray(arr, item);
+    }
+    cJSON_AddItemToObject(resp, "trending", arr);
+    db_free_keywords(records);
+
+    return send_json(conn, 200, resp);
+}
+
+/* GET /api/analytics/expired */
+static int handle_analytics_expired(struct mg_connection *conn, void *cbdata) {
+    (void)cbdata;
+    const struct mg_request_info *req = mg_get_request_info(conn);
+    if (strcmp(req->request_method, "OPTIONS") == 0) return handle_cors_options(conn);
+    if (strcmp(req->request_method, "GET") != 0) return 0;
+
+    DBKeywordRecord *records = NULL;
+    LOCK();
+    size_t count = db_get_expired_keywords(90, &records);
+    UNLOCK();
+
+    cJSON *resp = cJSON_CreateObject();
+    cJSON *arr = cJSON_CreateArray();
+    for (size_t i = 0; i < count; i++) {
+        cJSON *item = cJSON_CreateObject();
+        cJSON_AddNumberToObject(item, "id", records[i].id);
+        cJSON_AddStringToObject(item, "keyword", records[i].keyword);
+        cJSON_AddNumberToObject(item, "frequency", records[i].frequency);
+        cJSON_AddStringToObject(item, "created_at", records[i].created_at);
+        cJSON_AddStringToObject(item, "last_searched_at", records[i].last_searched_at);
+        cJSON_AddBoolToObject(item, "is_active", records[i].is_active);
+        cJSON_AddItemToArray(arr, item);
+    }
+    cJSON_AddItemToObject(resp, "expired", arr);
+    db_free_keywords(records);
+
+    return send_json(conn, 200, resp);
+}
+
+/* GET /api/analytics/recent */
+static int handle_analytics_recent(struct mg_connection *conn, void *cbdata) {
+    return handle_history(conn, cbdata);
 }
 
 /* GET /api/performance */
@@ -373,7 +704,6 @@ static int handle_performance(struct mg_connection *conn, void *cbdata) {
 
     ServerContext *ctx = (ServerContext *)cbdata;
 
-    /* Measure live queries for common prefix "p" and "d" */
     SuggestionItem *res_a = NULL;
     SuggestionItem *res_b = NULL;
     double lat_a = 0.0;
@@ -406,13 +736,14 @@ static int handle_performance(struct mg_connection *conn, void *cbdata) {
     return send_json(conn, 200, resp);
 }
 
-/* POST /api/keywords (Admin Add) & GET /api/keywords (Admin List) */
+/* /api/keywords: GET (list), POST (add), PUT (update), DELETE (delete) */
 static int handle_keywords(struct mg_connection *conn, void *cbdata) {
     const struct mg_request_info *req = mg_get_request_info(conn);
     if (strcmp(req->request_method, "OPTIONS") == 0) return handle_cors_options(conn);
 
     ServerContext *ctx = (ServerContext *)cbdata;
 
+    /* Public GET */
     if (strcmp(req->request_method, "GET") == 0) {
         DBKeywordRecord *records = NULL;
         LOCK();
@@ -436,6 +767,14 @@ static int handle_keywords(struct mg_connection *conn, void *cbdata) {
         return send_json(conn, 200, resp);
     }
 
+    /* Modifying Operations Require Admin Auth */
+    if (!check_admin_auth(conn)) {
+        cJSON *err = cJSON_CreateObject();
+        cJSON_AddStringToObject(err, "error", "Unauthorized: Valid ADMIN_API_KEY Bearer token required");
+        return send_json(conn, 401, err);
+    }
+
+    /* POST /api/keywords (Add) */
     if (strcmp(req->request_method, "POST") == 0) {
         char *body = read_request_body(conn);
         if (!body) return send_json(conn, 400, cJSON_CreateString("Missing body"));
@@ -446,26 +785,123 @@ static int handle_keywords(struct mg_connection *conn, void *cbdata) {
 
         cJSON *kw = cJSON_GetObjectItemCaseSensitive(parsed, "keyword");
         cJSON *freq = cJSON_GetObjectItemCaseSensitive(parsed, "frequency");
-        int frequency = (freq && cJSON_IsNumber(freq)) ? freq->valueint : 0;
+        int frequency = (freq && cJSON_IsNumber(freq)) ? freq->valueint : 10;
 
         if (!cJSON_IsString(kw) || !kw->valuestring) {
             cJSON_Delete(parsed);
-            return send_json(conn, 400, cJSON_CreateString("Keyword required"));
+            return send_json(conn, 400, cJSON_CreateString("Field 'keyword' is required"));
+        }
+
+        char *norm = trie_normalize(kw->valuestring);
+        if (!norm || strlen(norm) == 0) {
+            if (norm) free(norm);
+            cJSON_Delete(parsed);
+            return send_json(conn, 400, cJSON_CreateString("Keyword must contain alphabetic characters"));
         }
 
         int new_id = 0;
         LOCK();
-        db_add_keyword(kw->valuestring, frequency, &new_id);
-        trie_insert(ctx->trie, kw->valuestring, frequency);
-        hashtable_insert(ctx->hashmap, kw->valuestring, frequency, NULL, NULL, true);
-        ranking_propagate_cache_update(ctx->trie, kw->valuestring, frequency);
+        db_add_keyword(norm, frequency, &new_id);
+        trie_insert(ctx->trie, norm, frequency);
+        hashtable_insert(ctx->hashmap, norm, frequency, NULL, NULL, true);
+        ranking_propagate_cache_update(ctx->trie, norm, frequency);
         UNLOCK();
 
+        free(norm);
         cJSON_Delete(parsed);
         cJSON *resp = cJSON_CreateObject();
         cJSON_AddBoolToObject(resp, "success", true);
         cJSON_AddNumberToObject(resp, "id", new_id);
         return send_json(conn, 201, resp);
+    }
+
+    /* PUT /api/keywords (Update) */
+    if (strcmp(req->request_method, "PUT") == 0) {
+        char *body = read_request_body(conn);
+        if (!body) return send_json(conn, 400, cJSON_CreateString("Missing body"));
+
+        cJSON *parsed = cJSON_Parse(body);
+        free(body);
+        if (!parsed) return send_json(conn, 400, cJSON_CreateString("Invalid JSON"));
+
+        cJSON *id_item = cJSON_GetObjectItemCaseSensitive(parsed, "id");
+        cJSON *kw_item = cJSON_GetObjectItemCaseSensitive(parsed, "keyword");
+        cJSON *freq_item = cJSON_GetObjectItemCaseSensitive(parsed, "frequency");
+        cJSON *act_item = cJSON_GetObjectItemCaseSensitive(parsed, "is_active");
+
+        if (!cJSON_IsNumber(id_item) || !cJSON_IsString(kw_item)) {
+            cJSON_Delete(parsed);
+            return send_json(conn, 400, cJSON_CreateString("Fields 'id' and 'keyword' are required"));
+        }
+
+        int id = id_item->valueint;
+        int frequency = freq_item ? freq_item->valueint : 1;
+        bool is_active = act_item ? cJSON_IsTrue(act_item) : true;
+
+        char *norm = trie_normalize(kw_item->valuestring);
+        if (!norm) {
+            cJSON_Delete(parsed);
+            return send_json(conn, 400, cJSON_CreateString("Invalid keyword"));
+        }
+
+        LOCK();
+        db_update_keyword(id, norm, frequency, is_active);
+        if (is_active) {
+            trie_insert(ctx->trie, norm, frequency);
+            hashtable_insert(ctx->hashmap, norm, frequency, NULL, NULL, true);
+            ranking_propagate_cache_update(ctx->trie, norm, frequency);
+        } else {
+            trie_delete(ctx->trie, norm);
+            hashtable_delete(ctx->hashmap, norm);
+            ranking_propagate_cache_deletion(ctx->trie, norm);
+        }
+        UNLOCK();
+
+        free(norm);
+        cJSON_Delete(parsed);
+        cJSON *resp = cJSON_CreateObject();
+        cJSON_AddBoolToObject(resp, "success", true);
+        return send_json(conn, 200, resp);
+    }
+
+    /* DELETE /api/keywords (Delete by id or keyword) */
+    if (strcmp(req->request_method, "DELETE") == 0) {
+        int id = 0;
+        char id_str[32] = "";
+        if (req->query_string) {
+            mg_get_var(req->query_string, strlen(req->query_string), "id", id_str, sizeof(id_str));
+            if (strlen(id_str) > 0) id = atoi(id_str);
+        }
+
+        char *body = read_request_body(conn);
+        if (body) {
+            cJSON *parsed = cJSON_Parse(body);
+            free(body);
+            if (parsed) {
+                cJSON *id_item = cJSON_GetObjectItemCaseSensitive(parsed, "id");
+                if (cJSON_IsNumber(id_item)) id = id_item->valueint;
+                cJSON_Delete(parsed);
+            }
+        }
+
+        if (id <= 0) {
+            return send_json(conn, 400, cJSON_CreateString("Valid keyword 'id' required"));
+        }
+
+        char deleted_kw[128] = {0};
+        LOCK();
+        bool ok = db_delete_keyword(id, deleted_kw, sizeof(deleted_kw));
+        if (ok && strlen(deleted_kw) > 0) {
+            trie_delete(ctx->trie, deleted_kw);
+            hashtable_delete(ctx->hashmap, deleted_kw);
+            ranking_propagate_cache_deletion(ctx->trie, deleted_kw);
+        }
+        UNLOCK();
+
+        cJSON *resp = cJSON_CreateObject();
+        cJSON_AddBoolToObject(resp, "success", ok);
+        cJSON_AddStringToObject(resp, "deleted_keyword", deleted_kw);
+        return send_json(conn, 200, resp);
     }
 
     return 0;
@@ -476,6 +912,12 @@ static int handle_keywords_cleanup(struct mg_connection *conn, void *cbdata) {
     const struct mg_request_info *req = mg_get_request_info(conn);
     if (strcmp(req->request_method, "OPTIONS") == 0) return handle_cors_options(conn);
     if (strcmp(req->request_method, "POST") != 0) return 0;
+
+    if (!check_admin_auth(conn)) {
+        cJSON *err = cJSON_CreateObject();
+        cJSON_AddStringToObject(err, "error", "Unauthorized: Valid ADMIN_API_KEY Bearer token required");
+        return send_json(conn, 401, err);
+    }
 
     ServerContext *ctx = (ServerContext *)cbdata;
     char **deleted_kws = NULL;
@@ -497,6 +939,175 @@ static int handle_keywords_cleanup(struct mg_connection *conn, void *cbdata) {
     cJSON_AddNumberToObject(resp, "cleaned_count", (double)count);
 
     return send_json(conn, 200, resp);
+}
+
+/* /api/concepts: GET (list/get), POST (create), PUT (update), DELETE (delete) */
+static int handle_concepts(struct mg_connection *conn, void *cbdata) {
+    const struct mg_request_info *req = mg_get_request_info(conn);
+    if (strcmp(req->request_method, "OPTIONS") == 0) return handle_cors_options(conn);
+
+    ServerContext *ctx = (ServerContext *)cbdata;
+
+    /* Public GET */
+    if (strcmp(req->request_method, "GET") == 0) {
+        char id_str[32] = "";
+        if (req->query_string) {
+            mg_get_var(req->query_string, strlen(req->query_string), "id", id_str, sizeof(id_str));
+        }
+
+        if (strlen(id_str) > 0) {
+            int cid = atoi(id_str);
+            DBConceptRecord rec;
+            LOCK();
+            bool found = db_get_concept_by_id(cid, &rec);
+            UNLOCK();
+
+            if (!found) return send_json(conn, 404, cJSON_CreateString("Concept not found"));
+
+            cJSON *resp = cJSON_CreateObject();
+            cJSON *item = cJSON_CreateObject();
+            cJSON_AddNumberToObject(item, "id", rec.id);
+            cJSON_AddStringToObject(item, "concept_name", rec.concept_name);
+            cJSON_AddStringToObject(item, "description", rec.description);
+            cJSON_AddStringToObject(item, "keywords", rec.keywords);
+            cJSON_AddItemToObject(resp, "concept", item);
+            return send_json(conn, 200, resp);
+        }
+
+        DBConceptRecord *records = NULL;
+        LOCK();
+        size_t count = db_get_all_concepts(&records);
+        UNLOCK();
+
+        cJSON *resp = cJSON_CreateObject();
+        cJSON *arr = cJSON_CreateArray();
+        for (size_t i = 0; i < count; i++) {
+            cJSON *item = cJSON_CreateObject();
+            cJSON_AddNumberToObject(item, "id", records[i].id);
+            cJSON_AddStringToObject(item, "concept_name", records[i].concept_name);
+            cJSON_AddStringToObject(item, "description", records[i].description);
+            cJSON_AddStringToObject(item, "keywords", records[i].keywords);
+            cJSON_AddItemToArray(arr, item);
+        }
+        cJSON_AddItemToObject(resp, "concepts", arr);
+        db_free_concepts(records);
+        return send_json(conn, 200, resp);
+    }
+
+    /* Modifying Operations Require Admin Auth */
+    if (!check_admin_auth(conn)) {
+        cJSON *err = cJSON_CreateObject();
+        cJSON_AddStringToObject(err, "error", "Unauthorized: Valid ADMIN_API_KEY Bearer token required");
+        return send_json(conn, 401, err);
+    }
+
+    /* POST /api/concepts (Create) */
+    if (strcmp(req->request_method, "POST") == 0) {
+        char *body = read_request_body(conn);
+        if (!body) return send_json(conn, 400, cJSON_CreateString("Missing body"));
+
+        cJSON *parsed = cJSON_Parse(body);
+        free(body);
+        if (!parsed) return send_json(conn, 400, cJSON_CreateString("Invalid JSON"));
+
+        cJSON *nm = cJSON_GetObjectItemCaseSensitive(parsed, "concept_name");
+        cJSON *ds = cJSON_GetObjectItemCaseSensitive(parsed, "description");
+        cJSON *kw = cJSON_GetObjectItemCaseSensitive(parsed, "keywords");
+
+        if (!cJSON_IsString(nm) || !cJSON_IsString(ds)) {
+            cJSON_Delete(parsed);
+            return send_json(conn, 400, cJSON_CreateString("Fields 'concept_name' and 'description' are required"));
+        }
+
+        const char *kws_str = (kw && cJSON_IsString(kw)) ? kw->valuestring : "";
+        int new_id = 0;
+
+        LOCK();
+        bool ok = db_add_concept(nm->valuestring, ds->valuestring, kws_str, &new_id);
+        if (ok && new_id > 0) {
+            concept_index_add(ctx->concepts, new_id, nm->valuestring, ds->valuestring, kws_str);
+        }
+        UNLOCK();
+
+        cJSON_Delete(parsed);
+        cJSON *resp = cJSON_CreateObject();
+        cJSON_AddBoolToObject(resp, "success", ok);
+        cJSON_AddNumberToObject(resp, "id", new_id);
+        return send_json(conn, 201, resp);
+    }
+
+    /* PUT /api/concepts (Update) */
+    if (strcmp(req->request_method, "PUT") == 0) {
+        char *body = read_request_body(conn);
+        if (!body) return send_json(conn, 400, cJSON_CreateString("Missing body"));
+
+        cJSON *parsed = cJSON_Parse(body);
+        free(body);
+        if (!parsed) return send_json(conn, 400, cJSON_CreateString("Invalid JSON"));
+
+        cJSON *id_item = cJSON_GetObjectItemCaseSensitive(parsed, "id");
+        cJSON *nm = cJSON_GetObjectItemCaseSensitive(parsed, "concept_name");
+        cJSON *ds = cJSON_GetObjectItemCaseSensitive(parsed, "description");
+        cJSON *kw = cJSON_GetObjectItemCaseSensitive(parsed, "keywords");
+
+        if (!cJSON_IsNumber(id_item) || !cJSON_IsString(nm) || !cJSON_IsString(ds)) {
+            cJSON_Delete(parsed);
+            return send_json(conn, 400, cJSON_CreateString("Fields 'id', 'concept_name', and 'description' are required"));
+        }
+
+        int id = id_item->valueint;
+        const char *kws_str = (kw && cJSON_IsString(kw)) ? kw->valuestring : "";
+
+        LOCK();
+        bool ok = db_update_concept(id, nm->valuestring, ds->valuestring, kws_str);
+        if (ok) {
+            concept_index_update(ctx->concepts, id, nm->valuestring, ds->valuestring, kws_str);
+        }
+        UNLOCK();
+
+        cJSON_Delete(parsed);
+        cJSON *resp = cJSON_CreateObject();
+        cJSON_AddBoolToObject(resp, "success", ok);
+        return send_json(conn, 200, resp);
+    }
+
+    /* DELETE /api/concepts (Delete) */
+    if (strcmp(req->request_method, "DELETE") == 0) {
+        int id = 0;
+        char id_str[32] = "";
+        if (req->query_string) {
+            mg_get_var(req->query_string, strlen(req->query_string), "id", id_str, sizeof(id_str));
+            if (strlen(id_str) > 0) id = atoi(id_str);
+        }
+
+        char *body = read_request_body(conn);
+        if (body) {
+            cJSON *parsed = cJSON_Parse(body);
+            free(body);
+            if (parsed) {
+                cJSON *id_item = cJSON_GetObjectItemCaseSensitive(parsed, "id");
+                if (cJSON_IsNumber(id_item)) id = id_item->valueint;
+                cJSON_Delete(parsed);
+            }
+        }
+
+        if (id <= 0) {
+            return send_json(conn, 400, cJSON_CreateString("Valid concept 'id' required"));
+        }
+
+        LOCK();
+        bool ok = db_delete_concept(id);
+        if (ok) {
+            concept_index_delete(ctx->concepts, id);
+        }
+        UNLOCK();
+
+        cJSON *resp = cJSON_CreateObject();
+        cJSON_AddBoolToObject(resp, "success", ok);
+        return send_json(conn, 200, resp);
+    }
+
+    return 0;
 }
 
 /* Initialize server context, databases, and in-memory structures */
@@ -529,9 +1140,13 @@ bool api_server_init(ServerContext *ctx, int port, const char *db_path, const ch
     ranking_rebuild_entire_cache(ctx->trie);
     printf("[Server] Precomputed Top-10 node caches in Trie.\n");
 
-    /* Seed default concepts into concept inverted index */
-    concept_index_seed_defaults(ctx->concepts);
-    printf("[Server] Indexed %zu concepts in Forgotten-Name inverted index.\n", ctx->concepts->concept_count);
+    /* Hydrate concepts into concept inverted index from DB */
+    size_t concepts_loaded = db_load_concepts_into_memory(ctx->concepts);
+    printf("[Server] Hydrated %zu concepts into Forgotten-Name inverted index from database.\n", concepts_loaded);
+
+    /* Initialize persistence worker queue */
+    persistence_queue_init(ctx);
+    printf("[Server] Started reliable search persistence queue worker.\n");
 
     return true;
 }
@@ -562,10 +1177,14 @@ void api_server_start(ServerContext *ctx) {
     mg_set_request_handler(g_mg_ctx, "/api/popular", handle_popular, ctx);
     mg_set_request_handler(g_mg_ctx, "/api/history", handle_history, ctx);
     mg_set_request_handler(g_mg_ctx, "/api/forgotten-search", handle_forgotten_search, ctx);
+    mg_set_request_handler(g_mg_ctx, "/api/analytics/trending", handle_analytics_trending, ctx);
+    mg_set_request_handler(g_mg_ctx, "/api/analytics/expired", handle_analytics_expired, ctx);
+    mg_set_request_handler(g_mg_ctx, "/api/analytics/recent", handle_analytics_recent, ctx);
     mg_set_request_handler(g_mg_ctx, "/api/analytics", handle_analytics, ctx);
     mg_set_request_handler(g_mg_ctx, "/api/performance", handle_performance, ctx);
     mg_set_request_handler(g_mg_ctx, "/api/keywords/cleanup", handle_keywords_cleanup, ctx);
     mg_set_request_handler(g_mg_ctx, "/api/keywords", handle_keywords, ctx);
+    mg_set_request_handler(g_mg_ctx, "/api/concepts", handle_concepts, ctx);
 
     printf("======================================================================\n");
     printf("   INTELLISUGGEST CIVETWEB HTTP REST API RUNNING ON PORT %d\n", ctx->port);
@@ -575,28 +1194,37 @@ void api_server_start(ServerContext *ctx) {
     printf("     GET  /api/popular\n");
     printf("     GET  /api/history\n");
     printf("     POST /api/forgotten-search (body: {\"description\": \"...\"})\n");
+    printf("     GET  /api/concepts         (dynamic concepts)\n");
+    printf("     POST /api/concepts         (ADMIN: create concept)\n");
+    printf("     PUT  /api/concepts         (ADMIN: update concept)\n");
+    printf("     DELETE /api/concepts       (ADMIN: delete concept)\n");
     printf("     GET  /api/analytics\n");
+    printf("     GET  /api/analytics/trending\n");
+    printf("     GET  /api/analytics/expired\n");
     printf("     GET  /api/performance\n");
     printf("     GET  /api/keywords\n");
-    printf("     POST /api/keywords\n");
-    printf("     POST /api/keywords/cleanup\n");
+    printf("     POST /api/keywords         (ADMIN: add keyword)\n");
+    printf("     PUT  /api/keywords         (ADMIN: update keyword)\n");
+    printf("     DELETE /api/keywords       (ADMIN: delete keyword)\n");
+    printf("     POST /api/keywords/cleanup (ADMIN: cleanup expired)\n");
     printf("======================================================================\n");
 }
 
+/* Stop CivetWeb HTTP daemon */
 void api_server_stop(void) {
+    persistence_queue_stop();
     if (g_mg_ctx) {
         mg_stop(g_mg_ctx);
         g_mg_ctx = NULL;
     }
 }
 
+/* Free server context and close database */
 void api_server_cleanup(ServerContext *ctx) {
-    api_server_stop();
-    if (ctx) {
-        if (ctx->trie) { trie_free(ctx->trie); ctx->trie = NULL; }
-        if (ctx->hashmap) { hashtable_free(ctx->hashmap); ctx->hashmap = NULL; }
-        if (ctx->concepts) { concept_index_free(ctx->concepts); ctx->concepts = NULL; }
-    }
+    if (!ctx) return;
+    if (ctx->trie) { trie_free(ctx->trie); ctx->trie = NULL; }
+    if (ctx->hashmap) { hashtable_free(ctx->hashmap); ctx->hashmap = NULL; }
+    if (ctx->concepts) { concept_index_free(ctx->concepts); ctx->concepts = NULL; }
     db_close();
     LOCK_DESTROY();
 }

@@ -1,38 +1,86 @@
 import React, { useEffect, useState } from 'react';
-import { api, KeywordRecord } from '../services/api';
+import { api, KeywordRecord, AdminConceptRecord, setAdminToken, getAdminToken } from '../services/api';
 import {
   ShieldCheck,
   Plus,
   Trash2,
   Clock,
   CheckCircle2,
+  AlertCircle,
   Search,
   Download,
-  BookOpen
+  BookOpen,
+  Key,
+  Unlock,
+  Lock,
+  RefreshCw
 } from 'lucide-react';
 import { sounds } from '../utils/sound';
 
 export const AdminPage: React.FC = () => {
   const [keywords, setKeywords] = useState<KeywordRecord[]>([]);
+  const [concepts, setConcepts] = useState<AdminConceptRecord[]>([]);
   const [searchFilter, setSearchFilter] = useState('');
   const [newKeyword, setNewKeyword] = useState('');
   const [newFrequency, setNewFrequency] = useState(10);
-  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [statusMessage, setStatusMessage] = useState<{ text: string; isError?: boolean } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'keywords' | 'concepts'>('keywords');
+
+  // Admin Token State
+  const [adminKeyInput, setAdminKeyInput] = useState(() => getAdminToken() || '');
+  const [hasSavedKey, setHasSavedKey] = useState(() => !!getAdminToken());
+
+  // New Concept Form State
+  const [newConceptName, setNewConceptName] = useState('');
+  const [newConceptDesc, setNewConceptDesc] = useState('');
+  const [newConceptKeywords, setNewConceptKeywords] = useState('');
 
   const fetchKeywords = async () => {
     try {
       const res = await api.getKeywords();
       setKeywords(res.keywords || []);
     } catch (err) {
-      console.error(err);
+      console.error('Failed to load keywords:', err);
+    }
+  };
+
+  const fetchConcepts = async () => {
+    try {
+      const res = await api.getConcepts();
+      setConcepts(res.concepts || []);
+    } catch (err) {
+      console.error('Failed to load concepts:', err);
     }
   };
 
   useEffect(() => {
     fetchKeywords();
+    fetchConcepts();
   }, []);
+
+  const handleSaveAdminKey = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = adminKeyInput.trim();
+    if (trimmed) {
+      setAdminToken(trimmed);
+      setHasSavedKey(true);
+      setStatusMessage({ text: 'Admin API Key saved for this session.' });
+      sounds.playSubmit();
+    } else {
+      setAdminToken(null);
+      setHasSavedKey(false);
+      setStatusMessage({ text: 'Admin API Key cleared.' });
+    }
+  };
+
+  const handleClearAdminKey = () => {
+    setAdminToken(null);
+    setAdminKeyInput('');
+    setHasSavedKey(false);
+    setStatusMessage({ text: 'Admin API Key cleared from session.' });
+    sounds.playSelect();
+  };
 
   const handleAddKeyword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,12 +90,29 @@ export const AdminPage: React.FC = () => {
     sounds.playSubmit();
     try {
       await api.addKeyword(newKeyword.trim(), Number(newFrequency));
-      setStatusMessage(`Keyword "${newKeyword}" added to SQLite, Hash Table, and Trie Top-10 cache.`);
+      setStatusMessage({
+        text: `Keyword "${newKeyword}" added to SQLite, Hash Table, and Trie Top-10 cache.`
+      });
       setNewKeyword('');
       setNewFrequency(10);
       fetchKeywords();
-    } catch {
-      setStatusMessage('Error adding keyword');
+    } catch (err: any) {
+      setStatusMessage({ text: err.message || 'Error adding keyword', isError: true });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteKeyword = async (id: number, kw: string) => {
+    if (!window.confirm(`Permanently remove keyword "${kw}" from database and memory?`)) return;
+    setIsLoading(true);
+    sounds.playSelect();
+    try {
+      await api.deleteKeyword(id);
+      setStatusMessage({ text: `Keyword "${kw}" deleted successfully.` });
+      fetchKeywords();
+    } catch (err: any) {
+      setStatusMessage({ text: err.message || 'Error deleting keyword', isError: true });
     } finally {
       setIsLoading(false);
     }
@@ -59,10 +124,47 @@ export const AdminPage: React.FC = () => {
     sounds.playSubmit();
     try {
       const res = await api.cleanupExpired();
-      setStatusMessage(`Cleanup completed: ${res.cleaned_count} expired keywords purged.`);
+      setStatusMessage({ text: `Cleanup completed: ${res.cleaned_count} expired keywords purged.` });
       fetchKeywords();
-    } catch {
-      setStatusMessage('Error running cleanup');
+    } catch (err: any) {
+      setStatusMessage({ text: err.message || 'Error running cleanup', isError: true });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAddConcept = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newConceptName.trim() || !newConceptDesc.trim()) return;
+
+    setIsLoading(true);
+    sounds.playSubmit();
+    try {
+      await api.addConcept(newConceptName.trim(), newConceptDesc.trim(), newConceptKeywords.trim());
+      setStatusMessage({
+        text: `Concept "${newConceptName}" added and inverted index updated in-memory.`
+      });
+      setNewConceptName('');
+      setNewConceptDesc('');
+      setNewConceptKeywords('');
+      fetchConcepts();
+    } catch (err: any) {
+      setStatusMessage({ text: err.message || 'Error adding concept', isError: true });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteConcept = async (id: number, name: string) => {
+    if (!window.confirm(`Delete concept "${name}" and re-index inverted postings in memory?`)) return;
+    setIsLoading(true);
+    sounds.playSelect();
+    try {
+      await api.deleteConcept(id);
+      setStatusMessage({ text: `Concept "${name}" deleted and index rebalanced.` });
+      fetchConcepts();
+    } catch (err: any) {
+      setStatusMessage({ text: err.message || 'Error deleting concept', isError: true });
     } finally {
       setIsLoading(false);
     }
@@ -87,19 +189,6 @@ export const AdminPage: React.FC = () => {
     k.keyword.toLowerCase().includes(searchFilter.trim().toLowerCase())
   );
 
-  const defaultConcepts = [
-    { name: 'Memoization', desc: 'Technique that stores previously computed results to avoid repeated calculations.', keywords: 'caching, dynamic programming, lookup table' },
-    { name: 'Dijkstra Algorithm', desc: 'Algorithm that finds the shortest path between nodes in a weighted graph with non-negative edge weights.', keywords: 'shortest path, graph search, priority queue' },
-    { name: 'HDMI Adapter', desc: 'Device used to connect a laptop or computer to a projector, monitor or external display.', keywords: 'usb-c to hdmi, display adapter, projector connector' },
-    { name: 'Laptop Cooling Pad', desc: 'External accessory used to cool a laptop and prevent thermal throttling or overheating with fans.', keywords: 'cooling stand, laptop cooler, fan pad' },
-    { name: 'Binary Search', desc: 'Search algorithm that finds the position of a target value within a sorted array by dividing interval in half.', keywords: 'divide and conquer, logarithmic search, sorted array' },
-    { name: 'LRU Cache', desc: 'Caching data structure that evicts the least recently used elements first when capacity limit is reached.', keywords: 'least recently used, cache eviction, doubly linked list' },
-    { name: 'Depth First Search', desc: 'Graph traversal algorithm exploring as deep as possible along each branch before backtracking.', keywords: 'dfs, tree traversal, recursion' },
-    { name: 'Breadth First Search', desc: 'Graph traversal algorithm exploring all neighbor nodes at present depth before moving deeper.', keywords: 'bfs, level order traversal, queue' },
-    { name: 'Hash Table', desc: 'Associative array mapping keys to values using a hash function and collision resolution.', keywords: 'hash map, dictionary, separate chaining' },
-    { name: 'Min Heap', desc: 'Complete binary tree where parent node is always smaller than or equal to children.', keywords: 'priority queue, binary heap, top-k ranking' },
-  ];
-
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       {/* Header */}
@@ -114,7 +203,7 @@ export const AdminPage: React.FC = () => {
             <span>Keyword & Concept Management</span>
           </h1>
           <p className="text-slate-400 text-xs sm:text-sm mt-1">
-            Manage persistent database entries, inspect concept inverted index, and trigger cache syncs.
+            Manage persistent database entries, administer concept inverted index, and trigger cache updates.
           </p>
         </div>
 
@@ -138,11 +227,74 @@ export const AdminPage: React.FC = () => {
         </div>
       </div>
 
-      {statusMessage && (
-        <div className="mb-6 p-4 rounded-xl bg-teal-500/10 border border-teal-500/30 flex items-center justify-between text-xs sm:text-sm text-teal-300">
+      {/* Admin Authentication Key Card */}
+      <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 sm:p-5 mb-6 shadow-md">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
           <div className="flex items-center space-x-2">
-            <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-            <span>{statusMessage}</span>
+            <Key className="w-4 h-4 text-amber-400" />
+            <h2 className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+              Admin Authentication
+            </h2>
+          </div>
+          <span
+            className={`inline-flex items-center space-x-1.5 text-[11px] font-mono px-2.5 py-0.5 rounded-full border ${
+              hasSavedKey
+                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                : 'bg-amber-500/10 text-amber-400 border-amber-500/30'
+            }`}
+          >
+            {hasSavedKey ? <Unlock className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
+            <span>{hasSavedKey ? 'Token Active' : 'Unauthenticated'}</span>
+          </span>
+        </div>
+        <p className="text-xs text-slate-400 mb-3 leading-relaxed">
+          Modifying operations (Add/Delete Keyword, Run Cleanup, and Dynamic Concept CRUD) require an{' '}
+          <code className="text-teal-400 bg-slate-950 px-1 py-0.5 rounded text-[11px]">ADMIN_API_KEY</code>{' '}
+          token matching your backend environment configuration.
+        </p>
+        <form onSubmit={handleSaveAdminKey} className="flex flex-wrap items-center gap-2">
+          <div className="flex-1 min-w-[240px]">
+            <input
+              type="password"
+              value={adminKeyInput}
+              onChange={(e) => setAdminKeyInput(e.target.value)}
+              placeholder="Enter ADMIN_API_KEY token..."
+              className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-600 focus:border-amber-400 outline-none font-mono"
+            />
+          </div>
+          <button
+            type="submit"
+            className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl transition-all shadow-sm"
+          >
+            Save Token
+          </button>
+          {hasSavedKey && (
+            <button
+              type="button"
+              onClick={handleClearAdminKey}
+              className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs rounded-xl transition-all border border-slate-700"
+            >
+              Clear
+            </button>
+          )}
+        </form>
+      </div>
+
+      {statusMessage && (
+        <div
+          className={`mb-6 p-4 rounded-xl border flex items-center justify-between text-xs sm:text-sm ${
+            statusMessage.isError
+              ? 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+              : 'bg-teal-500/10 border-teal-500/30 text-teal-300'
+          }`}
+        >
+          <div className="flex items-center space-x-2">
+            {statusMessage.isError ? (
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            ) : (
+              <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+            )}
+            <span>{statusMessage.text}</span>
           </div>
           <button onClick={() => setStatusMessage(null)} className="text-xs text-slate-400 hover:text-white">
             Dismiss
@@ -178,7 +330,7 @@ export const AdminPage: React.FC = () => {
           }`}
         >
           <BookOpen className="w-3.5 h-3.5 text-teal-400" />
-          <span>Forgotten-Name Concepts ({defaultConcepts.length})</span>
+          <span>Dynamic Forgotten-Name Concepts ({concepts.length})</span>
         </button>
       </div>
 
@@ -250,6 +402,7 @@ export const AdminPage: React.FC = () => {
                     <th className="px-6 py-3">Created At</th>
                     <th className="px-6 py-3">Last Searched</th>
                     <th className="px-6 py-3">Status</th>
+                    <th className="px-6 py-3 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800/60 font-sans">
@@ -280,6 +433,16 @@ export const AdminPage: React.FC = () => {
                           {kw.is_active ? 'Active' : 'Inactive'}
                         </span>
                       </td>
+                      <td className="px-6 py-3 text-right">
+                        <button
+                          onClick={() => handleDeleteKeyword(kw.id, kw.keyword)}
+                          disabled={isLoading}
+                          title="Delete keyword"
+                          className="p-1.5 rounded-lg hover:bg-rose-500/10 text-slate-500 hover:text-rose-400 transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -290,22 +453,110 @@ export const AdminPage: React.FC = () => {
       )}
 
       {activeTab === 'concepts' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {defaultConcepts.map((c, i) => (
-            <div key={i} className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 shadow-lg">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-bold text-teal-400">{c.name}</h3>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-950 text-slate-400 border border-slate-800">
-                  Concept #{i + 1}
-                </span>
+        <div className="space-y-6">
+          {/* Add Concept Form */}
+          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl">
+            <h2 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-4 flex items-center space-x-2">
+              <Plus className="w-4 h-4 text-teal-400" />
+              <span>Add Dynamic Concept to Inverted Index</span>
+            </h2>
+            <form onSubmit={handleAddConcept} className="space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-medium text-slate-400 mb-1">Concept Name</label>
+                  <input
+                    type="text"
+                    value={newConceptName}
+                    onChange={(e) => setNewConceptName(e.target.value)}
+                    placeholder="e.g. 'A* Search Algorithm'"
+                    className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 text-xs focus:border-teal-500 outline-none"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-medium text-slate-400 mb-1">
+                    Associated Keywords (comma-separated)
+                  </label>
+                  <input
+                    type="text"
+                    value={newConceptKeywords}
+                    onChange={(e) => setNewConceptKeywords(e.target.value)}
+                    placeholder="e.g. 'heuristic search, graph pathfinding, shortest path'"
+                    className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 text-xs focus:border-teal-500 outline-none"
+                  />
+                </div>
               </div>
-              <p className="text-xs text-slate-300 leading-relaxed mb-3">{c.desc}</p>
-              <div className="pt-2.5 border-t border-slate-800/80 text-[11px] text-slate-400">
-                <span className="text-slate-500 font-medium">Index Synonyms:</span>{' '}
-                <span className="font-mono text-slate-300">{c.keywords}</span>
+              <div>
+                <label className="block text-[11px] font-medium text-slate-400 mb-1">Concept Description</label>
+                <textarea
+                  value={newConceptDesc}
+                  onChange={(e) => setNewConceptDesc(e.target.value)}
+                  placeholder="Detailed description of the concept used for natural language inverted index matching..."
+                  rows={2}
+                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 text-xs focus:border-teal-500 outline-none resize-none"
+                  required
+                />
               </div>
-            </div>
-          ))}
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="px-5 py-2.5 bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs rounded-xl transition-all shadow-md"
+                >
+                  Create Concept
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Concepts Grid */}
+          <div className="flex items-center justify-between">
+            <h2 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+              Registered Concepts ({concepts.length})
+            </h2>
+            <button
+              onClick={() => {
+                sounds.playSelect();
+                fetchConcepts();
+              }}
+              className="flex items-center space-x-1 text-xs text-slate-400 hover:text-white"
+            >
+              <RefreshCw className="w-3 h-3 text-teal-400" />
+              <span>Refresh Concepts</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {concepts.map((c) => (
+              <div key={c.id} className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-sm font-bold text-teal-400">{c.concept_name}</h3>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-950 text-slate-400 border border-slate-800">
+                        ID #{c.id}
+                      </span>
+                      <button
+                        onClick={() => handleDeleteConcept(c.id, c.concept_name)}
+                        disabled={isLoading}
+                        title="Delete Concept"
+                        className="p-1 rounded hover:bg-rose-500/10 text-slate-500 hover:text-rose-400 transition-colors"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed mb-3">{c.description}</p>
+                </div>
+                {c.keywords && (
+                  <div className="pt-2.5 border-t border-slate-800/80 text-[11px] text-slate-400">
+                    <span className="text-slate-500 font-medium">Index Synonyms:</span>{' '}
+                    <span className="font-mono text-slate-300">{c.keywords}</span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

@@ -19,12 +19,19 @@ import {
 
 interface SearchPageProps {
   searchInputRef?: React.RefObject<HTMLInputElement>;
+  initialMode?: 'prefix' | 'forgotten';
 }
 
-export const SearchPage: React.FC<SearchPageProps> = ({ searchInputRef }) => {
+export const SearchPage: React.FC<SearchPageProps> = ({ searchInputRef, initialMode }) => {
   const [query, setQuery] = useState('');
-  const [searchMode, setSearchMode] = useState<'prefix' | 'forgotten'>('prefix');
+  const [searchMode, setSearchMode] = useState<'prefix' | 'forgotten'>(initialMode || 'prefix');
   const [rankingMode, setRankingMode] = useState<'cached' | 'heap'>('cached');
+
+  useEffect(() => {
+    if (initialMode && initialMode !== searchMode) {
+      setSearchMode(initialMode);
+    }
+  }, [initialMode]);
 
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [conceptResults, setConceptResults] = useState<ConceptResult[]>([]);

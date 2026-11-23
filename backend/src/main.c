@@ -156,6 +156,7 @@ int main(int argc, char *argv[]) {
         sleep_sec(1);
     }
 
+    api_server_stop();
     api_server_cleanup(&ctx);
     printf("[Server]: Terminated cleanly.\n");
     return EXIT_SUCCESS;

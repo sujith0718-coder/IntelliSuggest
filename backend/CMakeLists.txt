@@ -100,6 +100,12 @@ set_target_properties(test_sqlitecloud PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
 )
 
+add_executable(test_admin_auth tests/test_admin_auth.c)
+target_link_libraries(test_admin_auth PRIVATE intellisuggest_core)
+set_target_properties(test_admin_auth PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+)
+
 # Benchmark Suite
 add_executable(benchmark_engine tests/benchmark_engine.c)
 target_link_libraries(benchmark_engine PRIVATE intellisuggest_core)

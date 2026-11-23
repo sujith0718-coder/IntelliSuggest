@@ -1,12 +1,13 @@
 import React, { useState, useRef } from 'react';
-import { Navbar } from './components/Navbar';
+import { Navbar, ActiveTab } from './components/Navbar';
 import { SearchPage } from './pages/Search';
+import { ResourceExplorerPage } from './pages/ResourceExplorer';
 import { AnalyticsPage } from './pages/Analytics';
 import { AdminPage } from './pages/Admin';
 import { PerformancePage } from './pages/Performance';
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'search' | 'analytics' | 'admin' | 'performance'>('search');
+  const [activeTab, setActiveTab] = useState<ActiveTab>('search');
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const handleFocusSearch = () => {
@@ -24,7 +25,13 @@ export const App: React.FC = () => {
         onFocusSearch={handleFocusSearch}
       />
       <main className="flex-1">
-        {activeTab === 'search' && <SearchPage searchInputRef={searchInputRef} />}
+        {activeTab === 'search' && (
+          <SearchPage searchInputRef={searchInputRef} initialMode="prefix" />
+        )}
+        {activeTab === 'forgotten' && (
+          <SearchPage searchInputRef={searchInputRef} initialMode="forgotten" />
+        )}
+        {activeTab === 'resources' && <ResourceExplorerPage />}
         {activeTab === 'analytics' && <AnalyticsPage />}
         {activeTab === 'admin' && <AdminPage />}
         {activeTab === 'performance' && <PerformancePage />}
@@ -32,7 +39,7 @@ export const App: React.FC = () => {
       <footer className="border-t border-slate-800/60 py-6 text-center text-xs text-slate-500 bg-slate-950/80">
         <p className="font-medium text-slate-400">IntelliSuggest · Academic Data Structures and Algorithms Project · Team 12</p>
         <p className="mt-1 font-mono text-[11px] text-slate-500">
-          In-Memory Core: C11 (Trie + Hash Table + Min Heap) · Persistence: SQLite · Server: CivetWeb · Frontend: React 18 + TS
+          In-Memory Core: C11 (Trie + Hash Table + Min Heap) · Persistence: SQLiteCloud · External Discovery: Google PSE · Frontend: React 18 + TS
         </p>
       </footer>
     </div>

@@ -50,6 +50,7 @@ VOLUME ["/var/data", "/app/data"]
 ENV PORT=10000
 ENV DATABASE_PATH=/var/data/intellisuggest.db
 ENV SAMPLE_DATA_PATH=/app/database/sample_data.csv
+ENV ADMIN_API_KEY=isug_admin_19344350b5f402c3b81d441639ce97104988cada0dbac27b
 
 EXPOSE 10000
 

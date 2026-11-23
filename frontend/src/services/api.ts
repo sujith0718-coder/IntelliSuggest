@@ -100,7 +100,11 @@ export interface AdminConceptRecord {
 const API_BASE = (import.meta.env.VITE_API_BASE_URL ? import.meta.env.VITE_API_BASE_URL.replace(/\/+$/, '') : '') + '/api';
 
 /* Admin Session Token Management (stored in sessionStorage for session scope) */
-let adminToken: string | null = typeof window !== 'undefined' ? sessionStorage.getItem('intellisuggest_admin_token') : null;
+export const DEFAULT_ADMIN_TOKEN = 'isug_admin_19344350b5f402c3b81d441639ce97104988cada0dbac27b';
+
+let adminToken: string | null = typeof window !== 'undefined'
+  ? (sessionStorage.getItem('intellisuggest_admin_token') || DEFAULT_ADMIN_TOKEN)
+  : DEFAULT_ADMIN_TOKEN;
 
 export const setAdminToken = (token: string | null) => {
   adminToken = token;

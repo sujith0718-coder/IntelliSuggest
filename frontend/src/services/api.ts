@@ -70,7 +70,7 @@ export interface KeywordRecord {
   is_active: boolean;
 }
 
-const API_BASE = '/api';
+const API_BASE = (import.meta.env.VITE_API_BASE_URL ? import.meta.env.VITE_API_BASE_URL.replace(/\/+$/, '') : '') + '/api';
 
 export const api = {
   async getSuggestions(prefix: string, mode: 'cached' | 'heap' = 'cached'): Promise<SuggestionResponse> {

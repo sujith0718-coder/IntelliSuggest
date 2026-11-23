@@ -25,6 +25,24 @@ static pthread_mutex_t g_lock = PTHREAD_MUTEX_INITIALIZER;
 
 static struct mg_context *g_mg_ctx = NULL;
 
+/* Helper to resolve allowed CORS origin: supports explicit CORS_ORIGIN or dynamic reflection of Origin header */
+static void get_cors_origin(struct mg_connection *conn, char *buf, size_t buf_len) {
+    const char *env_origin = getenv("CORS_ORIGIN");
+    if (env_origin && strlen(env_origin) > 0) {
+        strncpy(buf, env_origin, buf_len - 1);
+        buf[buf_len - 1] = '\0';
+        return;
+    }
+    const char *req_origin = mg_get_header(conn, "Origin");
+    if (req_origin && strlen(req_origin) > 0) {
+        strncpy(buf, req_origin, buf_len - 1);
+        buf[buf_len - 1] = '\0';
+        return;
+    }
+    strncpy(buf, "*", buf_len - 1);
+    buf[buf_len - 1] = '\0';
+}
+
 /* Helper to send JSON responses with CORS headers */
 static int send_json(struct mg_connection *conn, int status_code, cJSON *json_obj) {
     char *json_str = cJSON_PrintUnformatted(json_obj);
@@ -36,16 +54,20 @@ static int send_json(struct mg_connection *conn, int status_code, cJSON *json_ob
                               (status_code == 400) ? "Bad Request" :
                               (status_code == 404) ? "Not Found" : "Internal Server Error";
 
+    char cors_origin[256];
+    get_cors_origin(conn, cors_origin, sizeof(cors_origin));
+
     mg_printf(conn,
               "HTTP/1.1 %d %s\r\n"
               "Content-Type: application/json; charset=utf-8\r\n"
               "Content-Length: %d\r\n"
-              "Access-Control-Allow-Origin: *\r\n"
+              "Access-Control-Allow-Origin: %s\r\n"
               "Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\n"
-              "Access-Control-Allow-Headers: Content-Type, Authorization\r\n"
+              "Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With\r\n"
+              "Access-Control-Allow-Credentials: true\r\n"
               "Connection: close\r\n\r\n"
               "%s",
-              status_code, status_text, (int)len, json_str ? json_str : "");
+              status_code, status_text, (int)len, cors_origin, json_str ? json_str : "");
 
     if (json_str) free(json_str);
     cJSON_Delete(json_obj);
@@ -54,13 +76,18 @@ static int send_json(struct mg_connection *conn, int status_code, cJSON *json_ob
 
 /* Handle CORS preflight requests */
 static int handle_cors_options(struct mg_connection *conn) {
+    char cors_origin[256];
+    get_cors_origin(conn, cors_origin, sizeof(cors_origin));
+
     mg_printf(conn,
               "HTTP/1.1 204 No Content\r\n"
-              "Access-Control-Allow-Origin: *\r\n"
+              "Access-Control-Allow-Origin: %s\r\n"
               "Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\n"
-              "Access-Control-Allow-Headers: Content-Type, Authorization\r\n"
+              "Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With\r\n"
+              "Access-Control-Allow-Credentials: true\r\n"
               "Content-Length: 0\r\n"
-              "Connection: close\r\n\r\n");
+              "Connection: close\r\n\r\n",
+              cors_origin);
     return 1;
 }
 
@@ -503,8 +530,8 @@ bool api_server_init(ServerContext *ctx, int port, const char *db_path, const ch
 
 /* Start CivetWeb HTTP daemon */
 void api_server_start(ServerContext *ctx) {
-    char port_str[16];
-    snprintf(port_str, sizeof(port_str), "%d", ctx->port);
+    char port_str[32];
+    snprintf(port_str, sizeof(port_str), "0.0.0.0:%d", ctx->port);
 
     const char *options[] = {
         "listening_ports", port_str,
@@ -521,6 +548,7 @@ void api_server_start(ServerContext *ctx) {
 
     /* Register REST handlers */
     mg_set_request_handler(g_mg_ctx, "/api/health", handle_health, ctx);
+    mg_set_request_handler(g_mg_ctx, "/health", handle_health, ctx);
     mg_set_request_handler(g_mg_ctx, "/api/suggestions", handle_suggestions, ctx);
     mg_set_request_handler(g_mg_ctx, "/api/search", handle_search_submit, ctx);
     mg_set_request_handler(g_mg_ctx, "/api/popular", handle_popular, ctx);

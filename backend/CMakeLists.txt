@@ -39,9 +39,11 @@ target_compile_definitions(intellisuggest_core PRIVATE
     NO_SSL=1
 )
 
-# Windows socket & thread library
+# Windows socket & thread library, Linux pthread & dl & math
 if (WIN32)
     target_link_libraries(intellisuggest_core PUBLIC ws2_32 pthread psapi)
+else()
+    target_link_libraries(intellisuggest_core PUBLIC pthread dl m)
 endif()
 
 # Main executable

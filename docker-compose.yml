@@ -7,14 +7,15 @@ services:
       dockerfile: Dockerfile
     container_name: intellisuggest-app
     ports:
-      - "8080:8080"
+      - "10000:10000"
     environment:
-      - PORT=8080
+      - PORT=10000
+      - DATABASE_PATH=/var/data/intellisuggest.db
+      - CORS_ORIGIN=*
     volumes:
-      - intellisuggest-data:/app/data
+      - intellisuggest-data:/var/data
     restart: unless-stopped
 
 volumes:
   intellisuggest-data:
     driver: local
-

@@ -15,13 +15,43 @@
 
 #if defined(_WIN32)
 #include <windows.h>
+#include <direct.h>
 #define sleep_sec(s) Sleep((s) * 1000)
+#define make_dir(p) _mkdir(p)
 #else
 #include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #define sleep_sec(s) sleep(s)
+#define make_dir(p) mkdir(p, 0777)
 #endif
 
 static volatile int g_running = 1;
+
+static void ensure_parent_dir(const char *path) {
+    if (!path) return;
+    char temp[512];
+    strncpy(temp, path, sizeof(temp) - 1);
+    temp[sizeof(temp) - 1] = '\0';
+    char *last_slash = strrchr(temp, '/');
+#if defined(_WIN32)
+    char *last_bslash = strrchr(temp, '\\');
+    if (last_bslash && (!last_slash || last_bslash > last_slash)) {
+        last_slash = last_bslash;
+    }
+#endif
+    if (last_slash) {
+        *last_slash = '\0';
+        for (char *p = temp + 1; *p; p++) {
+            if (*p == '/' || *p == '\\') {
+                *p = '\0';
+                make_dir(temp);
+                *p = '/';
+            }
+        }
+        make_dir(temp);
+    }
+}
 
 static void handle_signal(int sig) {
     (void)sig;
@@ -45,21 +75,50 @@ int main(int argc, char *argv[]) {
     printf("  [25Z274] Tharun J             - React Frontend & Interface Testing\n");
     printf("----------------------------------------------------------------------\n");
 
-    /* Determine port: check environment variable PORT (standard for Render / cloud) */
-    int port = 8080;
+    /* Determine port: check environment variable PORT (standard for Render: default 10000) */
+    int port = 10000;
     const char *port_env = getenv("PORT");
     if (port_env && strlen(port_env) > 0) {
         port = atoi(port_env);
     }
-    if (argc > 1 && strcmp(argv[1], "--port") == 0 && argc > 2) {
-        port = atoi(argv[2]);
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "--port") == 0 && i + 1 < argc) {
+            port = atoi(argv[++i]);
+        }
     }
+
+    /* Determine SQLite database path: check DATABASE_PATH env var (e.g. /var/data/intellisuggest.db on Render) */
+    const char *db_path = "intellisuggest.db";
+    const char *db_env = getenv("DATABASE_PATH");
+    if (db_env && strlen(db_env) > 0) {
+        db_path = db_env;
+    }
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "--db") == 0 && i + 1 < argc) {
+            db_path = argv[++i];
+        }
+    }
+
+    /* Determine sample dataset CSV path */
+    const char *sample_csv = "database/sample_data.csv";
+    const char *csv_env = getenv("SAMPLE_DATA_PATH");
+    if (csv_env && strlen(csv_env) > 0) {
+        sample_csv = csv_env;
+    }
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "--csv") == 0 && i + 1 < argc) {
+            sample_csv = argv[++i];
+        }
+    }
+
+    /* Ensure target database directory exists */
+    ensure_parent_dir(db_path);
 
     /* CLI test mode verification flag */
     if (argc > 1 && strcmp(argv[1], "--verify-only") == 0) {
         printf("[CLI Mode]: Initializing and verifying in-memory engine...\n");
         ServerContext ctx;
-        if (!api_server_init(&ctx, port, "intellisuggest.db", "database/sample_data.csv")) {
+        if (!api_server_init(&ctx, port, db_path, sample_csv)) {
             fprintf(stderr, "Verification failed.\n");
             return EXIT_FAILURE;
         }
@@ -69,14 +128,14 @@ int main(int argc, char *argv[]) {
     }
 
     ServerContext ctx;
-    if (!api_server_init(&ctx, port, "intellisuggest.db", "database/sample_data.csv")) {
+    if (!api_server_init(&ctx, port, db_path, sample_csv)) {
         fprintf(stderr, "Fatal error: server initialization failed.\n");
         return EXIT_FAILURE;
     }
 
     api_server_start(&ctx);
 
-    printf("[Server]: Listening on http://localhost:%d\n", port);
+    printf("[Server]: Listening on 0.0.0.0:%d (Database: %s)\n", port, db_path);
     printf("[Server]: Press Ctrl+C to terminate.\n");
 
     while (g_running) {
